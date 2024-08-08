@@ -43,13 +43,18 @@ php artisan key:generate
 php artisan migrate --seed
 ```
 
+### 7. Start Redis Server
+Ensure that the Redis server is running. You can start it using the following command:
+```sh
+redis-server
+```
 
-### 7. Run the Development Server
+### 8. Run the Development Server
 ```sh
 php artisan serve
 ```
 
-### 8. Compile Assets
+### 9. Compile Assets
 ```sh
 npm run dev
 ```
@@ -67,4 +72,3 @@ npm run dev
 
 ## License
 This project is licensed under the SOL License.
-
