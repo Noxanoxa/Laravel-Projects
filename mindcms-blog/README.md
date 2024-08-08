@@ -40,21 +40,26 @@ php artisan key:generate
 
 ### 6. Run Database Migrations
 ```sh
+Ensure that you have created new database called `bloggi` on phpmyadmin or...  
+```
+
+### 7. Run Database Migrations
+```sh
 php artisan migrate --seed
 ```
 
-### 7. Start Redis Server
+### 8. Start Redis Server
 Ensure that the Redis server is running. You can start it using the following command:
 ```sh
 redis-server
 ```
 
-### 8. Run the Development Server
+### 9. Run the Development Server
 ```sh
 php artisan serve
 ```
 
-### 9. Compile Assets
+### 10. Compile Assets
 ```sh
 npm run dev
 ```
