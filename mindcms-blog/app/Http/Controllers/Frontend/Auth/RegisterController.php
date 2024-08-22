@@ -94,7 +94,7 @@ class RegisterController extends Controller
                $user->update(['user_image' => $filename]);
            }
         }
-
+        $user->attachRole(Role::whereName('user')->first()->id);
         return $user;
     }
 
