@@ -30,10 +30,25 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+//        'client_id' => env('FACEBOOK_CLIENT_ID'),
+//        'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
     'facebook' => [
-        'client_id' => env('FACEBOOK_CLIENT_ID'),
-        'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
-        'redirect' => env('https://bloggi.test/login/facebook/callback'),
+        'client_id' => '511828781396811',
+        'client_secret' => 'bb49f4ee258616cc3fe09cb87cdea4bb',
+        'redirect' => 'https://bloggi.test/login/facebook/callback',
+    ],
+
+/* must have real authorised domain such as .com .net ...
+  'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('https://bloggi.test/login/google/callback'),
+    ],*/
+
+    'twitter' => [
+        'client_id' => 'XPX5bNN6VHS5s65cisLV3YCy6',
+        'client_secret' => 'PPAOvgDd3BNxXqAvKu6tAi6XwJ1vzSI0saq8Pd1PyG3ZiehQ04',
+        'redirect' => 'https://bloggi.test/login/twitter/callback',
     ],
 
 

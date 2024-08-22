@@ -16,18 +16,19 @@ use App\Http\Controllers\Backend\PostsController;
 use App\Http\Controllers\Backend\PagesController;
 use App\Http\Controllers\Backend\PostCommentsController;
 use App\Http\Controllers\Backend\PostCategoriesController;
-use App\Http\Controllers\Backend\PostTagsController;
+//use App\Http\Controllers\Backend\PostTagsController;
 use App\Http\Controllers\Backend\ContactUsController;
 use App\Http\Controllers\Backend\UsersController as BackendUsersController;
 use App\Http\Controllers\Backend\SupervisorsController;
 use App\Http\Controllers\Backend\SettingsController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/',                                         [IndexController::class, 'index'])->name('frontend.index');
 // Authentication Routes...
 Route::get('/login',                                    [FrontendLoginController::class, 'showLoginForm'])->name('frontend.show_login_form');
 Route::post('login',                                    [FrontendLoginController::class, 'login'])->name('frontend.login');
 
-Route::get('login/{provider}',                          [FrontendLoginController::class, 'redirectToProvider'])->name('frontend.social_login');
+Route::get('login/{provider}',                                  [FrontendLoginController::class, 'redirectToProvider'])->name('frontend.social_login');
 Route::get('login/{provider}/callback',                 [FrontendLoginController::class, 'handleProviderCallback'])->name('frontend.social_login_callback');
 
 Route::post('logout',                                   [FrontendLoginController::class, 'logout'])->name('frontend.logout');
@@ -82,7 +83,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function() {
         Route::resource('post_comments',                PostCommentsController::class);
         Route::resource('post_categories',              PostCategoriesController::class);
 
-        Route::resource('post_tags',                    PostTagsController::class);
+//        Route::resource('post_tags',                    PostTagsController::class);
 
         Route::resource('contact_us',                   ContactUsController::class);
 
