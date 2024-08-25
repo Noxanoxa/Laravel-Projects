@@ -74,6 +74,11 @@ class Post extends Model
     {
         return $this->hasMany(PostMedia::class);
     }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'posts_tags');
+    }
     public function status(){
         return $this->status == 1 ? 'Active' : 'Inactive';
     }

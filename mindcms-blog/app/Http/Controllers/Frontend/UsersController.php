@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\PostMedia;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
@@ -129,8 +130,9 @@ class UsersController extends Controller
 
     public function create_post()
     {
+        $tags = Tag::pluck('name', 'id');
         $categories = Category::active()->pluck('name', 'id');
-        return view('frontend.users.create_post', compact('categories'));
+        return view('frontend.users.create_post', compact('categories', 'tags'));
     }
 
     public function store_post(Request $request)

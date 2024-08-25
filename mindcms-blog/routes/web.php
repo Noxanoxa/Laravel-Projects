@@ -83,7 +83,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function() {
         Route::resource('post_comments',                PostCommentsController::class);
         Route::resource('post_categories',              PostCategoriesController::class);
 
-//        Route::resource('post_tags',                    PostTagsController::class);
+        Route::resource('post_tags',                    PostTagsController::class);
 
         Route::resource('contact_us',                   ContactUsController::class);
 

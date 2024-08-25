@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('style')
     <link rel="stylesheet" href="{{asset('frontend/js/summernote/summernote-bs4.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('frontend/js/select2/css/select2.min.css') }}"/>
 @endsection
 @section('content')
     {{--    I am Index Page--}}
@@ -17,6 +18,11 @@
                             {!! Form::textarea('description', old('description'), ['class' => 'form-control summernote', 'placeholder' => 'Your Description' ]) !!}
                             @error('description')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
+                    <div class="form-group">
+                        {!! Form::label('tags', "Tags") !!}
+                        {!! Form::text('tags', old('tags'), ['class' => 'form-control']) !!}
+                        @error('tags')<span class="text-danger">{{ $message }}</span>@enderror
+                    </div>
 
                         <div class="row">
                             <div class="col-4">
@@ -60,6 +66,7 @@
 @endsection
 @section('script')
     <script src="{{ asset('frontend/js/summernote/summernote-bs4.min.js')}}"></script>
+    <script src="{{ asset('frontend/js/select2/js/select2.full.min.js')}}"></script>
     <script>
         $(function() {
             $('.summernote').summernote({
