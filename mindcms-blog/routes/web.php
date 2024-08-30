@@ -16,7 +16,7 @@ use App\Http\Controllers\Backend\PostsController;
 use App\Http\Controllers\Backend\PagesController;
 use App\Http\Controllers\Backend\PostCommentsController;
 use App\Http\Controllers\Backend\PostCategoriesController;
-//use App\Http\Controllers\Backend\PostTagsController;
+use App\Http\Controllers\Backend\PostTagsController;
 use App\Http\Controllers\Backend\ContactUsController;
 use App\Http\Controllers\Backend\UsersController as BackendUsersController;
 use App\Http\Controllers\Backend\SupervisorsController;

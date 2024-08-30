@@ -120,25 +120,23 @@ class PostCategoriesController extends Controller
 
         $category = Category::whereId($id)->first();
         if($category) {
-            $data ['name']                   = $request->name;
-            $data['slug']                      =   null;
-            $data ['status']                  = $request->status;
-
+            $data ['name']   = $request->name;
+            $data['slug']    = null;
+            $data ['status'] = $request->status;
 
             $category->update($data);
             Cache::forget('global_categories');
 
-
             return redirect()->route('admin.post_categories.index')->with([
-                'message' => 'Category Updated Successfully',
+                'message'    => 'Category Updated Successfully',
                 'alert-type' => 'success',
             ]);
-
+        }
             return redirect()->route('admin.post_categories.index')->with([
                 'message' => 'Something was wrong please try again later',
                 'alert-type' => 'danger',
             ]);
-        }
+
     }
 
     public function destroy($id)
@@ -162,9 +160,5 @@ class PostCategoriesController extends Controller
                 'alert-type' => 'success',
             ]);
 
-        return redirect()->route('admin.post_categories.index')->with([
-            'message' => 'Something was wrong. Category Not Found',
-            'alert-type' => 'danger',
-        ]);
     }
 }

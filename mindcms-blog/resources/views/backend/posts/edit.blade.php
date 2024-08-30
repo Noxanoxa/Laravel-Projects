@@ -1,4 +1,7 @@
 @extends('layouts.admin')
+@section('style')
+    <link rel="stylesheet" href="{{ asset('backend/vendor/select2/css/select2.min.css') }}"/>
+@endsection
 @section('content')
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex">
@@ -33,9 +36,21 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+{{--                        {{ dd($tags) }}--}}
+                        {!! Form::label('tags', "Tags") !!}
+                        <button type="button" class="btn btn-primary btn-xs" id="select_btn_tag">Select all</button>
+                        <button type="button" class="btn btn-primary btn-xs" id="deselect_btn_tag">Deselect all</button>
+                        {!! Form::select('tags[]', $tags->toArray(), old('tags', $post->tags), ['class' => 'form-control selects', 'multiple' => 'multiple', 'id' => 'select_all_tags' ]) !!}
+                        @error('tags')<span class="text-danger">{{ $message }}</span>@enderror
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-4">
                     {!! Form::label('category_id', "category_id") !!}
-                    {!! Form::select('category_id', ['' => '---' ] + $categories->toArray() ,  old('category_id', $post->category_id), ['class' => 'form-control' ]) !!}
+                    {!! Form::select('category', ['' => '---' ] + $categories->toArray() ,  old('category_id', $post->category_id), ['class' => 'form-control' ]) !!}
                     @error('category_id')<span class="text-danger">{{ $message }}</span>@enderror
                 </div>
                 <div class="col-4">
@@ -66,7 +81,7 @@
 
 @endsection
 @section('script')
-    <script src="{{ asset('frontend/js/summernote/summernote-bs4.min.js')}}"></script>
+    <script src="{{ asset('backend/vendor/select2/js/select2.full.min.js')}}"></script>
     <script>
         $(function() {
             $('.summernote').summernote({
@@ -81,6 +96,19 @@
                     ['insert', ['link', 'picture', 'video']],
                     ['view', ['fullscreen', 'codeview', 'help']]
                 ]
+            });
+            $('.selects').select2({
+                tags: true,
+                minimumResultsForSearch: Infinity,
+            });
+            $('#select_btn_tag').click(function(){
+                $('#select_all_tags > option').prop('selected', 'selected');
+                $('#select_all_tags').trigger('change');
+            });
+
+            $('#deselect_btn_tag').click(function(){
+                $('#select_all_tags > option').prop('selected', '');
+                $('#select_all_tags').trigger('change');
             });
             $('#post-images').fileinput({
                 theme: "fas",

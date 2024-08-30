@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\PostMedia;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
@@ -32,6 +33,7 @@ class PostsController extends Controller
         }
         $keyword = (isset(\request()->keyword) && \request()->keyword != '') ? \request()->keyword : null;
         $categoryId = (isset(\request()->categoryId) && \request()->categoryId != '') ? \request()->categoryId : null;
+        $tagId = (isset(\request()->tagId) && \request()->tagId != '') ? \request()->tagId : null;
         $status = (isset(\request()->status) && \request()->status != '') ? \request()->status : null;
         $sort_by = (isset(\request()->sort_by) && \request()->sort_by != '') ? \request()->sort_by : 'id';
         $order_by = (isset(\request()->order_by) && \request()->order_by != '') ? \request()->order_by : 'desc';
@@ -45,6 +47,11 @@ class PostsController extends Controller
         if($categoryId !=null) {
             $posts = $posts->whereCategoryId($categoryId);
         }
+        if($tagId !=null) {
+            $posts = $posts->whereHas('tags' , function ($query) use ($tagId){
+                $query->where('id', $tagId);
+            });
+        }
         if($status !=null) {
             $posts = $posts->whereStatus($status);
         }
@@ -53,8 +60,9 @@ class PostsController extends Controller
         $posts= $posts->paginate($limit_by);
 
 
+        $tags = Tag::orderBy('id', 'desc')->pluck('name', 'id');
         $categories= Category::orderBy('id', 'desc')->pluck('name', 'id');
-        return view('backend.posts.index', compact('posts', 'categories'));
+        return view('backend.posts.index', compact('posts', 'categories', 'tags'));
     }
 
     public function create()
@@ -62,8 +70,9 @@ class PostsController extends Controller
         if (!\auth()->user()->ability('admin', 'create_posts')){
             return redirect('admin/index');
         }
+        $tags = Tag::pluck('name', 'id');
         $categories= Category::orderBy('id', 'desc')->pluck('name', 'id');
-        return view('backend.posts.create', compact('categories') );
+        return view('backend.posts.create', compact('categories', 'tags'));
 
     }
 
@@ -79,6 +88,7 @@ class PostsController extends Controller
             'comment_able'   => 'required',
             'category_id'    => 'required',
             'images.*'       => 'nullable|mimes:jpg,jpeg,png,gif|max:20000',
+            'tags.*'         => 'required',
         ]);
 
         if($validator->fails()) {
@@ -92,9 +102,8 @@ class PostsController extends Controller
         $data ['comment_able']            = $request->comment_able;
         $data ['category_id']             = $request->category_id;
 
-
-
         $post = auth()->user()->posts()->create($data);
+
         if($request->images && count($request->images) > 0) {
             $i = 1;
             foreach ($request->images as $file) {
@@ -119,8 +128,23 @@ class PostsController extends Controller
                 $i++;
             }
         }
+
+        if(count($request->tags) > 0) {
+            $new_tags = [];
+            foreach ($request->tags as $tag) {
+                $tag = Tag::firstOrCreate([
+                    'id' => $tag
+                ], [
+                    'name' => $tag
+                ]);
+                $new_tags[] = $tag->id;
+            }
+            $post->tags()->sync($new_tags);
+        }
+
             if($request->status == 1) {
                 Cache::forget('recent_posts');
+                Cache::forget('global_tags');
             }
 
             return redirect()->route('admin.posts.index')->with([
@@ -144,9 +168,10 @@ class PostsController extends Controller
         if (!\auth()->user()->ability('admin', 'update_posts')){
             return redirect('admin/index');
         }
+        $tags = Tag::pluck('name', 'id');
         $categories= Category::orderBy('id', 'desc')->pluck('name', 'id');
         $post = Post::with(['media'])->whereId($id)->post()->first();
-        return view('backend.posts.edit', compact('categories', 'post') );
+        return view('backend.posts.edit', compact('categories', 'post', 'tags'));
 
     }
 
@@ -162,6 +187,7 @@ class PostsController extends Controller
             'comment_able'   => 'required',
             'category_id'    => 'required',
             'images.*'       => 'nullable|mimes:jpg,jpeg,png,gif|max:20000',
+            'tags.*'         => 'required',
         ]);
 
         if($validator->fails()) {
@@ -199,16 +225,28 @@ class PostsController extends Controller
                 }
             }
 
+            if(count($request->tags) > 0) {
+                $new_tags = [];
+                foreach ($request->tags as $tag) {
+                    $tag = Tag::firstOrCreate([
+                        'id' => $tag
+                    ], [
+                        'name' => $tag
+                    ]);
+                    $new_tags[] = $tag->id;
+                }
+                $post->tags()->sync($new_tags);
+            }
+
             return redirect()->route('admin.posts.index')->with([
                 'message' => 'Post Updated Successfully',
                 'alert-type' => 'success',
             ]);
-
-            return redirect()->route('admin.posts.index')->with([
-                'message' => 'Something was wrong please try again later',
-                'alert-type' => 'danger',
-            ]);
         }
+        return redirect()->route('admin.posts.index')->with([
+            'message' => 'Something was wrong please try again later',
+            'alert-type' => 'danger',
+        ]);
     }
 
     public function destroy($id)

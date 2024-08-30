@@ -20,7 +20,9 @@
                         </div>
                     <div class="form-group">
                         {!! Form::label('tags', "Tags") !!}
-                        {!! Form::text('tags', old('tags'), ['class' => 'form-control']) !!}
+                        <button type="button" class="btn btn-primary btn-xs" id="select_btn_tag">Select all</button>
+                        <button type="button" class="btn btn-primary btn-xs" id="deselect_btn_tag">Deselect all</button>
+                        {!! Form::select('tags[]', $tags->toArray(),old('tags'), ['class' => 'form-control selects', 'multiple' => 'multiple', 'id' => 'select_all_tags' ]) !!}
                         @error('tags')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
 
@@ -82,6 +84,20 @@
                     ['view', ['fullscreen', 'codeview', 'help']]
                 ]
             });
+            $('.selects').select2({
+                tags: true,
+                minimumResultsForSearch: Infinity,
+            });
+            $('#select_btn_tag').click(function(){
+                $('#select_all_tags > option').prop('selected', 'selected');
+                $('#select_all_tags').trigger('change');
+            });
+
+            $('#deselect_btn_tag').click(function(){
+                $('#select_all_tags > option').prop('selected', '');
+                $('#select_all_tags').trigger('change');
+            });
+
             $('#post-images').fileinput({
                 theme: "fas",
                 maxFileCount: 5,

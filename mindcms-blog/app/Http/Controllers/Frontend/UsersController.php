@@ -137,12 +137,14 @@ class UsersController extends Controller
 
     public function store_post(Request $request)
     {
+//        dd($request->all());
         $validator = Validator::make($request->all(), [
            'title'          => 'required',
            'description'    => 'required|min:50',
            'status'         => 'required',
            'comment_able'   => 'required',
            'category_id'    => 'required',
+           'tags.*'    => 'required',
         ]);
 
         if($validator->fails()) {
@@ -155,19 +157,23 @@ class UsersController extends Controller
         $data ['comment_able']            = $request->comment_able;
         $data ['category_id']             = $request->category_id;
 
-
-
         $post = auth()->user()->posts()->create($data);
+
         if($request->images && count($request->images) > 0) {
             $i = 1;
-            foreach($request->images as $file) {
-                $filename   = $post->slug.'-'.time().'-'.$i.'.'.$file->getClientOriginalExtension();
-                $file_size  = $file->getSize();
-                $file_type  = $file->getMimeType();
-                $path       = public_path('assets/posts/'. $filename);
-                Image::make($file->getRealPath())->resize(800, null, function($constraint) {
-                   $constraint->aspectRatio();
-                })->save($path, 100);
+            foreach ($request->images as $file) {
+                $filename = $post->slug . '-' . time() . '-' . $i . '.'
+                            . $file->getClientOriginalExtension();
+                $file_size = $file->getSize();
+                $file_type = $file->getMimeType();
+                $path = public_path('assets/posts/' . $filename);
+                Image::make($file->getRealPath())->resize(
+                    800,
+                    null,
+                    function ($constraint) {
+                        $constraint->aspectRatio();
+                    }
+                )->save($path, 100);
 
                 $post->media()->create([
                     'file_name' => $filename,
@@ -176,17 +182,31 @@ class UsersController extends Controller
                 ]);
                 $i++;
             }
-
-            if($request->status == 1) {
-                Cache::forget('recent_posts');
-            }
-
-            return redirect()->back()->with([
-                'message' => 'Post Created Successfully',
-                'alert-type' => 'success',
-            ]);
-
         }
+
+        if(count($request->tags) > 0) {
+            $new_tags = [];
+            foreach ($request->tags as $tag) {
+                $tag = Tag::firstOrCreate([
+                    'id' => $tag
+                ], [
+                        'name' => $tag
+                    ]);
+                $new_tags[] = $tag->id;
+             }
+            $post->tags()->sync($new_tags);
+        }
+
+        if($request->status == 1) {
+        Cache::forget('recent_posts');
+        Cache::forget('global_tags');
+    }
+
+        return redirect()->back()->with([
+            'message' => 'Post Created Successfully',
+            'alert-type' => 'success',
+        ]);
+
     }
 
     public function edit_post($post_id)
@@ -194,8 +214,9 @@ class UsersController extends Controller
 
         $post = Post::whereSlug($post_id)->orWhere('id', $post_id)->whereUserId(auth()->id())->first();
         if($post) {
+            $tags = Tag::pluck('name', 'id');
             $categories = Category::whereStatus(1)->pluck('name', 'id');
-            return view('frontend.users.edit_post', compact('categories', 'post'));
+            return view('frontend.users.edit_post', compact('categories', 'post', 'tags'));
         }
         return redirect()->route('frontend.index')->with([
            'message' => 'Post Not Found',
@@ -211,6 +232,7 @@ class UsersController extends Controller
             'status'         => 'required',
             'comment_able'   => 'required',
             'category_id'    => 'required',
+            'tags.*' => 'required',
         ]);
 
         if($validator->fails()) {
@@ -246,17 +268,29 @@ class UsersController extends Controller
                 }
             }
 
+            if(count($request->tags) > 0) {
+                $new_tags = [];
+                foreach ($request->tags as $tag) {
+                    $tag = Tag::firstOrCreate([
+                        'id' => $tag
+                    ], [
+                        'name' => $tag
+                    ]);
+                    $new_tags[] = $tag->id;
+                }
+                $post->tags()->sync($new_tags);
+            }
+
             return redirect()->back()->with([
                 'message' => 'Post Updated Successfully',
                 'alert-type' => 'success',
             ]);
 
-            return redirect()->back()->with([
-                'message' => 'Something was wrong please try again later',
-                'alert-type' => 'danger',
-            ]);
-
         }
+        return redirect()->back()->with([
+            'message' => 'Something was wrong please try again later',
+            'alert-type' => 'danger',
+        ]);
 
     }
 
@@ -298,26 +332,6 @@ class UsersController extends Controller
         }
         return false;
     }
-
-//    public function show_comments(Request $request)
-//    {
-//
-//
-//        $comments = Comment::query();
-//        if (isset($request->post) && $request->post != '')
-//        {
-//            $comments = $comments->where('post_id', $request->post);
-//        }else
-//        {
-//              $posts_id = auth()->user()->posts->pluck('id')->toArray();
-//                $comments ->whereIn('post_id', $posts_id);
-//
-//        }
-//        $comments->orderBy('id', 'desc');
-//        $comments->paginate(10);
-//
-//        return view('frontend.users.comments', compact('comments'));
-//    }
 
     public function show_comments(Request $request)
     {
