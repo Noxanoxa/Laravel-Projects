@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Frontend\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Http\Request;
 
@@ -50,10 +49,12 @@ class VerificationController extends Controller
 
     protected function verified(Request $request)
     {
-        $request = $request->user()->update(['status' => 1]);
+
+        $request->user()->update(['status' => 1]);
+
         return redirect()->route('frontend.index')->with([
-            'message' => 'Your account has been activated successfully.',
-            'alert-type' => 'success',
+            'message' => 'Your account is activated successfully.',
+            'alert-type' => 'success'
         ]);
     }
 

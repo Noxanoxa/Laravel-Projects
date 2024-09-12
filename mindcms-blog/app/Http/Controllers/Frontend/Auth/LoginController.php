@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Frontend\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -73,12 +72,35 @@ class LoginController extends Controller
                 'alert-type' => 'error',
             ]);
         }*/
+
+
         if($user->status ==1) {
+
+            // in case api
+            if($request->wantsJson()) {
+                $token = $user->createToken('access_token')->accessToken;
+                return response()->json([
+                    'errors' => false,
+                    'message' => 'Logged In Successfully',
+                    'token' => $token,
+                ]);
+            }
+
             return redirect()->route('users.dashboard')->with([
                 'message'    => 'Logged In Successfully ' . $user->name,
                 'alert-type' => 'success',
             ]);
         }
+
+        // in case api
+        if($request->wantsJson()) {
+            return response()->json([
+                'errors' => false,
+                'message' => 'Your account is not activated yet. Please check your email for activation link or contact Bloggi Admin.',
+            ]);
+        }
+
+
         return redirect()->route('frontend.index')->with([
             'message'    => 'Your account is not activated yet. Please check your email for activation link or contact Bloggi Admin.',
             'alert-type' => 'warning',
