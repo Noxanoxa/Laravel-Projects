@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Comment extends Model
 {
-    use SearchableTrait;
+    use HasFactory, SearchableTrait;
     protected $searchable = [
         'columns' => [
             'comments.name' => 10,
@@ -29,6 +30,6 @@ class Comment extends Model
         return $this->belongsTo(User::class);
     }
     public function status(){
-        return $this->status == 1 ? 'Active' : 'Inactive';
+        return $this->status == 1 ? __('Backend/post_comments.active') : __('Backend/post_comments.inactive');
     }
 }

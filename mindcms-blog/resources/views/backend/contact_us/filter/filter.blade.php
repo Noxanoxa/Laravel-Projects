@@ -3,22 +3,22 @@
     <div class="row">
         <div class="col-2">
             <div class="form-group">
-                {!! Form::text('keyword', old('keyword', request()->input('keyword')), ['class' => 'form-control', 'placeholder' => 'Search here']) !!}
+                {!! Form::text('keyword', old('keyword', request()->input('keyword')), ['class' => 'form-control', 'placeholder' => __('Backend/contact_us.search_here')]) !!}
             </div>
         </div>
         <div class="col-2">
             <div class="form-group">
-                {!! Form::select('status', ['' => '---', '1' => 'Read', '0' => 'New'], old('status', request()->input('status')), ['class' => 'form-control']) !!}
+                {!! Form::select('status', ['' => '---', '1' => __('Backend/contact_us.read'), '0' => __('Backend/contact_us.new')], old('status', request()->input('status')), ['class' => 'form-control']) !!}
             </div>
         </div>
         <div class="col-2">
             <div class="form-group">
-                {!! Form::select('sort_by', ['' => '---', 'name' => 'Name', 'title' => 'Title', 'created_at' => 'Created at'], old('sort_by', request()->input('sort_by')), ['class' => 'form-control']) !!}
+                {!! Form::select('sort_by', ['' => '---', 'name' => __('Backend/contact_us.name'), 'title' => __('Backend/contact_us.title'), 'created_at' => __('Backend/contact_us.created_at')], old('sort_by', request()->input('sort_by')), ['class' => 'form-control']) !!}
             </div>
         </div>
         <div class="col-2">
             <div class="form-group">
-                {!! Form::select('order_by', ['' => '---', 'asc' => 'Ascending', 'desc' => 'Descending'], old('order_by', request()->input('order_by')), ['class' => 'form-control']) !!}
+                {!! Form::select('order_by', ['' => '---', 'asc' => __('Backend/contact_us.asc'), 'desc' => __('Backend/contact_us.desc')], old('order_by', request()->input('order_by')), ['class' => 'form-control']) !!}
             </div>
         </div>
         <div class="col-1">
@@ -29,7 +29,7 @@
         <div class="col-2"></div>
         <div class="col-1">
             <div class="form-group">
-                {!! Form::button('Search', ['class' => 'btn btn-link', 'type' => 'submit']) !!}
+                {!! Form::button(__('Backend/contact_us.search'), ['class' => 'btn btn-link', 'type' => 'submit']) !!}
             </div>
         </div>
     </div>

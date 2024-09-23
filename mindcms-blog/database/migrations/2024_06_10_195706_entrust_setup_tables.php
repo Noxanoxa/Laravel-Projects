@@ -17,7 +17,9 @@ class EntrustSetupTables extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('display_name')->nullable();
+            $table->string('display_name_en')->nullable();
             $table->string('description')->nullable();
+            $table->string('description_en')->nullable();
             $table->string('allowed_route')->nullable();
             $table->timestamps();
         });
@@ -34,7 +36,9 @@ class EntrustSetupTables extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('display_name')->nullable();
+            $table->string('display_name_en')->nullable();
             $table->string('description')->nullable();
+            $table->string('description_en')->nullable();
             $table->string('route')->nullable();
             $table->string('module')->nullable();
             $table->string('as')->nullable();

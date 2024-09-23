@@ -18,17 +18,17 @@
             </div>
             <div class="col-1">
                 <div class="form-group">
-                    {!! Form::select('status', ['' => '---' , '0' => 'Inactive', '1' => 'Active' ],old('status', request()->input('status')), ['class'=>'form-control']) !!}
+                    {!! Form::select('status', ['' => '---' , '0' => __('Backend/posts.inactive'), '1' => __('Backend/posts.active') ],old('status', request()->input('status')), ['class'=>'form-control']) !!}
                 </div>
             </div>
             <div class="col-1">
                 <div class="form-group">
-                    {!! Form::select('sort_by', ['' => '---' , 'title' => 'Title', 'created_at' => 'Created Date' ],old('sort_by', request()->input('sort_by')), ['class'=>'form-control']) !!}
+                    {!! Form::select('sort_by', ['' => '---' , 'title' => __('Backend/posts.title'), 'created_at' => __('Backend/posts.created_at') ],old('sort_by', request()->input('sort_by')), ['class'=>'form-control']) !!}
                 </div>
             </div>
             <div class="col-2">
                 <div class="form-group">
-                    {!! Form::select('order_by', ['' => '---' , 'asc' => 'Ascending', 'desc' => 'Descending' ],old('order_by', request()->input('order_by')), ['class'=>'form-control']) !!}
+                    {!! Form::select('order_by', ['' => '---', 'asc' => __('Backend/posts.asc'), 'desc' => __('Backend/posts.desc')], old('order_by', request()->input('order_by')), ['class' => 'form-control']) !!}
                 </div>
             </div>
             <div class="col-1">

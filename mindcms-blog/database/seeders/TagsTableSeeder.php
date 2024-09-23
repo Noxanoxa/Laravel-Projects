@@ -14,12 +14,12 @@ class TagsTableSeeder extends Seeder
      */
     public function run()
     {
-        Tag::create(['name' => 'Flowers']);
-        Tag::create(['name' => 'Nature']);
-        Tag::create(['name' => 'Animals']);
-        Tag::create(['name' => 'Travel']);
-        Tag::create(['name' => 'Food']);
-        Tag::create(['name' => 'Lifestyle']);
-        Tag::create(['name' => 'Fashion']);
+        Tag::create(['name' => 'زهور', 'name_en' => 'Flowers']);
+        Tag::create(['name' => 'طبيعة سجية', 'name_en' => 'Nature']);
+        Tag::create(['name' => 'الكتروني', 'name_en' => 'Animals']);
+        Tag::create(['name' => 'السفر', 'name_en' => 'Travel']);
+        Tag::create(['name' => 'طعام', 'name_en' => 'Food']);
+        Tag::create(['name' => 'نمط حياة', 'name_en' => 'Lifestyle']);
+        Tag::create(['name' => 'موضة', 'name_en' => 'Fashion']);
     }
 }

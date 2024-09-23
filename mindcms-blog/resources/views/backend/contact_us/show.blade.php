@@ -8,7 +8,9 @@
                     <span class="icon text-white-50">
                         <i class="fa fa-home"></i>
                     </span>
-                    <span class="text">Messages</span>
+                    <span class="text">
+                        {{__('Backend/contact_us.messages')}}
+                    </span>
                 </a>
             </div>
         </div>
@@ -16,15 +18,15 @@
                 <table class="table table-hover">
                 <tbody>
                     <tr>
-                        <th>Title</th>
+                        <th>{{ __('Backend/contact_us.from') }}</th>
                         <td>{{ $message->title }}</td>
                     </tr>
                     <tr>
-                        <th>From</th>
+                        <th>{{ __('Backend/contact_us.title') }}</th>
                         <td>{{ $message->name }}<{{ $message->email }}></td>
                     </tr>
                     <tr>
-                        <th>Message</th>
+                        <th>{{ __('Backend/contact_us.message') }}</th>
                         <td>{!!  $message->message  !!}</td>
                     </tr>
                 </tbody>

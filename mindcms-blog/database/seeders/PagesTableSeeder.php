@@ -17,8 +17,10 @@ class PagesTableSeeder extends Seeder
         $faker = Factory::create();
 
          Page::create([
-            'title' => 'About Us',
+            'title' => 'نبذة عنا',
+            'title_en' => 'About Us',
             'description' => $faker->paragraph(),
+            'description_en' => $faker->paragraph(),
             'status' => 1,
             'comment_able' => 0,
             'post_type' => 'page',
@@ -28,8 +30,10 @@ class PagesTableSeeder extends Seeder
 
 
         Page::create([
-            'title' => 'Our Vision',
+            'title' => 'رؤيتنا',
+            'title_en' => 'Our Vision',
             'description' => $faker->paragraph(),
+            'description_en' => $faker->paragraph(),
             'status' => 1,
             'comment_able' => 0,
             'post_type' => 'page',

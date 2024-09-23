@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Api\General;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\General\PostCommentsResource;
+use App\Http\Resources\General\TagsResource;
 use App\Http\Resources\Users\UsersPostResource;
 use App\Http\Resources\General\PostsResource;
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\Contact;
 use App\Models\Post;
 use App\Models\Tag;
@@ -26,7 +29,7 @@ class GeneralController extends Controller
                      ->whereHas('user', function($query) {
                          $query->whereStatus('1');
                      })
-                     ->post()->active()->orderBy('id', 'desc')->paginate(5);
+                     ->post()->active()->orderBy('id', 'desc')->get();
 
         if($posts->count() > 0) {
         return PostsResource::collection($posts);
@@ -34,6 +37,63 @@ class GeneralController extends Controller
             return response()->json(['message' => 'No posts found', 'error'=>true ], 201);// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
         }
     }
+
+    public function get_recent_posts()
+    {
+        $posts = Post::with(['category', 'media', 'user'])
+                     ->whereHas('category', function($query) {
+                         $query->whereStatus(1);
+                     })
+                     ->whereHas('user', function($query) {
+                         $query->whereStatus(1);
+                     })
+                     ->wherePostType('post')->whereStatus(1)->orderBy('id', 'desc')->limit(5)->get();
+
+        if($posts->count() > 0) {
+            return response()->json(['posts' => PostsResource::collection($posts), 'error'=>false], 200);
+        } else {
+            return response()->json(['message' => 'No posts found', 'error'=>true ], 201);// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
+        }
+    }
+
+    public function get_recent_comments()
+    {
+        $comments = Comment::whereStatus(1)->orderBy('id', 'desc')->limit(5)->get();
+        if($comments->count() > 0) {
+            return response()->json(['comments' => PostCommentsResource::collection( $comments), 'error'=>false], 200);
+        } else {
+            return response()->json(['message' => 'No comments found', 'error'=>true ], 201);// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
+        }
+    }
+
+    public function get_archives()
+    {
+        $archives = Post::selectRaw('year(created_at) year, monthname(created_at) month, count(*) published')
+                        ->wherePostType('post')
+                        ->whereStatus(1)
+                        ->groupBy('year', 'month')
+                        ->orderByRaw('min(created_at) desc')
+                        ->get();
+
+        if($archives->count() > 0) {
+            return response()->json(['archives' => $archives, 'error'=>false], 200);
+        } else {
+            return response()->json(['message' => 'No archives found', 'error'=>true ], 201);// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
+        }
+
+    }
+
+    public function get_tags()
+    {
+        $tags = Tag::withCount('posts')->get();
+        if($tags->count() > 0) {
+            return response()->json(['tags' => TagsResource::collection($tags), 'error'=>false], 200);
+        } else {
+            return response()->json(['message' => 'No tags found', 'error'=>true ], 201);// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
+        }
+
+    }
+
 
     public function show_post($slug)
     {
@@ -44,7 +104,7 @@ class GeneralController extends Controller
             'tags',
             'approved_comments' => function ($query) {
                 $query->orderBy('id', 'desc');
-            }
+            },
         ]);
 
         $post = $post->whereHas('category', function ($query) {

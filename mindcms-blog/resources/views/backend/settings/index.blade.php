@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-3">
             <div class="card">
-                <div class="card-header">Settings</div>
+                <div class="card-header">{{__('Backend/settings.settings')}}</div>
                 <ul class="list-group list-group-flush">
                     @foreach($settings_sections as $settings_section)
                         <li class="list-group-item">
@@ -16,14 +16,14 @@
         </div>
         <div class="col-9">
             <div class="card">
-                <div class="card-header">Settings {{ $section }}</div>
+                <div class="card-header">{{__('Backend/settings.settings')}} {{ $section }}</div>
                 <div class="card-body">
                     {!! Form::model($settings, ['route' => ['admin.settings.update', 1], 'method' => 'patch']) !!}
                     @foreach($settings as $setting)
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label for="title">{{ $setting->display_name }}</label>
+                                    <label for="title">{{ config('app.locale') == 'ar' ? $setting->display_name : $setting->display_name_en }}</label>
                                     @if ($setting->type == 'text')
                                         <input type="text" name="value[{{ $loop->index }}]" id="value" class="form-control" value="{{ $setting->value }}">
                                     @elseif($setting->type == 'textarea')
@@ -49,7 +49,7 @@
                     @endforeach
 
                     <div class="text-right">
-                        {!! Form::button('Submit', ['type' => 'submit', 'class' => 'btn btn-primary']) !!}
+                        {!! Form::button(__('Backend/settings.submit'), ['type' => 'submit', 'class' => 'btn btn-primary']) !!}
                     </div>
                     {!! Form::close() !!}
                 </div>

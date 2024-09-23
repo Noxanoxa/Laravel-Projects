@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Contact extends Model
 {
-    use SearchableTrait;
+    use HasFactory, SearchableTrait;
 
     protected $searchable = [
         'columns' => [
@@ -22,6 +23,6 @@ class Contact extends Model
 
      public function status ()
      {
-       return $this->status == 1 ? 'Read' : 'New';
+       return $this->status == 1 ? __('Backend/contact_us.read') : __('Backend/contact_us.new');
      }
 }

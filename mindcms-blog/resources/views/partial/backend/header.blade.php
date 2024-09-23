@@ -6,15 +6,28 @@
         <i class="fa fa-bars"></i>
     </button>
 
-
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
+        @if(session()->get('locale') == 'ar')
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('change_locale', 'en')}}">
+                    English  <img src="{{ asset('backend/img/us.png') }}" alt="EN"/>
+                </a>
+            </li>
+        @else
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('change_locale', 'ar')}}">
+                    العربي <img src="{{ asset('backend/img/dz.png') }}" alt="AR"/>
+                </a>
+            </li>
+        @endif
+
 
         @if(auth()->user()->ability('admin', 'manage_supervisors,show_supervisors'))
             <!-- Nav Item - Messages -->
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.supervisors.index') }}">
-                    Supervisors
+                    {{__('Backend/general.supervisors')}}
                 </a>
             </li>
         @endif
@@ -22,7 +35,7 @@
             @if(auth()->user()->ability('admin', 'manage_settings,show_settings'))
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('admin.settings.index') }}">
-                        Settings
+                        {{__('Backend/general.settings')}}
                     </a>
                 </li>
             @endif
@@ -48,12 +61,12 @@
                  aria-labelledby="userDropdown">
                 <a class="dropdown-item" href="#">
                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Profile
+                    {{__('Backend/general.profile')}}
                 </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="javascript:void(0);" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Logout
+                    {{__('Backend/general.logout')}}
                 </a>
                 <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" class="d-none">
                     @csrf

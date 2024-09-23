@@ -1,4 +1,10 @@
 const mix = require('laravel-mix');
+/*
+const notifier = require('node-notifier');
+
+// Set the app ID for notifications
+notifier.appId = 'Laravel Mix';
+*/
 
 /*
  |--------------------------------------------------------------------------
@@ -12,5 +18,6 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
+    .vue()
     .sass('resources/sass/app.scss', 'public/css');
 

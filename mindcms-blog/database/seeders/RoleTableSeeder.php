@@ -7,7 +7,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Faker\Factory;
 
-class RoleTableSeeder extends Seeder
+class  RoleTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -20,22 +20,28 @@ class RoleTableSeeder extends Seeder
 
         $adminRole = Role::create([
             'name' => 'admin',
-            'display_name' => 'Adminstrator',
-            'description' => 'System Adminstrator',
+            'display_name' => 'الادارة',
+            'display_name_en' => 'Adminstrator',
+            'description' => 'مدير النظام',
+            'description_en' => 'System Adminstrator',
             'allowed_route' => 'admin'
         ]);
 
         $editorRole = Role::create([
             'name' => 'editor',
-            'display_name' => 'Supervisor',
-            'description' => 'System Supervisor',
+            'display_name' => 'مشرف',
+            'display_name_en' => 'Supervisor',
+            'description' => 'مشرف النظام',
+            'description_en' => 'System Supervisor',
             'allowed_route' => 'admin'
         ]);
 
         $userRole = Role::create([
             'name' => 'user',
-            'display_name' => 'User',
-            'description' => 'Normal User',
+            'display_name' => 'مستخدم',
+            'display_name_en' => 'User',
+            'description' => 'مستخدم عادي',
+            'description_en' => 'Normal User',
             'allowed_route' => null
         ]);
 
@@ -48,6 +54,18 @@ class RoleTableSeeder extends Seeder
             'password' => bcrypt('123123123'),
             'status' => 1,
             ]);
+
+        $admin->attachRole($adminRole);
+
+        $admin = User::create([
+            'name' => 'Admin2',
+            'username' => 'admin2',
+            'email' => 'admin2@bloggi.test',
+            'mobile' => '0771015413',
+            'email_verified_at' => Carbon::now(),
+            'password' => bcrypt('123123123'),
+            'status' => 1,
+        ]);
 
         $admin->attachRole($adminRole);
 

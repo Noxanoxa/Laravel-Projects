@@ -18,6 +18,14 @@ Route::get('/category/{category_slug}',                 [GeneralController::clas
 Route::get('/tag/{tag_slug}',                           [GeneralController::class, 'tag']);
 Route::post('/contact-us',                              [GeneralController::class, 'do_contact']);
 
+// sidebar
+Route::get('/recent_posts',                             [GeneralController::class, 'get_recent_posts']);
+Route::get('/recent_comments',                          [GeneralController::class, 'get_recent_comments']);
+Route::get('/archives',                                 [GeneralController::class, 'get_archives']);
+Route::get('/tags',                                    [GeneralController::class, 'get_tags']);
+
+
+
 Route::get('/archive/{date}',                           [GeneralController::class, 'archive']);
 Route::get('/author/{username}',                        [GeneralController::class, 'author']);
 

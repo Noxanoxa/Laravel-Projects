@@ -9,7 +9,7 @@
                     <span class="icon text-white-50">
                         <i class="fa fa-plus"></i>
                     </span>
-                    <span class="text">Add new post</span>
+                    <span class="text">{{__('Backend/posts.add_post')}}</span>
                 </a>
             </div>
         </div>
@@ -18,32 +18,32 @@
             <table class="table table-hover">
                 <thead>
                 <tr>
-                    <th>Title</th>
-                    <th>Comments</th>
-                    <th>Status</th>
-                    <th>Category</th>
-                    <th>User</th>
-                    <th>Created at</th>
-                    <th class="text-center" style="width:30px;">Actions</th>
+                    <th>{{__('Backend/posts.title')}}</th>
+                    <th>{{__('Backend/posts.comments')}}</th>
+                    <th>{{__('Backend/posts.status')}}</th>
+                    <th>{{__('Backend/posts.category')}}</th>
+                    <th>{{__('Backend/posts.user')}}</th>
+                    <th>{{__('Backend/posts.created_at')}}</th>
+                    <th class="text-center" style="width:30px;">{{__('Backend/posts.actions')}}</th>
                 </tr>
                 </thead>
                 <tbody>
                 @forelse($posts as $post)
                     <tr>
                         <td><a href="{{route('admin.posts.show', $post->id)}}">{{ $post->title }}</a></td>
-                        <td>{!!  $post->comment_able == 1 ?  '<a href="'.  route('admin.post_comments.index', ['post_id'=>$post->id]) . '">' . $post->comments->count()  . '</a>': 'Disallowed'  !!}</td>
+                        <td>{!!  $post->comment_able == 1 ?  '<a href="'.  route('admin.post_comments.index', ['post_id'=>$post->id]) . '">' . $post->comments->count()  . '</a>': (config('app.locale') == 'ar' ? 'غير مفعل' : 'Disabled') !!}</td>
                         <td>{{ $post->status() }}</td>
                         <td>
-                            <a href="{{route('admin.posts.index', ['category_id' =>$post->category_id])}}">{{ $post->category->name}}</a>
+                            <a href="{{route('admin.posts.index', ['category_id' =>$post->category_id])}}">{{ config('app.locale') == 'ar' ? $post->category->name : $post->category->name_en}}</a>
                         </td>
                         <td>{{ $post->user->name}}</td>
-                        <td>{{ $post->created_at ->format('d-m-Y h:i a')}}</td>
+                        <td>{{ config('app.locale') == 'en' ? $post->created_at ->format('d-m-Y h:i a') :   $post->created_at->locale('ar')->translatedFormat('d-m-Y h:i a') }}</td>
                         <td>
                             <div class="btn-group">
                                 <a href="{{route('admin.posts.edit', $post->id)}}" class="btn btn-primary"><i
                                             class="fa fa-edit"></i></a>
                                 <a href="javascript:void(0);"
-                                   onclick="if(confirm('Are you sure to delete this post? ')) { document.getElementById('post-delete-{{$post->id}}').submit(); } else { return false}"
+                                   onclick="if(confirm('{{__('Backend/posts.are_you_sure')}} ')) { document.getElementById('post-delete-{{$post->id}}').submit(); } else { return false}"
                                    class="btn btn-danger"><i class="fa fa-trash"></i></a>
                                 <form action="{{route('admin.posts.destroy', $post->id)}}" method="post"
                                       id="post-delete-{{$post->id}}">
@@ -55,9 +55,8 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="text-center">No posts found</td>
+                        <td colspan="7" class="text-center">{{ __('Backend/posts.no_posts')}}</td>
                     </tr>
-
                 @endforelse
                 </tbody>
                 <tfoot>

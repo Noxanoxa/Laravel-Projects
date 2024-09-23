@@ -118,8 +118,6 @@ class ViewServiceProvider extends ServiceProvider
 
                 $admin_side_menu = Cache::get('admin_side_menu');
 
-
-
                 $view->with([
                     'admin_side_menu' => $admin_side_menu,
 
