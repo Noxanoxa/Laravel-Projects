@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Backend\Api\ApiController;
 use App\Http\Controllers\Api\General\GeneralController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Users\UsersController;
@@ -19,8 +19,8 @@ Route::get('/tag/{tag_slug}',                           [GeneralController::clas
 Route::post('/contact-us',                              [GeneralController::class, 'do_contact']);
 
 // sidebar
-Route::get('/recent_posts',                             [GeneralController::class, 'get_recent_posts']);
-Route::get('/recent_comments',                          [GeneralController::class, 'get_recent_comments']);
+Route::get('/recent-posts',                             [GeneralController::class, 'get_recent_posts']);
+Route::get('/recent-comments',                          [GeneralController::class, 'get_recent_comments']);
 Route::get('/archives',                                 [GeneralController::class, 'get_archives']);
 Route::get('/tags',                                    [GeneralController::class, 'get_tags']);
 

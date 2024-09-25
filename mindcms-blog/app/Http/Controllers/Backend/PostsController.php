@@ -31,37 +31,29 @@ class PostsController extends Controller
         if (!\auth()->user()->ability('admin', 'manage_posts,show_posts')){
             return redirect('admin/index');
         }
-        $keyword = (isset(\request()->keyword) && \request()->keyword != '') ? \request()->keyword : null;
-        $categoryId = (isset(\request()->categoryId) && \request()->categoryId != '') ? \request()->categoryId : null;
-        $tagId = (isset(\request()->tagId) && \request()->tagId != '') ? \request()->tagId : null;
-        $status = (isset(\request()->status) && \request()->status != '') ? \request()->status : null;
-        $sort_by = (isset(\request()->sort_by) && \request()->sort_by != '') ? \request()->sort_by : 'id';
-        $order_by = (isset(\request()->order_by) && \request()->order_by != '') ? \request()->order_by : 'desc';
-        $limit_by = (isset(\request()->limit_by) && \request()->limit_by != '') ? \request()->limit_by : '10';
+
+        $posts = Post::with(['media', 'user', 'comments'])->post()
+        ->when(request('keyword') != '', function ($query){
+            $query->search(request('keyword'));
+        })
+        ->when(request('category_id') != '', function ($query){
+                $query->whereCategoryId(request('category_id'));
+            })
+        ->when(request('tag_id') != '', function ($query){
+                $query->whereHas('tags', function ($q) {
+                    $q->where('id', request('tag_id'));
+                });
+            })
+        ->when(request('status') != '', function ($query){
+                $query->whereStatus(request('status'));
+            })
+        ->orderBy(request('sort_by') ??  'id', request('order_by') ??  'desc')
+        ->paginate(request('limit_by')?? '10')
+        ->withQueryString();
 
 
-        $posts = Post::with(['media', 'user', 'comments'])->post();
-        if($keyword !=null){
-            $posts = $posts->search($keyword);
-        }
-        if($categoryId !=null) {
-            $posts = $posts->whereCategoryId($categoryId);
-        }
-        if($tagId !=null) {
-            $posts = $posts->whereHas('tags' , function ($query) use ($tagId){
-                $query->where('id', $tagId);
-            });
-        }
-        if($status !=null) {
-            $posts = $posts->whereStatus($status);
-        }
-
-        $posts= $posts->orderBy($sort_by, $order_by);
-        $posts= $posts->paginate($limit_by);
-
-
-        $tags = Tag::orderBy('id', 'desc')->pluck('name', 'id');
-        $categories= Category::orderBy('id', 'desc')->pluck('name', 'id');
+        $tags = Tag::orderBy('id', 'desc')->select('id', 'name', 'name_en')->get();
+        $categories= Category::orderBy('id', 'desc')->select('id', 'name',  'name_en')->get();
         return view('backend.posts.index', compact('posts', 'categories', 'tags'));
     }
 
@@ -70,8 +62,8 @@ class PostsController extends Controller
         if (!\auth()->user()->ability('admin', 'create_posts')){
             return redirect('admin/index');
         }
-        $tags = Tag::pluck('name', 'id');
-        $categories= Category::orderBy('id', 'desc')->pluck('name', 'id');
+        $tags = Tag::select('name', 'id');
+        $categories= Category::orderBy('id', 'desc')->select('name', 'id');
         return view('backend.posts.create', compact('categories', 'tags'));
 
     }
@@ -168,8 +160,8 @@ class PostsController extends Controller
         if (!\auth()->user()->ability('admin', 'update_posts')){
             return redirect('admin/index');
         }
-        $tags = Tag::pluck('name', 'id');
-        $categories= Category::orderBy('id', 'desc')->pluck('name', 'id');
+        $tags = Tag::select('id', 'name', 'name_en')->get();
+        $categories = Category::orderBy('id', 'desc')->select('id', 'name', 'name_en')->get();
         $post = Post::with(['media'])->whereId($id)->post()->first();
         return view('backend.posts.edit', compact('categories', 'post', 'tags'));
 

@@ -3,7 +3,7 @@
 
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex">
-            <h6 class="m-0 font-weight-bold text-primary">Posts</h6>
+            <h6 class="m-0 font-weight-bold text-primary">{{__('Backend/posts.posts')}}</h6>
             <div class="ml-auto">
                 <a href="{{route('admin.posts.create')}}" class="btn btn-primary">
                     <span class="icon text-white-50">
@@ -30,11 +30,11 @@
                 <tbody>
                 @forelse($posts as $post)
                     <tr>
-                        <td><a href="{{route('admin.posts.show', $post->id)}}">{{ $post->title }}</a></td>
+                        <td><a href="{{route('admin.posts.show', $post->id)}}">{{ $post->title() }}</a></td>
                         <td>{!!  $post->comment_able == 1 ?  '<a href="'.  route('admin.post_comments.index', ['post_id'=>$post->id]) . '">' . $post->comments->count()  . '</a>': (config('app.locale') == 'ar' ? 'غير مفعل' : 'Disabled') !!}</td>
                         <td>{{ $post->status() }}</td>
                         <td>
-                            <a href="{{route('admin.posts.index', ['category_id' =>$post->category_id])}}">{{ config('app.locale') == 'ar' ? $post->category->name : $post->category->name_en}}</a>
+                            <a href="{{route('admin.posts.index', ['category_id' =>$post->category_id])}}">{{ $post->category->name() }}</a>
                         </td>
                         <td>{{ $post->user->name}}</td>
                         <td>{{ config('app.locale') == 'en' ? $post->created_at ->format('d-m-Y h:i a') :   $post->created_at->locale('ar')->translatedFormat('d-m-Y h:i a') }}</td>
