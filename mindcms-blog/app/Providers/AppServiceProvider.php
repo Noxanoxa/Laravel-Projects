@@ -30,7 +30,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
 
-    Paginator::useBootstrapThree() ;
+//    Paginator::useBootstrapThree() ;
+        Paginator::defaultView('vendor.pagination.bootstrap-4');
     $locale = config('app.locale') == 'ar' ? 'ar' : config('app.locale');
     App::setLocale($locale);
     Lang::setLocale($locale);

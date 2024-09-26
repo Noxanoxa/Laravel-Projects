@@ -6,7 +6,7 @@
             <div class="col-2">
                 <div class="form-group">
 {{--                    {!! Form::text('keyword', old('keyword', request()->input('keyword')), ['class'=>'form-control', 'placeholder' => __('Backend/posts.search_here')]) !!}--}}
-                    <input type="text" name="keyword" value="{{old('keyword', request('keyword')}}" class="form-control" placeholder="{{__('Backend/posts.search_here')}}">
+                    <input type="text" name="keyword" value="{{old('keyword', request('keyword'))}}" class="form-control" placeholder="{{ __('Backend/posts.search_here')}}">
                 </div>
             </div>
             <div class="col-2">

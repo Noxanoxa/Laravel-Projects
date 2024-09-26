@@ -63,6 +63,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function() {
 
         Route::post('/posts/removeImage/{media_id}',    [Backend\PostsController::class, 'removeImage'])->name('posts.media.destroy');
         Route::resource('posts',                        Backend\PostsController::class);
+        // announcements
+        Route::resource('announcements',                Backend\AnnouncementsController::class);
 
         Route::post('/pages/removeImage/{media_id}',    [Backend\PagesController::class, 'removeImage'])->name('pages.media.destroy');
         Route::resource('pages',                        Backend\PagesController::class);

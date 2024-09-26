@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api\General;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\General\AnnouncementsResource;
 use App\Http\Resources\General\PostCommentsResource;
 use App\Http\Resources\General\TagsResource;
+use App\Http\Resources\Users\UserResource;
 use App\Http\Resources\Users\UsersPostResource;
 use App\Http\Resources\General\PostsResource;
+use App\Models\Announcement;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Contact;
@@ -56,6 +59,21 @@ class GeneralController extends Controller
         }
     }
 
+    public function get_recent_announcements()
+    {
+        $announcements = Announcement::with([ 'user'])
+                     ->whereHas('user', function($query) {
+                         $query->whereStatus(1);
+                     })->whereStatus(1)->orderBy('id', 'desc')->limit(5)->get();
+
+        if($announcements->count() > 0) {
+            return response()->json(['announcements' => AnnouncementsResource::collection($announcements), 'error'=>false], 200);
+        } else {
+            return response()->json(['message' => 'No announcements found', 'error'=>true ], 201);// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
+        }
+
+    }
+
     public function get_recent_comments()
     {
         $comments = Comment::whereStatus(1)->orderBy('id', 'desc')->limit(5)->get();
@@ -65,6 +83,20 @@ class GeneralController extends Controller
             return response()->json(['message' => 'No comments found', 'error'=>true ], 201);// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
         }
     }
+
+    public function get_authors()
+    {
+        $authors = User::whereStatus(1)->whereHas('posts', function($query) {
+            $query->wherePostType('post');
+        })->withCount('posts')->orderBy('id', 'desc')->get();
+
+        if($authors->count() > 0) {
+            return response()->json(['authors' => UserResource::collection($authors), 'error'=>false], 200);
+        } else {
+            return response()->json(['message' => 'No authors found', 'error'=>true ], 201);// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
+        }
+    }
+
 
     public function get_archives()
     {
@@ -124,6 +156,24 @@ class GeneralController extends Controller
         }
     }
 
+    public function show_announcement($slug)
+    {
+        $announcement = Announcement::with(['user']);
+
+        $announcement = $announcement->whereHas('user', function ($query) {
+                         $query->whereStatus('1');
+                     });
+
+        $announcement = Announcement::whereSlug($slug);
+        $announcement = $announcement->active()->first();;
+
+        if ($announcement) {
+            return response()->json(['announcement' => new UsersAnnouncementResource($announcement), 'error'=>false], 200);
+        } else {
+            return response()->json(['message' => 'No announcement found', 'error'=>true ], 201);// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
+        }
+    }
+
     public function search(Request $request)
     {
         $keyword = isset($request->keyword) && $request->keyword != '' ? $request->keyword : null;
@@ -148,8 +198,6 @@ class GeneralController extends Controller
         } else {
             return response()->json(['message' => 'No post found', 'error'=>true ], 201);// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
         }
-
-
 
     }
 
