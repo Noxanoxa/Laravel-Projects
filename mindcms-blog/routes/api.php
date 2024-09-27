@@ -15,6 +15,7 @@ Route::get('/announcement/{slug}', [GeneralController::class, 'show_announcement
 
 Route::get('/all_posts', [GeneralController::class, 'get_posts']);
 Route::get('/post/{slug}', [GeneralController::class, 'show_post']);
+Route::get('/post/{slug}', [GeneralController::class, 'show_page']);
 Route::post('/post/{slug}',                                  [GeneralController::class, 'store_comment']);
 
 

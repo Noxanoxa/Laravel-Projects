@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\General;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\General\AnnouncementsResource;
+use App\Http\Resources\General\PageResource;
 use App\Http\Resources\General\PostCommentsResource;
+use App\Http\Resources\General\PostResource;
 use App\Http\Resources\General\TagsResource;
 use App\Http\Resources\Users\UserResource;
 use App\Http\Resources\Users\UsersPostResource;
@@ -171,19 +173,17 @@ class GeneralController extends Controller
     }
 
 
-public function show_page()
+public function show_page($slug)
 {
+    $page = Post::where('slug_en', $slug);
+    $page = $page->active()->WherePostType('page')->first();
 
-    $page = Post::with([
-        'category',
-        'media',
-        'user',
-        'tags',
-        'approved_comments' => function ($query) {
-            $query->orderBy('id', 'desc');
-        },
-    ]);
-    
+    if ($page) {
+        return response()->json(['page' => new PageResource($page), 'error'=>false], 200);
+    } else {
+        return response()->json(['message' => 'No page found', 'error'=>true ], 201);// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
+    }
+
 
 
 }
