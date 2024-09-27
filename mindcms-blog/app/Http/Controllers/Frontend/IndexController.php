@@ -72,10 +72,12 @@ class IndexController extends Controller
                 $query->whereStatus('1');
             });
 
-        $post = Post::whereSlug($slug);
+//        dd($post);
+        $post = Post::where('slug_en', $slug);
         $post = $post->active()->first();;
 
         if($post) {
+
             $blade = $post->post_type == 'post' ?  'post' : 'page';
             return view('frontend.'. $blade, compact('post'));
 
@@ -243,18 +245,3 @@ class IndexController extends Controller
     }
 }
 
-
-
-/*
-composer dump-autoload
-php artisan clear-compiled
-php artisan view:clear
-php artisan cache:clear
-php artisan config:clear
-php artisan route:clear
-php artisan route:cache
-
-redis-cli
-FLUSHALL
-exit
-*/

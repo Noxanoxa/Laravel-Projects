@@ -85,7 +85,6 @@ class ViewServiceProvider extends ServiceProvider
                 $global_tags = Cache::get('global_tags');
 
 
-
                 if(! Cache::has('global_archives')){
 
                     $global_archives = Post::whereStatus(1)->orderBy('created_at', 'desc')
@@ -98,9 +97,26 @@ class ViewServiceProvider extends ServiceProvider
 
                 $global_archives = Cache::get('global_archives');
 
+                if(! Cache::has('recent_announcements')){
+
+                    $recent_announcements = Post::with(['user'])
+                                                ->whereHas('user', function($query){
+                                            $query->where('status', 1);
+                                        })
+                                        ->whereStatus(1)->orderBy('id', 'desc')->limit(5)->get();
+
+                    Cache::remember('recent_announcements', 3600, function() use($recent_announcements){
+                        return $recent_announcements;
+                    });
+                }
+
+                $recent_announcements = Cache::get('recent_announcements');
+
+
 
                 $view->with([
                     'recent_posts' => $recent_posts,
+                    'recent_announcements' => $recent_announcements,
                     'recent_comments' => $recent_comments,
                     'global_categories' => $global_categories,
                     'global_tags' => $global_tags,

@@ -4,6 +4,7 @@ return [
 
                         'create_announcement' => 'إنشاء اعلان',
                         'title' => 'العنوان',
+                        'title_en' => 'العنوان بالإنجليزية',
                         'announcements' => 'الاعلانات',
                         'announcement' => 'اعلان',
                         'user' => 'المستخدم',
@@ -27,7 +28,9 @@ return [
                         'images' => 'الصور',
                         'description' => 'الوصف',
                         'ur_description' => 'وصفك',
+                        'ur_description_en' => 'وصفك بالإنجليزية',
                         'ur_title' => 'عنوانك',
+                        'ur_title_en' => 'عنوانك بالإنجليزية',
                         'asc' => 'تصاعدي',
                         'desc' => 'تنازلي',
                         'id' => 'الرقم',

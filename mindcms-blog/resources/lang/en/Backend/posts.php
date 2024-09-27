@@ -4,6 +4,7 @@ return [
 
                     'create_post' => 'Create Post',
                     'title' => 'Title',
+                    'title_en' => 'Title in English',
                     'posts' => 'Posts',
                     'post' => 'Post',
                     'comments' => 'Comments',
@@ -29,6 +30,7 @@ return [
                     'no' => 'No',
                     'images' => 'Images',
                     'description' => 'Description',
+                    'description_en' => 'Description in English',
                     'ur_description' => 'Your Description',
                     'ur_title' => 'Your Title',
                     'tags' => 'Tags',
@@ -37,6 +39,7 @@ return [
                     'id' => 'ID',
                     'author' => 'Author',
                     'comment' => 'Comment',
+                    'comment_able'  => 'Allow Comments',
                     'image' => 'Image',
                      'no_comments' => 'No Comments',
                     'update_post' => 'Update Post',

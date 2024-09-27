@@ -41,6 +41,20 @@ class GeneralController extends Controller
         }
     }
 
+    public function get_announcements()
+    {
+        $announcements = Announcement::with(['user'])
+                     ->whereHas('user', function($query) {
+                         $query->whereStatus(1);
+                     })->whereStatus(1)->orderBy('id', 'desc')->get();
+
+        if($announcements->count() > 0) {
+            return response()->json(['announcements' => AnnouncementsResource::collection($announcements), 'error'=>false], 200);
+        } else {
+            return response()->json(['message' => 'No announcements found', 'error'=>true ], 201);// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
+        }
+    }
+
     public function get_recent_posts()
     {
         $posts = Post::with(['category', 'media', 'user'])
@@ -146,7 +160,7 @@ class GeneralController extends Controller
                          $query->whereStatus('1');
                      });
 
-        $post = Post::whereSlug($slug);
+        $post = Post::where('slug_en', $slug);
         $post = $post->active()->post()->first();;
 
         if ($post) {
@@ -156,6 +170,13 @@ class GeneralController extends Controller
         }
     }
 
+
+public function show_page()
+{
+
+
+
+}
     public function show_announcement($slug)
     {
         $announcement = Announcement::with(['user']);

@@ -40,6 +40,7 @@ return [
                         'id' => 'الرقم',
                         'author' => 'الكاتب',
                         'comment' => 'التعليق',
+                        'comment_able'  => 'سماح بالتعليقات',
                         'image' => 'الصورة',
                          'no_comments' => 'لا توجد تعليقات',
                         'update_post' => 'تحديث المقال',

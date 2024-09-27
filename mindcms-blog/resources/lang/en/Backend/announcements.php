@@ -4,6 +4,7 @@ return [
 
     'create_announcement' => 'Create Announcement',
     'title' => 'Title',
+    'title_en' => 'Title in English',
     'announcements' => 'Announcements',
     'announcement' => 'Announcement',
     'user' => 'User',
@@ -27,7 +28,9 @@ return [
     'images' => 'Images',
     'description' => 'Description',
     'ur_description' => 'Your Description',
+    'ur_description_en' => 'Your Description in English',
     'ur_title' => 'Your Title',
+    'ur_title_en' => 'Your Title in English',
     'asc' => 'Ascending',
     'desc' => 'Descending',
     'id' => 'ID',
