@@ -173,7 +173,7 @@ class GeneralController extends Controller
     }
 
 
-public function show_page($slug)
+public function page_show($slug)
 {
     $page = Post::where('slug_en', $slug);
     $page = $page->active()->WherePostType('page')->first();
