@@ -174,6 +174,16 @@ class GeneralController extends Controller
 public function show_page()
 {
 
+    $page = Post::with([
+        'category',
+        'media',
+        'user',
+        'tags',
+        'approved_comments' => function ($query) {
+            $query->orderBy('id', 'desc');
+        },
+    ]);
+    
 
 
 }

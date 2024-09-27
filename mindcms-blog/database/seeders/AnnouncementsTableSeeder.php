@@ -21,7 +21,7 @@ class AnnouncementsTableSeeder extends Seeder
         $faker         = Factory::create();
         $announcements = [];
         $user          = collect(User::where('id', '>', 2)->get()->modelKeys());
-        for ($i = 0; $i < 200; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $days                  = [
                 '01',
                 '02',
@@ -62,7 +62,7 @@ class AnnouncementsTableSeeder extends Seeder
                 '07',
                 '08'
             ];
-            $announcement_date     = "2020-" . Arr::random($months) . "-"
+            $announcement_date     = "2024-" . Arr::random($months) . "-"
                                      . Arr::random($days) . " 01:01:01";
             $announcement_title    = $faker->sentence(mt_rand(3, 6), true);
             $announcement_title_en = $faker->sentence(mt_rand(3, 6), true);
@@ -80,7 +80,7 @@ class AnnouncementsTableSeeder extends Seeder
                 'updated_at'     => $announcement_date,
             ];
         }
-        $chunks = array_chunk($announcements, 500);
+        $chunks = array_chunk($announcements, 5);
         foreach ($chunks as $chunk) {
             Announcement::insert($chunk);
         }
