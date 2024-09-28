@@ -176,7 +176,7 @@ class GeneralController extends Controller
 public function page_show($slug)
 {
     $page = Post::where('slug_en', $slug);
-    $page = $page->active()->WherePostType('page')->first();
+    $page = $page->active()->Where('post_type', 'page')->first();
 
     if ($page) {
         return response()->json(['page' => new PageResource($page), 'error'=>false], 200);

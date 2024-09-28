@@ -17,7 +17,6 @@ class PageResource extends JsonResource
         return [
             'title' => $this->title,
             'slug' => $this->slug,
-            'url' => route('frontend.pages.show', $this->slug),
             'description' => $this->description,
             'status' => $this->status(),
             'created_date' => $this->created_at->format('d-m-Y h:i a'),
