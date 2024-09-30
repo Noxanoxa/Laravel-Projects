@@ -4,6 +4,7 @@ return [
 
                         'create_post' => 'إنشاء مقال',
                         'title' => 'العنوان',
+                        'title_en' => 'العنوان (بالإنجليزية)',
                         'posts' => 'المقالات',
                         'post' => 'مقال',
                         'comments' => 'التعليقات',
@@ -30,8 +31,9 @@ return [
                         'deselect_all' => 'إلغاء تحديد الكل',
                         'yes' => 'نعم',
                         'no' => 'لا',
-                        'images' => 'الصور',
+                        'sliders' => 'الشرائح',
                         'description' => 'الوصف',
+                        'description_en' => 'الوصف (بالإنجليزية)',
                         'ur_description' => 'وصفك',
                         'ur_title' => 'عنوانك',
                         'tags' => 'الوسوم',

@@ -23,7 +23,7 @@ class CommentsTableSeeder extends Seeder
         $users   = collect(User::where('id', '>', 2)->get()->modelKeys());
         $posts   = collect(Post::wherePostType('post')->whereStatus(1)->whereCommentAble(1)->get());
         $comments = [];
-        for ($i = 0; $i < 5000; $i++) {
+        for ($i = 0; $i < 500; $i++) {
 
             $selected_post = $posts->random();
             $post_date = $selected_post->created_at->timestamp;
@@ -43,7 +43,7 @@ class CommentsTableSeeder extends Seeder
             ];
         }
 
-        $chunks = array_chunk($comments, 500);
+        $chunks = array_chunk($comments, 50);
         foreach ($chunks as $chunk) {
             Comment::insert($chunk);
         }

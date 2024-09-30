@@ -16,37 +16,57 @@
             </div>
         </div>
         <div class="card-body">
-            {!! Form::model($post, ['route' => ['admin.posts.update', $post->id], 'method' => 'patch', 'files' => true]) !!}
-            <div class="row">
-                <div class="col-12">
-                    <div class="form-group">
-                        {!! Form::label('title', __('Backend/posts.title')) !!}
-                        {!! Form::text('title', old('title', config('app.locale') == 'ar' ? $post->title : $post->title_en), ['class' => 'form-control', 'placeholder' => __('Backend/posts.ur_title') ]) !!}
-                        @error('title')<span class="text-danger">{{ $message }}</span>@enderror
+            <form method="post" action="{{route('admin.posts.update', $post->id)}}" enctype="multipart/form-data">
+                @csrf
+                @method('PATCH')
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="title">{{__('Backend/posts.title')}}</label>
+                            <input type="text" name="title" value="{{old('title', $post->title)}}" class="form-control" placeholder="{{__('Backend/posts.ur_title')}}">
+                            @error('title')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="title_en">{{__('Backend/posts.title_en')}}</label>
+                            <input type="text" name="title_en" value="{{old('title_en', $post->title_en)}}" class="form-control" placeholder="{{__('Backend/posts.ur_title_en')}}">
+                            @error('title_en')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="form-group">
-                        {!! Form::label('description', __('Backend/posts.description')) !!}
-                        {!! Form::textarea('description', old('description', $post->description), ['class' => 'form-control summernote', 'placeholder' => __('Backend/posts.ur_description') ]) !!}
-                        @error('description')<span class="text-danger">{{ $message }}</span>@enderror
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="description">{{__('Backend/posts.description')}}</label>
+                            <textarea name="description" class="form-control summernote" placeholder="{{__('Backend/posts.ur_description')}}">{!! old('description', $post->description) !!}</textarea>
+                            @error('description')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="description_en">{{__('Backend/posts.description_en')}}</label>
+                            <textarea name="description_en" class="form-control summernote" placeholder="{{__('Backend/posts.ur_description_en')}}">{!! old('description_en' , $post->description_en) !!}</textarea>
+                            @error('description')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="form-group">
-{{--                        {{ dd($tags) }}--}}
-                        {!! Form::label('tags', __('Backend/posts.tags')) !!}
-                        <button type="button" class="btn btn-primary btn-xs" id="select_btn_tag">{{__('Backend/posts.select_all')}}</button>
-                        <button type="button" class="btn btn-primary btn-xs" id="deselect_btn_tag">{{__('Backend/posts.deselect_all')}}</button>
-                        {!! Form::select('tags[]', $tags->toArray(), old('tags', $tags->toArray()), ['class' => 'form-control selects', 'multiple' => 'multiple', 'id' => 'select_all_tags' ]) !!}
-                        @error('tags')<span class="text-danger">{{ $message }}</span>@enderror
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="tags">{{__('Backend/posts.tags')}}</label>
+                            <button type="button" class="btn btn-primary btn-xs" id="select_btn_tag">{{__('Backend/posts.select_all')}}</button>
+                            <button type="button" class="btn btn-primary btn-xs" id="deselect_btn_tag">{{__('Backend/posts.deselect_all')}}</button>
+                            <select name="tags[]" class="form-control selects" multiple="multiple" id="select_all_tags">
+                                @foreach($tags as $tag)
+                                    <option value="{{$tag->id}}" {{ in_array($tag->id, old('tags', )) == $tag->id ? 'selected' : ''   }}>{{$tag->name()}}</option>
+                                @endforeach
+                            </select>
+                            @error('tags')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
                     </div>
                 </div>
-            </div>
             <div class="row">
                 <div class="col-4">
                     {!! Form::label('category_id', __('Backend/posts.category')) !!}

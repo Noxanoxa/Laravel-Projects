@@ -26,7 +26,7 @@ class PostsTableSeeder extends Seeder
         $categories = collect(Category::all()->modelKeys());
         $user = collect(User::where('id', '>', 2)->get()->modelKeys());
 
-        for ($i = 0; $i < 980; $i++) {
+        for ($i = 0; $i < 80; $i++) {
             $days = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28'];
             $months = ['01', '02', '03', '04', '05', '06', '07', '08'];
             $post_date = "2020-" . Arr::random($months) . "-" . Arr::random($days) . " 01:01:01";
@@ -51,7 +51,7 @@ class PostsTableSeeder extends Seeder
             ];
         }
 
-        $chunks = array_chunk($posts, 500);
+        $chunks = array_chunk($posts, 50);
         foreach ($chunks as $chunk) {
             Post::insert($chunk);
         }

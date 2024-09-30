@@ -17,7 +17,6 @@
             </div>
         </div>
         <div class="card-body">
-{{--            {!! Form::open(['route' => 'admin.posts.store', 'method' => 'post', 'files' => true]) !!}--}}
             <form method="post" action="{{route('admin.posts.store')}}" enctype="multipart/form-data">
                 @csrf
             <div class="row">
@@ -37,7 +36,14 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="description">{{__('Backend/posts.description')}}</label>
+                    <textarea name="description" class="form-control summernote" placeholder="{{__('Backend/posts.ur_description')}}">{!! old('description') !!}</textarea>
+                        @error('description')<span class="text-danger">{{ $message }}</span>@enderror
+                    </div>
+                </div>
+                <div class="col-6">
                     <div class="form-group">
                         <label for="description_en">{{__('Backend/posts.description_en')}}</label>
                     <textarea name="description_en" class="form-control summernote" placeholder="{{__('Backend/posts.ur_description_en')}}">{!! old('description_en') !!}</textarea>
@@ -53,7 +59,7 @@
                         <button type="button" class="btn btn-primary btn-xs" id="deselect_btn_tag">{{__('Backend/posts.deselect_all')}}</button>
                         <select name="tags[]" class="form-control selects" multiple="multiple" id="select_all_tags">
                             @foreach($tags as $tag)
-                                <option value="{{$tag->id}}">{{$tag->name()}}</option>
+                                <option value="{{$tag->id}}" {{ in_array($tag->id, old('tags')) == $tag->id ? 'selected' : ''   }}>{{$tag->name()}}</option>
                             @endforeach
                         </select>
                         @error('tags')<span class="text-danger">{{ $message }}</span>@enderror
@@ -67,7 +73,7 @@
                     <select name="category_id" class="form-control">
                         <option value="">---</option>
                         @foreach($categories as $category)
-                            <option value="{{$category->id}}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{$category->name()}}</option>
+                            <option value="{{$category->id}}" {{ in_array($category->id, old('categories')) == $category->id ? 'selected' : '' }} >{{$category->name()}}</option>
                         @endforeach
                     </select>
                     @error('category_id')<span class="text-danger">{{ $message }}</span>@enderror
@@ -91,7 +97,7 @@
             </div>
             <div class="row pt-4">
                 <div class="col-12">
-                    <label for="Sliders">{{__('Backend/posts.images')}}</label>
+                    <label for="images">{{__('Backend/posts.sliders')}}</label>
                     <br>
                     <div class="file-loading">
                         <input type="file" name="images[]" id="post-images" class="file-input-overview" multiple="multiple">
@@ -103,7 +109,7 @@
             <div class="form-group pt-4">
                 <button type="submit" class="btn btn-primary">{{__('Backend/posts.submit')}}</button>
             </div>
-            {!! Form::close() !!}
+            </form>
         </div>
     </div>
 

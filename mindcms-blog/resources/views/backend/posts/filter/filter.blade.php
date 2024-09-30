@@ -11,7 +11,6 @@
             </div>
             <div class="col-2">
                 <div class="form-group">
-{{--                    {!! Form::select('category_id', [''=>'---' ] +   $categories->toArray() ,old('category_id', request()->input('category_id')), ['class'=>'form-control']) !!}--}}
                     <select name="category_id" class="form-control">
                         <option value="">---</option>
                         @foreach($categories as $category)
