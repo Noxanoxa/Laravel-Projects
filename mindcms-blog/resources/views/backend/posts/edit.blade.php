@@ -60,7 +60,7 @@
                             <button type="button" class="btn btn-primary btn-xs" id="deselect_btn_tag">{{__('Backend/posts.deselect_all')}}</button>
                             <select name="tags[]" class="form-control selects" multiple="multiple" id="select_all_tags">
                                 @foreach($tags as $tag)
-                                    <option value="{{$tag->id}}" {{ in_array($tag->id, old('tags', )) == $tag->id ? 'selected' : ''   }}>{{$tag->name()}}</option>
+                                    <option value="{{$tag->id}}" {{ in_array($tag->id, old('tags', $post->tags )) == $tag->id ? 'selected' : ''   }}>{{$tag->name()}}</option>
                                 @endforeach
                             </select>
                             @error('tags')<span class="text-danger">{{ $message }}</span>@enderror
@@ -69,32 +69,47 @@
                 </div>
             <div class="row">
                 <div class="col-4">
-                    {!! Form::label('category_id', __('Backend/posts.category')) !!}
-                    {!! Form::select('category', ['' => '---' ] + $categories->toArray() ,  old('category_id', $post->category_id), ['class' => 'form-control' ]) !!}
+                    <label for="category_id">{{__('Backend/posts.category')}}</label>
+                    <select name="category_id" class="form-control">
+                        <option value="">---</option>
+                        @foreach($categories as $category)
+                            <option value="{{$category->id}}" {{  old('category_id', $post->category_id ) == $category->id ? 'selected' : '' }} >{{$category->name()}}</option>
+                        @endforeach
+                    </select>
                     @error('category_id')<span class="text-danger">{{ $message }}</span>@enderror
                 </div>
                 <div class="col-4">
-                    {!! Form::label('comment_able', "comment_able") !!}
-                    {!! Form::select('comment_able', ['0' => __('Backend/posts.no'), '1' => __('Backend/posts.yes') ],  old('comment_able', $post->comment_able), ['class' => 'form-control' ]) !!}
+                    <label for="comment_able">{{__('Backend/posts.comment_able')}}</label>
+                    <select name="comment_able" class="form-control">
+                        <option value="0" {{ old('comment_able', $post->comment_able) == '0' ? 'selected' : '' }}>{{__('Backend/posts.no')}}</option>
+                        <option value="1" {{ old('comment_able', $post->comment_able) == '1' ? 'selected' : '' }}>{{__('Backend/posts.yes')}}</option>
+                    </select>
                     @error('comment_able')<span class="text-danger">{{ $message }}</span>@enderror
                 </div>
                 <div class="col-4">
-                    {!! Form::label('status', __('Backend/posts.status')) !!}
-                    {!! Form::select('status', ['1' => __('Backend/posts.active'), '0' => __('Backend/posts.inactive') ],  old('status', $post->status), ['class' => 'form-control']) !!}
+                    <label for="status">{{__('Backend/posts.status')}}</label>
+                    <select name="status" class="form-control">
+                        <option value="1" {{ old('status', $post->status) == '1' ? 'selected' : '' }}>{{__('Backend/posts.active')}}</option>
+                        <option value="0" {{ old('status', $post->status) == '0' ? 'selected' : '' }}>{{__('Backend/posts.inactive')}}</option>
+                    </select>
                     @error('status')<span class="text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
-            <div class="row pt-4">
-                <div class="col-12">
-                    <div class="file-loading">
-                        {!! Form::file('images[]', ['id' => 'post-images', 'multiple' => 'multiple']) !!}
+                <div class="row pt-4">
+                    <div class="col-12">
+                        <label for="images">{{__('Backend/posts.sliders')}}</label>
+                        <br>
+                        <div class="file-loading">
+                            <input type="file" name="images[]" id="post-images" class="file-input-overview" multiple="multiple">
+                            <span class="form-text text-muted">{{__('Backend/posts.image_note')}}</span>
+                            @error('images')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="form-group pt-4">
-                {!! Form::submit(__('Backend/posts.submit'), ['class' => 'btn btn-primary']) !!}
-            </div>
-            {!! Form::close() !!}
+                <div class="form-group pt-4">
+                    <button type="submit" class="btn btn-primary">{{__('Backend/posts.update_post')}}</button>
+                </div>
+            </form>
         </div>
     </div>
 

@@ -34,7 +34,7 @@ class GeneralController extends Controller
                      ->whereHas('user', function($query) {
                          $query->whereStatus('1');
                      })
-                     ->post()->active()->orderBy('id', 'desc')->get();
+                     ->post()->active()->orderBy('id', 'desc')->paginate(10);
 
         if($posts->count() > 0) {
         return PostsResource::collection($posts);

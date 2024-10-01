@@ -16,17 +16,17 @@
                 <table class="table table-hover">
                     <tbody>
                         <tr>
-                            <td colspan="4"><a href="{{route('admin.posts.show', $post->id)}}">{{ config('app.locale') =='en' ? $post->title_en : $post->title }}</a></td>
+                            <td colspan="4"><a href="{{route('admin.posts.show', $post->id)}}">{{  $post->title() }}</a></td>
                         </tr>
                         <tr>
                             <th>{{__('Backend/posts.comments')}}</th>
-                            <td>{{ $post->comment_able == 1 ? $post->comments->count() : (config('app.locale') =='en' ? 'Not Allowed' : 'غير مسموح') }}</td>
+                            <td>{{ $post->comment_able == 1 ? $post->comments->count() : __('Backend/posts.disallow') }}</td>
                             <th>{{__('Backend/posts.status')}}</th>
                             <td>{{ $post->status() }}</td>
                         </tr>
                         <tr>
                             <th>{{__('Backend/posts.category')}}</th>
-                            <td>{{ $post->category->name}}</td>
+                            <td>{{ $post->category->name()}}</td>
                             <th>{{__('Backend/posts.author')}}</th>
                             <td>{{ $post->user->name}}</td>
                         </tr>

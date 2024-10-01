@@ -43,6 +43,7 @@ return [
                     'image' => 'Image',
                      'no_comments' => 'No Comments',
                     'update_post' => 'Update Post',
+                     'disallow' =>'Disallow'
 
 ];
 
