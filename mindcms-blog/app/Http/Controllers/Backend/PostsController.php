@@ -75,7 +75,9 @@ class PostsController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'title'          => 'required',
+            'title_en' => 'required',
             'description'    => 'required|min:50',
+            'description_en' => 'required|min:50',
             'status'         => 'required',
             'comment_able'   => 'required',
             'category_id'    => 'required',
@@ -88,7 +90,9 @@ class PostsController extends Controller
         }
 
         $data ['title']                   = $request->title;
+        $data ['title_en']                   = $request->title_en;
         $data ['description']             = Purify::clean($request->description);
+        $data ['description_en']             = Purify::clean($request->description_en);
         $data ['status']                  = $request->status;
         $data ['post_type']                  = 'post';
         $data ['comment_able']            = $request->comment_able;
@@ -162,7 +166,7 @@ class PostsController extends Controller
         }
         $tags = Tag::select('id', 'name', 'name_en')->get();
         $categories = Category::orderBy('id', 'desc')->select('id', 'name', 'name_en')->get();
-        $post = Post::with(['media'])->whereId($id)->post()->first();
+        $post = Post::with('media')->whereId($id)->post()->first();
         return view('backend.posts.edit', compact('categories', 'post', 'tags'));
 
     }
@@ -174,7 +178,9 @@ class PostsController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'title'          => 'required',
+            'title_en' => 'required',
             'description'    => 'required|min:50',
+            'description_en' => 'required|min:50',
             'status'         => 'required',
             'comment_able'   => 'required',
             'category_id'    => 'required',
@@ -189,8 +195,11 @@ class PostsController extends Controller
         $post = Post::whereId($id)->post()->first();
         if($post) {
             $data ['title']                   = $request->title;
+            $data ['title_en']                   = $request->title_en;
             $data ['slug']                   = null;
+            $data ['slug_en']                   = null;
             $data ['description']             = Purify::clean($request->description);
+            $data ['description_en']             = Purify::clean($request->description_en);
             $data ['status']                  = $request->status;
             $data ['comment_able']            = $request->comment_able;
             $data ['category_id']             = $request->category_id;

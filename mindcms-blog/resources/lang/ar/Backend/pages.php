@@ -1,8 +1,5 @@
 <?php
-
 return [
-
-            //  Page create
             'create_page' => 'إنشاء صفحة',
             'pages' => 'الصفحات',
             'page' => 'الصفحة',
@@ -14,25 +11,16 @@ return [
             'inactive' => 'غير نشط',
             'images' => 'الصور',
             'submit' => 'إرسال',
-
-
-    //  Page index
             'actions'                      => 'الإجراءات',
             'user' => 'المستخدم',
             'add_page' => 'إضافة صفحة',
-
-
-
             'are_you_sure'            => 'هل أنت متأكد من حذف هذه الصفحة؟',
             'no_page'              => 'لم يتم العثور على صفحة',
             'messages' => 'الرسائل',
-
             'images_note' => 'يجب أن يكون عرض الصورة 800 بكسل × 500 بكسل',
-        'edit_page' => 'تعديل الصفحة',
-    'author' => 'المؤلف',
-
-
-//    filter section
+            'edit_page' => 'تعديل الصفحة',
+            'update_page' => 'تحديث الصفحة',
+            'author' => 'المؤلف',
             'keyword'                   =>  'الكلمة المفتاحية',
             'status'                        =>   'الحالة',
             'sort_by'                      =>    'ترتيب حسب',
@@ -47,5 +35,4 @@ return [
             'new' => 'جديد',
             'asc' => 'تصاعدي',
             'desc' => 'تنازلي',
-
 ];

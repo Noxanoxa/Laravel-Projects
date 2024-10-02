@@ -21,7 +21,7 @@ class AnnouncementsTableSeeder extends Seeder
         $faker         = Factory::create();
         $announcements = [];
         $user          = collect(User::where('id', '>', 2)->get()->modelKeys());
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $days                  = [
                 '01',
                 '02',
