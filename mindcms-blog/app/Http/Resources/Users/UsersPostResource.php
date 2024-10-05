@@ -17,8 +17,11 @@ class UsersPostResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'title_en' => $this->title_en,
             'slug' => $this->slug,
+            'slug_en' => $this->slug_en,
             'description' => $this->description,
+            'description_en' => $this->description_en,
             'status' => $this->status,
             'status_text' => $this->status(),
             'comment_able' => $this->comment_able,
