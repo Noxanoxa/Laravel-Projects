@@ -85,34 +85,34 @@
                         <div class="comment_respond">
                             <h3 class="reply_title">Leave a Reply <small></small></h3>
 
-                            {!! Form::open(['route' => ['frontend.posts.add_comment', $post->slug], 'method' => 'post', 'class' => 'comment__form']) !!}
-                                <p>Your email address will not be published.Required fields are marked </p>
+                            <form method="post" action="{{route('frontend.posts.add_comment', $post->slug)}}" enctype="multipart/form-data">
+                                @csrf
+                                <p>{{ __('auth.your_email_address_will_not_be_published') }}</p>
                                 <div class="input__box">
-                                    {!! Form::textarea('comment', old('comment'), ['placeholder' => 'Your comment here']) !!}
+                                 <textarea name="comment" placeholder="Your comment here">{{ old('comment') }}</textarea>
                                     @error('comment') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="input__wrapper clearfix">
                                     <div class="input__box name one--third">
-                                        {!! Form::text('name', old('name'), ['placeholder' => 'Your name here']) !!}
+                                        <input type="text" name="name" placeholder="Your name here" value="{{ old('name') }}">
                                         @error('name') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                     <div class="input__box email one--third">
-                                        {!! Form::email('email', old('email'), ['placeholder' => 'Your email here']) !!}
+                                        <input type="email" name="email" placeholder="Your email here" value="{{ old('email') }}">
                                         @error('email') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                     <div class="input__box website one--third">
-                                        {!! Form::text('url', old('url'), ['placeholder' => 'Your URL here']) !!}
+                                        <input type="text" name="url" placeholder="Your website here" value="{{ old('url') }}">
                                         @error('url') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
                                 <div class="submite__btn">
-                                    {!! Form::submit('Post Comment', ['class' => 'btn btn-primary'])  !!}
+                                    <button type="submit" class="btn btn-primary">{{ __('auth.post_comment') }}</button>
                                 </div>
-                            {!! Form::close() !!}
+                            </form>
                         </div>
                     </div>
                 </div>
-                {{-- Start Sidebar Area--}}
                 <div class="col-lg-3 col-12 md-mt-40 sm-mt-40">
                     @include('partial.frontend.sidebar')
                 </div>

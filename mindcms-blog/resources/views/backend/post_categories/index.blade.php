@@ -42,7 +42,7 @@
                         <tr>
                             <td>
                                {{-- <a href="{{route('admin.post_categories.show', $category->id)}}">--}}
-                                    {{ config('app.locale') == 'ar' ? $category->name : $category->name_en  }}
+                                    {{ $category->name()   }}
                     {{--            </a>--}}
                             </td>
                             <td><a href="{{route('admin.posts.index', ['category_id' =>$category->id])}}">{{ $category->posts_count }}</a></td>
@@ -71,7 +71,7 @@
                     <tr>
                         <th colspan="5">
                             <div class="float-right">
-                            {!!  $categories->appends(request()->input())->links() !!}
+                            {!!  $categories->links() !!}
                             </div>
                         </th>
                     </tr>

@@ -18,12 +18,13 @@
             </div>
         </div>
         <div class="card-body">
-            {!! Form::open(['route' => 'admin.pages.store', 'method' => 'post', 'files' => true]) !!}
+            <form method="post" action="{{route('admin.pages.store')}}" enctype="multipart/form-data">
+                @csrf
             <div class="row">
                 <div class="col-12">
                     <div class="form-group">
-                        {!! Form::label('title', __('backend/pages.title')) !!}
-                        {!! Form::text('title', old('title'), ['class' => 'form-control', 'placeholder' => __('Backend/pages.ur_title') ]) !!}
+                        <label for="title">{{__('backend/pages.title')}}</label>
+                        <input type="text" name="title" class="form-control" placeholder="{{__('backend/pages.ur_title')}}" value="{{old('title')}}">
                         @error('title')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
@@ -31,30 +32,36 @@
             <div class="row">
                 <div class="col-12">
                     <div class="form-group">
-                        {!! Form::label('description', __('backend/pages.description')) !!}
-                        {!! Form::textarea('description', old('description'), ['class' => 'form-control summernote', 'placeholder' => __('backend/pages.ur_description')]) !!}
+                        <label for="description">{{__('backend/pages.description')}}</label>
+                        <textarea name="description" class="form-control summernote" placeholder="{{__('backend/pages.ur_description')}}">{{old('description')}}</textarea>
                         @error('description')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-6">
-                    {!! Form::label('category_id', __('backend/pages.category')) !!}
-                    {!! Form::select('category_id', ['' => '---' ] + $categories->toArray() ,  old('category_id'), ['class' => 'form-control' ]) !!}
+                    <label for="category_id">{{__('backend/pages.category')}}</label>
+                    <select name="category_id" class="form-control">
+                        <option value="">---</option>
+                        @foreach($categories as $key => $category)
+                            <option value="{{ $key }}"> {{ $category }} </option>
+                        @endforeach
                     @error('category_id')<span class="text-danger">{{ $message }}</span>@enderror
                 </div>
                 <div class="col-6">
-                    {!! Form::label('status', __('backend/pages.status')) !!}
-                    {!! Form::select('status', ['1' => __('backend/pages.active'), '0' =>  __('backend/pages.inactive') ],  old('status'), ['class' => 'form-control']) !!}
+                    <label for="status">{{__('backend/pages.status')}}</label>
+                    <select name="status" class="form-control">
+                        <option value="1"> {{__('backend/pages.active')}} </option>
+                        <option value="0"> {{__('backend/pages.inactive')}} </option>
                     @error('status')<span class="text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
             <div class="row pt-4">
                 <div class="col-12">
-                    {!! Form::label('Sliders', __('backend/pages.images')) !!}_
+                    <label for="images">{{__('backend/pages.images')}}</label>
                     <br>
                     <div class="file-loading">
-                        {!! Form::file('images[]', ['id' => 'page-images', 'class' => 'file-input-overview', 'multiple' => 'multiple']) !!}
+                        <input id="page-images" type="file" name="images[]" class="file" data-overwrite-initial="false" data-min-file-count="2">
                         <span class="form-text text-muted">
                             {{__('backend/pages.images_note')}}
                         </span>
@@ -63,7 +70,7 @@
                 </div>
             </div>
             <div class="form-group pt-4">
-                {!! Form::submit( __('backend/pages.submit'), ['class' => 'btn btn-primary']) !!}
+                <button type="submit" class="btn btn-primary">{{__('backend/pages.submit')}}</button>
             </div>
             {!! Form::close() !!}
         </div>

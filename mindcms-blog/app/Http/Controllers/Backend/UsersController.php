@@ -31,27 +31,20 @@ class UsersController extends Controller
         if (!\auth()->user()->ability('admin', 'manage_users,show_users')){
             return redirect('admin/index');
         }
-        $keyword = (isset(\request()->keyword) && \request()->keyword != '') ? \request()->keyword : null;
-        $status = (isset(\request()->status) && \request()->status != '') ? \request()->status : null;
-        $sort_by = (isset(\request()->sort_by) && \request()->sort_by != '') ? \request()->sort_by : 'id';
-        $order_by = (isset(\request()->order_by) && \request()->order_by != '') ? \request()->order_by : 'desc';
-        $limit_by = (isset(\request()->limit_by) && \request()->limit_by != '') ? \request()->limit_by : '10';
 
 
         $users = User::whereHas('roles', function ($query) {
             $query->where('name', 'user');
-        });
-
-        if($keyword !=null){
-            $users = $users->search($keyword);
-        }
-
-        if($status !=null) {
-            $users = $users->status();
-        }
-
-        $users= $users->orderBy($sort_by, $order_by);
-        $users= $users->paginate($limit_by);
+        })
+            ->when(request('keyword') != '', function ($query){
+                $query->search(request('keyword'));
+            })
+            ->when(request('status') != '', function ($query){
+                $query->whereStatus(request('status'));
+            })
+            ->orderBy(request('sort_by') ??  'id', request('order_by') ??  'desc')
+            ->paginate(request('limit_by')?? '10')
+            ->withQueryString();
 
         return view('backend.users.index', compact('users'));
     }

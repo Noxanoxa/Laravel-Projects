@@ -14,20 +14,28 @@
             </div>
         </div>
         <div class="card-body">
-            {!! Form::open(['route' => 'admin.post_tags.store', 'method' => 'post']) !!}
+            <form method="post" action="{{route('admin.post_tags.store')}}">
+                @csrf
             <div class="row">
-                <div class="col-12">
+                <div class="col-6">
                     <div class="form-group">
-                        {!! Form::label('name', __('Backend/post_tags.name')) !!}
-                        {!! Form::text('name', old('name'), ['class' => 'form-control', 'placeholder' => __('Backend/post_tags.ur_name')]) !!}
+                        <label for="name">{{__('Backend/post_tags.name')}}</label>
+                        <input type="text" name="name" value="{{old('name')}}" class="form-control">
                         @error('name')<span class="text-danger">{{ $message }}</span>@enderror
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="name_en">{{__('Backend/post_tags.name_en')}}</label>
+                        <input type="text" name="name_en" value="{{old('name_en')}}" class="form-control" >
+                        @error('name_en')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
             </div>
             <div class="form-group pt-4">
-                {!! Form::submit(__('Backend/post_tags.submit'), ['class' => 'btn btn-primary']) !!}
+                <button type="submit" class="btn btn-primary">{{__('Backend/post_tags.submit')}}</button>
             </div>
-            {!! Form::close() !!}
+            </form>
         </div>
     </div>
 @endsection

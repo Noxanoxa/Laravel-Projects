@@ -63,7 +63,7 @@
                 <tr>
                     <th colspan="7">
                         <div class="float-right">
-                            {!!  $posts->appends(request()->input())->links() !!}
+                            {!!  $posts->links() !!}
                         </div>
                     </th>
                 </tr>

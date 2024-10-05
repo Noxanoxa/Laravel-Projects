@@ -10,7 +10,7 @@
                 <div class="card-body">
                     {{ __('Backend/auth.please_confirm') }}
 
-                    <form method="POST" action="{{ route('password.confirm') }}">
+                    <form method="post" action="{{ route('password.confirm') }}">
                         @csrf
 
                         <div class="form-group row">

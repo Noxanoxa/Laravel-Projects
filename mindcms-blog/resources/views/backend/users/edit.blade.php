@@ -3,44 +3,46 @@
 
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex">
-            <h6 class="m-0 font-weight-bold text-primary">Edit User ({{ $user->name }})</h6>
+            <h6 class="m-0 font-weight-bold text-primary">{{__('Backend/users.edit_users')}}({{ $user->name }})</h6>
             <div class="ml-auto">
                 <a href="{{route('admin.users.index')}}" class="btn btn-primary">
                     <span class="icon text-white-50">
                         <i class="fa fa-home"></i>
                     </span>
-                    <span class="text">Users</span>
+                    <span class="text">{{__('Backend/users.users')}}</span>
                 </a>
             </div>
         </div>
         <div class="card-body">
-            {!! Form::model($user, ['route' => ['admin.users.update', $user->id], 'method' => 'patch', 'files' => true]) !!}
+            <form method="post" action="{{route('admin.users.update', $user->id)}}" enctype="multipart/form-data">
+            @csrf
+            @method('PATCH')
             <div class="row">
                 <div class="col-3">
                     <div class="form-group">
-                        {!! Form::label('name', "Name") !!}
-                        {!! Form::text('name', old('name', $user->name), ['class' => 'form-control', 'placeholder' => 'Your Name' ]) !!}
+                        <label for="name">{{__('Backend/users.name')}}</label>
+                        <input type="text" name="name" value="{{ old('name', $user->name) }}" class="form-control">
                         @error('name')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
                 <div class="col-3">
                     <div class="form-group">
-                        {!! Form::label('username', "Username") !!}
-                        {!! Form::text('username', old('username', $user->usrname), ['class' => 'form-control', 'placeholder' => 'Your Username' ]) !!}
+                        <label for="username">{{__('Backend/users.username')}}</label>
+                        <input type="text" name="username" value="{{ old('username', $user->username) }}" class="form-control">
                         @error('username')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
                 <div class="col-3">
                     <div class="form-group">
-                        {!! Form::label('email', "Email") !!}
-                        {!! Form::text('email', old('email', $user->email), ['class' => 'form-control', 'placeholder' => 'Your Email' ]) !!}
+                        <label for="email">{{__('Backend/users.email')}}</label>
+                        <input type="email" name="email" value="{{ old('email', $user->email) }}" class="form-control">
                         @error('email')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
                 <div class="col-3">
                     <div class="form-group">
-                        {!! Form::label('mobile', "Mobile") !!}
-                        {!! Form::text('mobile', old('mobile', $user->mobile), ['class' => 'form-control', 'placeholder' => 'Your Mobile' ]) !!}
+                        <label for="mobile">{{__('Backend/users.mobile')}}</label>
+                        <input type="text" name="mobile" value="{{ old('mobile', $user->mobile) }}" class="form-control">
                         @error('mobile')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
@@ -48,22 +50,29 @@
             <div class="row">
                 <div class="col-3">
                     <div class="form-group">
-                        {!! Form::label('password', "Password") !!}
-                        {!! Form::password('password', ['class' => 'form-control', 'placeholder' => 'Your Password' ]) !!}
+                        <label for="password">{{__('Backend/users.password')}}</label>
+                        <input type="password" name="password" value="{{ old('password') }}" class="form-control">
                         @error('password')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
                 <div class="col-3">
                     <div class="form-group">
-                        {!! Form::label('status', "Status") !!}
-                        {!! Form::select('status',['' => '---', '1' => 'Active', '0' => 'Inactive'], old('status', $user->status), ['class' => 'form-control']) !!}
+                        <label for="status">{{__('Backend/users.status')}}</label>
+                        <select name="status" class="form-control">
+                            <option value="">---</option>
+                            <option value="0" {{ old('status', $user->status) == '0' ? 'selected' : '' }}>{{__('Backend/users.inactive')}}</option>
+                            <option value="1" {{ old('status', $user->status) == '1' ? 'selected' : '' }}>{{__('Backend/users.active')}}</option>
+                        </select>
                         @error('status')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-group">
-                        {!! Form::label('receive_email', "Receive email") !!}
-                        {!! Form::select('receive_email',['' => '---', '1' => 'Yes', '0' => 'No'], old('receive_email', $user->receive_email), ['class' => 'form-control']) !!}
+                       <label for="receive_email">{{__('Backend/users.receive_email')}}</label>
+                        <select name="receive_email" class="form-control">
+                            <option value="1" {{ old('receive_email', $user->receive_email) == '1' ? 'selected' : '' }}>{{__('Backend/users.yes')}}</option>
+                            <option value="0" {{ old('receive_email', $user->receive_email) == '0' ? 'selected' : '' }}>{{__('Backend/users.no')}}</option>
+                        </select>
                         @error('receive_email')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
@@ -72,8 +81,8 @@
             <div class="row">
                 <div class="col-12">
                     <div class="form-group">
-                        {!! Form::label('bio', "Description") !!}
-                        {!! Form::textarea('bio', old('bio', $user->bio), ['class' => 'form-control', 'placeholder' => 'Your Bio' ]) !!}
+                       <label for="bio">{{__('Backend/users.bio')}}</label>
+                        <textarea name="bio" class="form-control">{{ old('bio', $user->bio) }}</textarea>
                         @error('bio')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
@@ -83,24 +92,24 @@
                     <div class="col-12 text-center">
                         <div class="imgArea">
                             <img src="{{ asset('assets/users/' . $user->user_image) }}" width="300" height="300" class="img-thumbnail">
-                            <button type="button" class="btn btn-danger remove-image">Remove Image</button>
+                            <button type="button" class="btn btn-danger remove-image">{{__('Backend/users.remove_image')}}</button>
                         </div>
                     </div>
                 @endif
                 <div class="col-12">
-                    {!! Form::label('user_image', "User Image") !!}
+                    <label for="user_image">{{__('Backend/users.user_image')}}</label>
                     <br>
                     <div class="file-loading">
-                        {!! Form::file('user_image', ['id' => 'user-image', 'class' => 'file-input-overview']) !!}
-                        <span class="form-text text-muted">Image width should be 300px x 300px</span>
+                        <input id="user-image" type="file" name="user_image" class="file" data-overwrite-initial="false" data-min-file-count="1">
+                        <span class="form-text text-muted">{{__('Backend/users.image_note')}}</span>
                         @error('images')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
             </div>
             <div class="form-group pt-4">
-                {!! Form::submit('Update', ['class' => 'btn btn-primary']) !!}
+                <button type="submit" class="btn btn-primary">{{__('Backend/users.update')}}</button>
             </div>
-            {!! Form::close() !!}
+            </form>
         </div>
     </div>
 

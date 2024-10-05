@@ -30,11 +30,14 @@
                         <td>{{ config('app.locale') == 'en' ? $message->created_at ->format('d-m-Y h:i a') :   $message->created_at->locale('ar')->translatedFormat('d-m-Y h:i a') }}</td>
                         <td>
                             <div class="btn-group">
-                                <a href="{{ route('admin.contact_us.show', $message->id) }}" class="btn btn-primary"><i class="fa fa-eye"></i></a>
+                                <a href="{{ route('admin.contact_us.show', $message->id) }}" class="btn btn-primary"><i
+                                        class="fa fa-eye"></i></a>
                                 <a href="javascript:void(0)" onclick="if (confirm(
                                     '{{__('Backend/contact_us.are_you_sure')}}'
-                                ) ) { document.getElementById('message-delete-{{ $message->id }}').submit(); } else { return false; }" class="btn btn-danger"><i class="fa fa-trash"></i></a>
-                                <form action="{{ route('admin.contact_us.destroy', $message->id) }}" method="post" id="message-delete-{{ $message->id }}" style="display: none;">
+                                ) ) { document.getElementById('message-delete-{{ $message->id }}').submit(); } else { return false; }"
+                                   class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                <form action="{{ route('admin.contact_us.destroy', $message->id) }}" method="post"
+                                      id="message-delete-{{ $message->id }}" style="display: none;">
                                     @csrf
                                     @method('DELETE')
                                 </form>
@@ -53,7 +56,7 @@
                 <tr>
                     <th colspan="5">
                         <div class="float-right">
-                            {!! $messages->appends(request()->input())->links() !!}
+                            {!! $messages->links() !!}
                         </div>
                     </th>
                 </tr>

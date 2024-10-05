@@ -163,7 +163,7 @@ class GeneralController extends Controller
                      });
 
         $post = Post::where('slug_en', $slug);
-        $post = $post->active()->post()->first();;
+        $post = $post->active()->post()->first();
 
         if ($post) {
            return response()->json(['post' => new UsersPostResource($post), 'error'=>false], 200);

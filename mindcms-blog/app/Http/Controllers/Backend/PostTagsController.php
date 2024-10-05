@@ -26,19 +26,16 @@ class PostTagsController extends Controller
         if (!\auth()->user()->ability('admin', 'manage_post_tags,show_post_tags')){
             return redirect('admin/index');
         }
-        $keyword = (isset(\request()->keyword) && \request()->keyword != '') ? \request()->keyword : null;
-        $sort_by = (isset(\request()->sort_by) && \request()->sort_by != '') ? \request()->sort_by : 'id';
-        $order_by = (isset(\request()->order_by) && \request()->order_by != '') ? \request()->order_by : 'desc';
-        $limit_by = (isset(\request()->limit_by) && \request()->limit_by != '') ? \request()->limit_by : '10';
 
+        $tags = Tag::withCount('posts' )
+        ->when(request('keyword') != '', function ($query){
+        $query->search(request('keyword'));
+    })
 
-        $tags = Tag::withCount('posts' );
-        if($keyword !=null){
-            $tags = $tags->search($keyword);
-        }
+        ->orderBy(request('sort_by') ??  'id', request('order_by') ??  'desc')
+        ->paginate(request('limit_by')?? '10')
+        ->withQueryString();
 
-        $tags= $tags->orderBy($sort_by, $order_by);
-        $tags= $tags->paginate($limit_by);
 
         return view('backend.post_tags.index', compact( 'tags'));
     }
@@ -60,12 +57,14 @@ class PostTagsController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name'          => 'required',
+            'name_en'       => 'required',
         ]);
         if($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
         $data['name']              = $request->name;
+        $data['name_en']           = $request->name_en;
         Tag::create($data);
         Cache::forget('global_tags');
 
@@ -100,6 +99,7 @@ class PostTagsController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'name'          => 'required',
+            'name_en'       => 'required',
         ]);
 
         if($validator->fails()) {
@@ -109,7 +109,9 @@ class PostTagsController extends Controller
         $tag = Tag::whereId($id)->first();
         if($tag) {
             $data ['name'] = $request->name;
+            $data ['name_en'] = $request->name_en;
             $data['slug']  = null;
+            $data['slug_en'] = null;
 
             $tag->update($data);
             Cache::forget('global_tags');

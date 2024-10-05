@@ -74,7 +74,7 @@ class IndexController extends Controller
 
 //        dd($post);
         $post = Post::where('slug_en', $slug);
-        $post = $post->active()->first();;
+        $post = $post->active()->first();
 
         if($post) {
 

@@ -2,12 +2,13 @@
     <!-- Start Single Widget -->
     <aside class="widget search_widget">
         <h3 class="widget-title">Search</h3>
-        {!! Form::open(['route' => 'frontend.search', 'method' => 'get' ]) !!}
+        <form method="'get'" action="{{route('frontend.search')}}" >
+            @csrf
             <div class="form-input">
-                {!! Form::text('keyword', old('keyword', request()->keyword), ['placeholder' => 'Search...']) !!}
-                {!! Form::button('<i class="fa fa-search"></i>', ['type' => 'submit']) !!}
+                <input type="text" name="keyword" value="{{ old('keyword', request('keyword')) }}" class="form-control" placeholder="Search...">
+                <button type="submit"><i class="fa fa-search"></i></button>
             </div>
-        {!! Form::close() !!}
+        </form>
     </aside>
     <!-- End Single Widget -->
     <!-- Start Single Widget -->

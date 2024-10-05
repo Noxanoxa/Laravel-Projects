@@ -26,29 +26,23 @@ class PostCommentsController extends Controller
         if (!\auth()->user()->ability('admin', 'manage_post_comments,show_post_comments')){
             return redirect('admin/index');
         }
-        $keyword = (isset(\request()->keyword) && \request()->keyword != '') ? \request()->keyword : null;
-        $postId = (isset(\request()->post_id) && \request()->post_id != '') ? \request()->post_id : null;
-        $status = (isset(\request()->status) && \request()->status != '') ? \request()->status : null;
-        $sort_by = (isset(\request()->sort_by) && \request()->sort_by != '') ? \request()->sort_by : 'id';
-        $order_by = (isset(\request()->order_by) && \request()->order_by != '') ? \request()->order_by : 'desc';
-        $limit_by = (isset(\request()->limit_by) && \request()->limit_by != '') ? \request()->limit_by : '10';
+
+        $comments = Comment::query()
+            ->when(request('keyword') != '', function ($query){
+                $query->search(request('keyword'));
+            })
+            ->when(request('status') != '', function ($query){
+                $query->whereStatus(request('status'));
+            })
+            ->when(request('post_id') != '', function ($query){
+                $query->wherePostId(request('post_id'));
+            })
+            ->orderBy(request('sort_by') ??  'id', request('order_by') ??  'desc')
+            ->paginate(request('limit_by')?? '10')
+            ->withQueryString();
 
 
-        $comments = Comment::query();
-        if($keyword !=null){
-            $comments = $comments->search($keyword);
-        }
-        if($postId !=null) {
-            $comments = $comments->wherePostId($postId);
-        }
-        if($status !=null) {
-            $comments = $comments->whereStatus($status);
-        }
-
-        $comments= $comments->orderBy($sort_by, $order_by);
-        $comments= $comments->paginate($limit_by);
-
-        $posts = Post::post()->pluck('title', 'id');
+        $posts = Post::post()->select('id', 'title', 'title_en')->get();
         return view('backend.post_comments.index', compact('comments', 'posts' ));
     }
 
