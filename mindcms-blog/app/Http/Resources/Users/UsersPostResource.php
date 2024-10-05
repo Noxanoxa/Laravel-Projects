@@ -30,6 +30,7 @@ class UsersPostResource extends JsonResource
             'category' => new UsersCategoriesResource($this->category), // in this case category as one  element
             'tags' => UsersTagsResource::collection($this->tags), // in this case tags as multiple elements
             'media' => UsersPostsMediaResource::collection($this->media), // in this case media as multiple elements
+            'created_at' => $this->created_at->format('d-m-Y h:i a'),
         ];
     }
 }
