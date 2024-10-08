@@ -36,11 +36,18 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12">
+                <div class="col-6">
                     <div class="form-group">
-                        <label for="description_en">{{__('Backend/announcements.description')}}</label>
-                    <textarea name="description_en" class="form-control summernote" placeholder="{{ __('Backend/announcements.ur_description')}}">{!! old('description_en') !!}</textarea>
+                        <label for="description">{{__('Backend/announcements.description')}}</label>
+                    <textarea name="description" class="form-control summernote" placeholder="{{ __('Backend/announcements.ur_description')}}">{!! old('description') !!}</textarea>
                         @error('description')<span class="text-danger">{{ $message }}</span>@enderror
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="description_en">{{__('Backend/announcements.description_en')}}</label>
+                        <textarea name="description_en" class="form-control summernote" placeholder="{{ __('Backend/announcements.ur_description')}}">{!! old('description_en') !!}</textarea>
+                        @error('description_en')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
             </div>
@@ -58,7 +65,7 @@
             <div class="form-group pt-4">
                 <button type="submit" class="btn btn-primary">{{__('Backend/announcements.submit')}}</button>
             </div>
-            {!! Form::close() !!}
+            </form>
         </div>
     </div>
 

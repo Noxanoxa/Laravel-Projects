@@ -27,6 +27,7 @@ return [
                         'sort_by'                      =>    'ترتيب حسب',
                         'images' => 'الصور',
                         'description' => 'الوصف',
+                        'description_en' => 'الوصف بالإنجليزية',
                         'ur_description' => 'وصفك',
                         'ur_description_en' => 'وصفك بالإنجليزية',
                         'ur_title' => 'عنوانك',

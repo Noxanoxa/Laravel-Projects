@@ -5,7 +5,7 @@
 @section('content')
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex">
-            <h6 class="m-0 font-weight-bold text-primary">{{__('Backend/announcements.edit_announcement')}} ( {{ config('app.locale') == 'ar' ? $announcement->title : $announcement->title_en }} )</h6>
+            <h6 class="m-0 font-weight-bold text-primary">{{__('Backend/announcements.edit_announcement')}} ( {{ $announcement->title() }} )</h6>
             <div class="ml-auto">
                 <a href="{{route('admin.announcements.index')}}" class="btn btn-primary">
                     <span class="icon text-white-50">
@@ -16,36 +16,55 @@
             </div>
         </div>
         <div class="card-body">
-            {!! Form::model($announcement, ['route' => ['admin.announcements.update', $announcement->id], 'method' => 'patch', 'files' => true]) !!}
+            <form method="post" action="{{route('admin.announcements.update', $announcement->id)}}" enctype="multipart/form-data">
+                @csrf
+                @method('PATCH')
             <div class="row">
-                <div class="col-12">
+                <div class="col-6">
                     <div class="form-group">
-                        {!! Form::label('title', __('Backend/announcements.title')) !!}
-                        {!! Form::text('title', old('title', config('app.locale') == 'ar' ? $announcement->title : $announcement->title_en), ['class' => 'form-control', 'placeholder' => __('Backend/announcements.ur_title') ]) !!}
+                        <label for="title">{{__('Backend/announcements.title')}}</label>
+                        <input type="text" name="title" value="{{old('title', $announcement->title)}}" class="form-control">
                         @error('title')<span class="text-danger">{{ $message }}</span>@enderror
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="title_en">{{__('Backend/announcements.title_en')}}</label>
+                        <input type="text" name="title_en" value="{{old('title_en', $announcement->title_en)}}" class="form-control">
+                        @error('title_en')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-12">
+                <div class="col-6">
                     <div class="form-group">
-                        {!! Form::label('description', __('Backend/announcements.description')) !!}
-                        {!! Form::textarea('description', old('description', $announcement->description), ['class' => 'form-control summernote', 'placeholder' => __('Backend/announcements.ur_description') ]) !!}
+                        <label for="description">{{__('Backend/announcements.description')}}</label>
+                        <textarea name="description" class="form-control summernote">{!! old('description', $announcement->description) !!}</textarea>
                         @error('description')<span class="text-danger">{{ $message }}</span>@enderror
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="description_en">{{__('Backend/announcements.description_en')}}</label>
+                        <textarea name="description_en" class="form-control summernote">{!! old('description_en', $announcement->description_en) !!}</textarea>
+                        @error('description_en')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-4">
-                    {!! Form::label('status', __('Backend/announcements.status')) !!}
-                    {!! Form::select('status', ['1' => __('Backend/announcements.active'), '0' => __('Backend/announcements.inactive') ],  old('status', $announcement->status), ['class' => 'form-control']) !!}
+                    <label for="status">{{__('Backend/announcements.status')}}</label>
+                    <select name="status" class="form-control">
+                        <option value="1" {{ old('status', $announcement->status) == '1' ? 'selected' : '' }}>{{__('Backend/announcements.active')}}</option>
+                        <option value="0" {{ old('status', $announcement->status) == '0' ? 'selected' : '' }}>{{__('Backend/announcements.inactive')}}</option>
+                    </select>
                     @error('status')<span class="text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
             <div class="form-group pt-4">
-                {!! Form::submit(__('Backend/announcements.submit'), ['class' => 'btn btn-primary']) !!}
+                <button type="submit" class="btn btn-primary">{{__('Backend/announcements.submit')}}</button>
             </div>
-            {!! Form::close() !!}
+            </form>
         </div>
     </div>
 @endsection
@@ -67,8 +86,5 @@
                 ]
             });
         });
-
-
-
     </script>
 @endsection

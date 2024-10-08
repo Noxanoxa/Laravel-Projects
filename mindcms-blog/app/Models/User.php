@@ -59,7 +59,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Comment::class);
     }
     public  function status() {
-        return $this->status == 1 ? 'Active' : 'Inactive';
+        return $this->status == 1 ? __('Backend/supervisors.active') : __('Backend/supervisors.inactive');
     }
     public  function userImage() {
         return $this->user_image != '' ? asset('assets/users/'. $this->user_image ) : asset('assets/users/default.jpg');

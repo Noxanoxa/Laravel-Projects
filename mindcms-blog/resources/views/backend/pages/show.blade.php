@@ -16,11 +16,11 @@
                 <table class="table table-hover">
                     <tbody>
                         <tr>
-                            <td colspan="4"><a href="{{route('admin.posts.show', $page->id)}}">{{ $page->title }}</a></td>
+                            <td colspan="4"><a href="{{route('admin.posts.show', $page->id)}}">{{ $page->title() }}</a></td>
                         </tr>
                         <tr>
                             <th>{{__('backend/pages.category')}}</th>
-                            <td>{{ $page->category->name}}</td>
+                            <td>{{ $page->category->name()}}</td>
                             <th>{{__('backend/pages.status')}}</th>
                             <td>{{ $page->status() == 'Active'? __('Backend/pages.active') : __('Backend/pages.inactive') }}</td>
                         </tr>

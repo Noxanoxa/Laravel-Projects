@@ -8,6 +8,7 @@ return [
             'category' => 'Category',
             'status' => 'Status',
             'ur_name' => 'Your Name',
+            'ur_name_en' => 'Your Name (English)',
             'submit' => 'Submit',
             'actions'      => 'Actions',
             'user' => 'User',

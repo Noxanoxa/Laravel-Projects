@@ -8,6 +8,7 @@ return [
             'category' => 'الصفحة',
             'status' => 'الحالة',
             'ur_name' => 'اسمك',
+            'ur_name_en' => 'اسمك (بالإنجليزية)',
             'submit' => 'إرسال',
             'actions'      => 'الإجراءات',
             'user' => 'المستخدم',
@@ -20,11 +21,12 @@ return [
             'search_here'           =>    'ابحث هنا',
             'created_at'                => 'تاريخ الإنشاء',
             'name' => 'الاسم',
+            'name_en' => 'الاسم بالإنجليزية',
             'asc' => 'تصاعدي',
             'desc' => 'تنازلي',
             'active' => 'نشط',
             'inactive' => 'غير نشط',
             'id' => 'الرقم',
-    'update_category' => 'تحديث القسم',
+            'update_category' => 'تحديث القسم',
 
 ];

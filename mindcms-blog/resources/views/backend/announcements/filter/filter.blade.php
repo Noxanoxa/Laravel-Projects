@@ -1,6 +1,5 @@
 <div class="card-body">
     <form method="get" action="{{route('admin.announcements.index')}}">
-        @csrf
         <div class="row">
             <div class="col-2">
                 <div class="form-group">
@@ -36,7 +35,6 @@
             </div>
             <div class="col-1">
                 <div class="form-group">
-{{--                    {!! Form::select('limit_by', ['' => '---' , '10' => '10', '20' => '20', '50' => '50', '100' => '100' ],old('limit_by', request()->input('limit_by')), ['class'=>'form-control']) !!}--}}
                     <select name="limit_by" class="form-control">
                         <option value="">---</option>
                         <option value="10" {{ old('limit_by', request('limit_by')) == '10' ? 'selected' : '' }}>10</option>
@@ -52,7 +50,5 @@
                 </div>
             </div>
         </div>
-
-
 </form>
 </div>

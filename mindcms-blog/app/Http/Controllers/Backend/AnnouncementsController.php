@@ -55,7 +55,9 @@ class AnnouncementsController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'title'          => 'required',
+            'title_en'          => 'required',
             'description'    => 'required|min:50',
+            'description_en'    => 'required|min:50',
             'status'         => 'required',
         ]);
 
@@ -64,7 +66,9 @@ class AnnouncementsController extends Controller
         }
 
         $data ['title']                   = $request->title;
+        $data['title_en'] = $request->title_en;
         $data ['description']             = Purify::clean($request->description);
+        $data['description_en'] = Purify::clean($request->description_en);
         $data ['status']                  = $request->status;
 
 
@@ -107,7 +111,9 @@ class AnnouncementsController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'title'          => 'required',
+            'title_en'          => 'required',
             'description'    => 'required|min:50',
+            'description_en'    => 'required|min:50',
             'status'         => 'required',
         ]);
 
@@ -118,8 +124,11 @@ class AnnouncementsController extends Controller
         $announcement = Announcement::whereId($id)->first();
         if($announcement) {
             $data ['title']                   = $request->title;
+            $data['title_en'] = $request->title_en;
             $data ['slug']                   = null;
+            $data ['slug_en']                   = null;
             $data ['description']             = Purify::clean($request->description);
+            $data['description_en'] = Purify::clean($request->description_en);
             $data ['status']                  = $request->status;
 
             $announcement->update($data);

@@ -21,14 +21,14 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label for="title">{{__('backend/pages.title')}}</label>
-                        <input type="text" name="title" id="title" class="form-control" value="{{ old('title', $page->title) }}" placeholder="{{__('backend/pages.ur_title')}}">
+                        <input type="text" name="title" id="title" class="form-control" value="{{ old('title', $page->title) }}">
                         @error('title')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-group">
                         <label for="title_en">{{__('backend/pages.title_en')}}</label>
-                        <input type="text" name="title_en" id="title_en" class="form-control" value="{{ old('title_en', $page->title_en) }}" placeholder="{{__('backend/pages.ur_title_en')}}">
+                        <input type="text" name="title_en" id="title_en" class="form-control" value="{{ old('title_en', $page->title_en) }}" >
                         @error('title_en')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
@@ -37,7 +37,7 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label for="description">{{__('backend/pages.description')}}</label>
-                        <textarea name="description" id="description" class="form-control summernote" placeholder="{{__('backend/pages.ur_description')}}">{{ old('description', $page->description) }}</textarea>
+                        <textarea name="description" id="description" class="form-control summernote">{{ old('description', $page->description) }}</textarea>
                         @error('description')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
@@ -54,8 +54,8 @@
                     <label for="category_id">{{__('backend/pages.category')}}</label>
                     <select name="category_id" id="category_id" class="form-control">
                         <option value="">{{__('backend/pages.select_category')}}</option>
-                        @foreach($categories as $key => $value)
-                            <option value="{{ $key }}" {{ $key == $page->category_id ? 'selected' : '' }}>{{ $value }}</option>
+                        @foreach($categories as $cat)
+                            <option value="{{ $cat->id }}" {{ old('category_id', $page->category_id) == $cat->id ? 'selected' : '' }}>{{ $cat->name() }}</option>
                         @endforeach
                     </select>
                     @error('category_id')<span class="text-danger">{{ $message }}</span>@enderror
@@ -63,8 +63,8 @@
                 <div class="col-6">
                     <label for="status">{{__('backend/pages.status')}}</label>
                     <select name="status" id="status" class="form-control">
-                        <option value="1" {{ $page->status == 1 ? 'selected' : '' }}>{{__('backend/pages.active')}}</option>
-                        <option value="0" {{ $page->status == 0 ? 'selected' : '' }}>{{__('backend/pages.inactive')}}</option>
+                        <option value="1" {{ old('status', $page->status )== 1 ? 'selected' : '' }}>{{__('backend/pages.active')}}</option>
+                        <option value="0" {{ old('status', $page->status )== 0 ? 'selected' : '' }}>{{__('backend/pages.inactive')}}</option>
                     </select>
                     @error('status')<span class="text-danger">{{ $message }}</span>@enderror
                 </div>
@@ -82,7 +82,6 @@
             </form>
         </div>
     </div>
-
 
 @endsection
 @section('script')

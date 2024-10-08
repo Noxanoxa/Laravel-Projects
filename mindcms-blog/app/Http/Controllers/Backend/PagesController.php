@@ -29,30 +29,24 @@ class PagesController extends Controller
         if (!\auth()->user()->ability('admin', 'manage_pages,show_pages')){
             return redirect('admin/index');
         }
-        $keyword = (isset(\request()->keyword) && \request()->keyword != '') ? \request()->keyword : null;
-        $categoryId = (isset(\request()->categoryId) && \request()->categoryId != '') ? \request()->categoryId : null;
-        $status = (isset(\request()->status) && \request()->status != '') ? \request()->status : null;
-        $sort_by = (isset(\request()->sort_by) && \request()->sort_by != '') ? \request()->sort_by : 'id';
-        $order_by = (isset(\request()->order_by) && \request()->order_by != '') ? \request()->order_by : 'desc';
-        $limit_by = (isset(\request()->limit_by) && \request()->limit_by != '') ? \request()->limit_by : '10';
 
 
-        $pages = Page::wherePostType('page');
-        if($keyword !=null){
-            $pages = $pages->search($keyword);
-        }
-        if($categoryId !=null) {
-            $pages = $pages->whereCategoryId($categoryId);
-        }
-        if($status !=null) {
-            $pages = $pages->whereStatus($status);
-        }
+        $pages = Page::wherePostType('page')
+            ->when(request('keyword') != '', function($q) {
+                $q->search(request('keyword'));
+            })
+            ->when(request('category') != '', function($q) {
+                $q->whereCategoryId(request('category'));
+            })
+            ->when(request('status') != '', function($q) {
+                $q->whereStatus(request('status'));
+            })
+            ->orderBy(request('sort_by') ?? 'id', request('order_by') ?? 'desc')
+            ->paginate(request('limit_by') ?? 10)
+            ->withQueryString();
 
-        $pages= $pages->orderBy($sort_by, $order_by);
-        $pages= $pages->paginate($limit_by);
 
-
-        $categories= Category::orderBy('id', 'desc')->pluck('name', 'id');
+        $categories= Category::orderBy('id', 'desc')->select('id', 'name', 'name_en')->get();
         return view('backend.pages.index', compact('pages', 'categories'));
     }
 
@@ -61,7 +55,7 @@ class PagesController extends Controller
         if (!\auth()->user()->ability('admin', 'create_pages')){
             return redirect('admin/index');
         }
-        $categories= Category::orderBy('id', 'desc')->pluck('name', 'id');
+        $categories= Category::orderBy('id', 'desc')->select('id', 'name', 'name_en')->get();
         return view('backend.pages.create', compact('categories') );
 
     }
@@ -73,7 +67,9 @@ class PagesController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'title'          => 'required',
+            'title_en' => 'required',
             'description'    => 'required|min:50',
+            'description_en' => 'required|min:50',
             'status'         => 'required',
             'category_id'    => 'required',
             'images.*'       => 'nullable|mimes:jpg,jpeg,png,gif|max:20000',
@@ -84,7 +80,9 @@ class PagesController extends Controller
         }
 
         $data ['title']                   = $request->title;
+        $data ['title_en']                   = $request->title_en;
         $data ['description']             = Purify::clean($request->description);
+        $data ['description_en']             = Purify::clean($request->description_en);
         $data ['status']                  = $request->status;
         $data ['post_type']                  = 'page';
         $data ['comment_able']            = 0;
@@ -139,7 +137,7 @@ class PagesController extends Controller
         if (!\auth()->user()->ability('admin', 'update_pages')){
             return redirect('admin/index');
         }
-        $categories= Category::orderBy('id', 'desc')->pluck('name', 'id');
+        $categories= Category::orderBy('id', 'desc')->select('id', 'name', 'name_en')->get();
         $page = Page::with(['media'])->whereId($id)->wherePostType('page')->first();
         return view('backend.pages.edit', compact('categories', 'page') );
 
@@ -152,7 +150,9 @@ class PagesController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'title'          => 'required',
+            'title_en' => 'required',
             'description'    => 'required|min:50',
+            'description_en' => 'required|min:50',
             'status'         => 'required',
             'category_id'    => 'required',
             'images.*'       => 'nullable|mimes:jpg,jpeg,png,gif|max:20000',
@@ -165,8 +165,11 @@ class PagesController extends Controller
         $page = Page::whereId($id)->wherePostType('page')->first();
         if($page) {
             $data ['title']                   = $request->title;
+            $data ['title_en']                   = $request->title_en;
             $data ['slug']                   = null;
+            $data ['slug_en']                   = null;
             $data ['description']             = Purify::clean($request->description);
+            $data ['description_en']             = Purify::clean($request->description_en);
             $data ['status']                  = $request->status;
             $data ['category_id']             = $request->category_id;
 

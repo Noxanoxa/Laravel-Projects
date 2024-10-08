@@ -56,7 +56,7 @@
                 <tr>
                     <th colspan="7">
                         <div class="float-right">
-                            {!!  $announcements->appends(request()->input())->links() !!}
+                            {!!  $announcements->links() !!}
                         </div>
                     </th>
                 </tr>

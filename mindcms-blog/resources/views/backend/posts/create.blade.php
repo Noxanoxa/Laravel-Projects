@@ -81,6 +81,7 @@
                 <div class="col-4">
                     <label for="comment_able">{{__('Backend/posts.comment_able')}}</label>
                     <select name="comment_able" class="form-control">
+                        <option value="">---</option>
                         <option value="0" {{ old('comment_able') == '0' ? 'selected' : '' }}>{{__('Backend/posts.no')}}</option>
                         <option value="1" {{ old('comment_able') == '1' ? 'selected' : '' }}>{{__('Backend/posts.yes')}}</option>
                     </select>
@@ -89,6 +90,7 @@
                 <div class="col-4">
                     <label for="status">{{__('Backend/posts.status')}}</label>
                     <select name="status" class="form-control">
+                        <option value="">---</option>
                         <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>{{__('Backend/posts.active')}}</option>
                         <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>{{__('Backend/posts.inactive')}}</option>
                     </select>

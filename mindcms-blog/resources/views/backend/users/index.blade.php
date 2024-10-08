@@ -18,7 +18,7 @@
             <table class="table table-hover">
                 <thead>
                 <tr>
-                    <th>{{__('Backend/users.image')}}</th>
+                    <th>{{__('Backend/users.user_image')}}</th>
                     <th>{{__('Backend/users.name')}}</th>
                     <th>{{__('Backend/users.email')}} & {{__('Backend/users.mobile')}}</th>
                     <th>{{__('Backend/users.status')}}</th>
@@ -31,7 +31,7 @@
                     <tr>
                         <td>
                             @if($user->user_image != '')
-                                <img src="{{asset('assets/users/' . $user->user_image)}}" width="60" >
+                                <img src="{{asset('assets/users/' . $user->user_image)}}" width="60">
                             @else
                                 <img src="{{asset('assets/users/default.png')}}" width="60">
                             @endif
@@ -49,9 +49,9 @@
                         <td>
                             <div class="btn-group">
                                 <a href="{{route('admin.users.edit', $user->id)}}" class="btn btn-primary"><i
-                                            class="fa fa-edit"></i></a>
+                                        class="fa fa-edit"></i></a>
                                 <a href="javascript:void(0);"
-                                   onclick="if(confirm('{{ __('Backend.users.image_note') }}')) { document.getElementById('user-delete-{{$user->id}}').submit(); } else { return false}"
+                                   onclick="if(confirm('{{ __('Backend/users.are_you_sure') }}')) { document.getElementById('user-delete-{{$user->id}}').submit(); } else { return false}"
                                    class="btn btn-danger"><i class="fa fa-trash"></i></a>
                                 <form action="{{route('admin.users.destroy', $user->id)}}" method="post"
                                       id="user-delete-{{$user->id}}">
@@ -63,7 +63,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center">No users found</td>
+                        <td colspan="6" class="text-center">{{__('Backend/users.no_users')}}</td>
                     </tr>
                 @endforelse
                 </tbody>

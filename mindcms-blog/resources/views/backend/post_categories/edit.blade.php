@@ -18,12 +18,20 @@
                 @csrf
                 @method('PATCH')
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-4">
                         <div class="form-group">
                             <label for="name">{{__('Backend/post_categories.name')}}</label>
-                            <input type="text" name="name" value="{{ old('name',  $category->name()) }}"
+                            <input type="text" name="name" value="{{ old('name',  $category->name) }}"
                                    class="form-control" placeholder="{{__('Backend/post_categories.ur_name')}}">
                             @error('name')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="name_en">{{__('Backend/post_categories.name_en')}}</label>
+                            <input type="text" name="name_en" value="{{ old('name_en',  $category->name_en) }}"
+                                   class="form-control" placeholder="{{__('Backend/post_categories.ur_name_en')}}">
+                            @error('name_en')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                     </div>
                     <div class="col-4">

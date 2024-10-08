@@ -27,6 +27,7 @@ return [
     'sort_by'                      =>    'Sort By',
     'images' => 'Images',
     'description' => 'Description',
+    'description_en' => 'Description in English',
     'ur_description' => 'Your Description',
     'ur_description_en' => 'Your Description in English',
     'ur_title' => 'Your Title',

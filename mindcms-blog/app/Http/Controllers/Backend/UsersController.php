@@ -33,7 +33,8 @@ class UsersController extends Controller
         }
 
 
-        $users = User::whereHas('roles', function ($query) {
+        $users = User::query()
+        ->whereHas('roles', function ($query) {
             $query->where('name', 'user');
         })
             ->when(request('keyword') != '', function ($query){
