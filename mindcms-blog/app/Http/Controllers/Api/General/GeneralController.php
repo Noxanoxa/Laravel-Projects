@@ -287,10 +287,10 @@ public function page_show($slug)
                      ->post()
                      ->active()
                      ->orderBy('id', 'desc')
-                     ->get();
+                     ->paginate(10);
 
         if ($posts->count() > 0) {
-            return response()->json(['posts' => PostsResource::collection($posts), 'error'=>false], 200);
+            return  PostsResource::collection($posts);
         } else {
             return response()->json(['message' => 'No post found', 'error'=>true ], 201);// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
         }
