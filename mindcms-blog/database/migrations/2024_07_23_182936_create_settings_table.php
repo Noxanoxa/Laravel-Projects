@@ -22,6 +22,7 @@ class CreateSettingsTable extends Migration
             $table->string('details')->nullable();
             $table->string('type');
             $table->string('section');
+            $table->string('section_en');
             $table->string('lang')->default('en');
             $table->string('ordering');
         });
