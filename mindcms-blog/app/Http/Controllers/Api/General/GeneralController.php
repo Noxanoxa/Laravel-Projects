@@ -223,7 +223,7 @@ public function page_show($slug)
             $posts = $posts->search($keyword, null, true);
         }
 
-        $posts = $posts ->post()->active()->orderBy('id', 'desc')->paginate(3);
+        $posts = $posts ->post()->active()->orderBy('id', 'desc')->paginate(10);
 
         if ($posts) {
             return PostsResource::collection($posts);
