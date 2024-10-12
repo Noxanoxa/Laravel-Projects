@@ -287,7 +287,7 @@ public function page_show($slug)
                      ->post()
                      ->active()
                      ->orderBy('id', 'desc')
-                     ->paginate(10);
+                     ->paginate(5);
 
         if ($posts->count() > 0) {
             return  PostsResource::collection($posts);

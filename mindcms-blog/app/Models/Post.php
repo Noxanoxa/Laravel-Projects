@@ -40,8 +40,6 @@ class Post extends Model
         'columns' => [
             'posts.title'       => 10,
             'posts.title_en'    => 10,
-            'posts.description' => 10,
-            'posts.description_en' => 10,
         ],
     ];
 
