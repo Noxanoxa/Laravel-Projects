@@ -18,7 +18,7 @@ class CategoriesResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'status' => $this->status(),
-            'url' => route('frontend.category.posts', $this->slug),
+            'url' => route('category.show', $this->slug),
             'posts_count' => $this->posts->where('status', 1)->where('post_type', 'post')->count(),
         ];
     }

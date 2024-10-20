@@ -13,13 +13,13 @@ Route::get('/all_announcements', [GeneralController::class, 'get_announcements']
 Route::get('/announcement/{slug}', [GeneralController::class, 'show_announcement']);
 
 Route::get('/all_posts', [GeneralController::class, 'get_posts']);
-Route::get('/post/{slug}', [GeneralController::class, 'show_post']);
+Route::get('/post/{slug}', [GeneralController::class, 'show_post'])->name('post.show');;
 Route::get('/page/{page}', [GeneralController::class, 'page_show']);
 
 
 
-Route::get('/category/{category_slug}',                 [GeneralController::class, 'category']);
-Route::get('/tag/{tag_slug}',                           [GeneralController::class, 'tag']);
+Route::get('/category/{category_slug}',                 [GeneralController::class, 'category'])->name('category.show');
+Route::get('/tag/{tag_slug}',                           [GeneralController::class, 'tag'])->name('tag.show');
 Route::post('/contact-us',                              [GeneralController::class, 'do_contact']);
 
 // sidebar

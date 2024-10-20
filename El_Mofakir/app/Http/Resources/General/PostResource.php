@@ -20,7 +20,7 @@ class PostResource extends JsonResource
             'title_en' => $this->title_en,
             'slug' => $this->slug,
             'slug_en' => $this->slug_en,
-            'url' => route('frontend.posts.show', $this->slug),
+            'url' => route('post.show', $this->slug),
             'description' => $this->description,
             'description_en' => $this->description_en,
             'status' => $this->status(),
