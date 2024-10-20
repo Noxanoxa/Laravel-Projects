@@ -94,7 +94,7 @@ class  RoleTableSeeder extends Seeder
                                     'username' => $faker->userName,
                                     'email' => $faker->email,
 //                                  'mobile' => '956' . random_int(100000, 999999),
-                                    'mobile' => $faker->phoneNumber,
+                                    'mobile' => '07' . $faker->numerify('########'),
                                     'email_verified_at' => Carbon::now(),
                                     'password' => bcrypt('123123123'),
                                     'status' => 1,

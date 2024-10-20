@@ -51,14 +51,6 @@ Route::group(['middleware' => ['auth:api']], function() {
         Route::patch('/edit_user_information', [UsersController::class, 'update_user_information']);
         Route::patch('/edit_user_password', [UsersController::class, 'update_user_password']);
 
-//    Route::get('/my_posts', [UsersController::class, 'my_posts']);
-//    Route::get('/my_posts/create', [UsersController::class, 'create_post']);
-//    Route::post('/my_posts/create', [UsersController::class, 'store_post']);
-//    Route::get('/my_posts/{post}/edit', [UsersController::class, 'edit_post']);
-//    Route::patch('/my_posts/{post}/edit', [UsersController::class, 'update_post']);
-//    Route::delete('/my_posts/{post}', [UsersController::class, 'delete_post']);
-//    Route::post('/delete_post_media/{media_id}', [UsersController::class, 'destroy_post_media']);
-
     // announcements
     Route::get('/my_announcements', [UsersController::class, 'my_announcements']);
     Route::get('/my_announcements/create', [UsersController::class, 'create_announcement']);

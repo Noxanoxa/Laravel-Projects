@@ -386,9 +386,12 @@ public function page_show($slug)
         $data['message']    = $request->message;
 
 
-        Contact::create($data);
+             Contact::create($data);
 
-        return response()->json(['message' => 'Your message has been sent successfully', 'error'=>false], 200);
+
+            return response()->json(['message' => 'Your message has been sent successfully', 'error'=>false], 200);
+
+
     }
 
 }

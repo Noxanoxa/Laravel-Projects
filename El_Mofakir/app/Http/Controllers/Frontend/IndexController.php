@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Notification;
 
 class IndexController extends Controller
 {
-    public function index()
+/*    public function index()
     {
         $posts = Post::with([ 'media', 'user', 'tags'])
                     ->whereHas('category', function($query) {
@@ -184,6 +184,6 @@ class IndexController extends Controller
             return view('frontend.index', compact('posts'));
         }
         return redirect()->route('frontend.index');
-    }
+    }*/
 }
 

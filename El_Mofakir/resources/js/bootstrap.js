@@ -1,4 +1,4 @@
-window._ = require('lodash');
+
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -47,8 +47,11 @@ window.Echo = new Echo({
     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
     forceTLS: true,
     wsHost: window.location.hostname,
-    wsPort: 6003,
-    wssPort: 6003,
+    wsPort: 6006,
+    wssPort: 6006,
     disableStats: true,
     encrypted: true,
+});
+window.Echo.connector.pusher.connection.bind('pusher:ping', function(data) {
+    console.log('Received ping:', data);
 });

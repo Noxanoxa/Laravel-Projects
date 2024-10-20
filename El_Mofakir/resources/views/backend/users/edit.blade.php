@@ -3,13 +3,13 @@
 
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex">
-            <h6 class="m-0 font-weight-bold text-primary">{{__('Backend/users.edit_users')}}({{ $user->name }})</h6>
+            <h6 class="m-0 font-weight-bold text-primary">{{__('Backend/users.edit_author')}}({{ $user->name }})</h6>
             <div class="ml-auto">
                 <a href="{{route('admin.users.index')}}" class="btn btn-primary">
                     <span class="icon text-white-50">
                         <i class="fa fa-home"></i>
                     </span>
-                    <span class="text">{{__('Backend/users.users')}}</span>
+                    <span class="text">{{__('Backend/users.authors')}}</span>
                 </a>
             </div>
         </div>
@@ -106,7 +106,7 @@
                         </div>
                     @endif
                     <div class="col-12">
-                        <label for="user_image">{{__('Backend/users.user_image')}}</label>
+                        <label for="user_image">{{__('Backend/users.author_image')}}</label>
                         <br>
                         <div class="file-loading">
                             <input id="user-image" type="file" name="user_image" class="file-input-overview">

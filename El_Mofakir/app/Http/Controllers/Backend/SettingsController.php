@@ -48,9 +48,14 @@ class SettingsController extends Controller
 
     private function generateCache()
     {
-        $settings = Valuestore::make(config_path('settings_en.json'));
-        Setting::all()->each(function ($item) use ($settings) {
+        $settings = Valuestore::make(config_path('settings.json'));
+        Setting::whereLang('ar')->each(function ($item) use ($settings) {
             $settings->put($item->key, $item->value);
+        });
+
+        $settings_en = Valuestore::make(config_path('settings_en.json'));
+        Setting::whereLang('en')->each(function ($item) use ($settings_en) {
+            $settings_en->put($item->key, $item->value);
         });
     }
 
