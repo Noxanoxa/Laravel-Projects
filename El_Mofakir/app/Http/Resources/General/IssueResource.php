@@ -16,8 +16,8 @@ class IssueResource extends JsonResource
     {
         return [
 
-            'number' => $this->number,
-            'date' => $this->date,
+            'number' => $this->issue_number,
+            'date' => $this->issue_date,
             'volume' => $this->volume_id,
 
         ];

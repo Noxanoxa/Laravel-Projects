@@ -235,7 +235,7 @@ class GeneralController extends Controller
         }
 
         $zip = new ZipArchive();
-        $zipFileName = 'post_pdfs_' . $post->id . '.zip';
+        $zipFileName = $post->title(). '.zip';
         $zipFilePath = public_path($zipFileName);
 
         if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {

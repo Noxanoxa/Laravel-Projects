@@ -317,7 +317,7 @@ class PostsController extends Controller
         }
 
         $zip = new ZipArchive;
-        $zipFileName = 'post_pdfs_' . $postId . '.zip';
+        $zipFileName = $postId->real_file_name. '.zip';
         $zipFilePath = public_path($zipFileName);
 
         if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
