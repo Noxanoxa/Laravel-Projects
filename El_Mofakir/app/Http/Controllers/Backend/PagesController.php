@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
 use Stevebauman\Purify\Facades\Purify;
+use ZipArchive;
 
 class PagesController extends Controller
 {
@@ -238,7 +239,7 @@ class PagesController extends Controller
 
     }
 
-    public function removeImage(Request $request){
+    public function removePdf(Request $request){
         if (!\auth()->user()->ability('admin', 'delete_pages')){
             return redirect('admin/index');
         }
@@ -252,5 +253,7 @@ class PagesController extends Controller
         }
         return false;
     }
+
+
 
 }

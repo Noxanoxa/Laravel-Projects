@@ -35,16 +35,20 @@ class IssuesController extends Controller
         return view('backend.issues.index', compact('issues'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         if (!\auth()->user()->ability('admin', 'create_issues')) {
             return redirect('admin/index');
         }
 
         $volumes = Volume::select('id', 'number', 'year')->get();
-        $posts = Post::post()->select('id', 'title', 'title_en', 'created_at')->get();
+        $posts = Post::whereIssueId(null)->post()->select('id', 'title', 'title_en', 'created_at')->get();
+        $volumeId = $request->query('volume_id');
+        $volume = Volume::find($volumeId);
+        $currentDate = now();
+        $issueDate = $volume ? $volume->year . '-' . $currentDate->format('m-d') : null;
 
-        return view('backend.issues.create', compact('volumes', 'posts'));
+        return view('backend.issues.create', compact('volumes', 'posts', 'volumeId', 'issueDate'));
     }
 
     public function store(Request $request)
@@ -90,8 +94,10 @@ class IssuesController extends Controller
 
         $issue = Issue::findOrFail($id);
         $volume = Volume::where('id', '!=', $issue->volume_id)->select('id', 'number', 'year')->get();
+        $selectedPosts = $issue->with('posts')->get()->pluck('posts.*.id')->flatten()->toArray();
 
-        return view('backend.issues.edit', compact('issue', 'volume'));
+
+        return view('backend.issues.edit', compact('issue', 'volume', 'selectedPosts'));
     }
 
     public function update(Request $request, $id)
@@ -103,7 +109,6 @@ class IssuesController extends Controller
         $validator = Validator::make($request->all(), [
             'issue_number' => 'required',
             'issue_date' => 'required|date',
-            'volume_id' => 'required|exists:volumes,id',
         ]);
 
         if ($validator->fails()) {
@@ -111,15 +116,21 @@ class IssuesController extends Controller
         }
 
         $issue = Issue::findOrFail($id);
-        $data = $request->only(['issue_number', 'issue_date', 'volume_id']);
+        $posts = $request->input('posts', []);
+
+        $data = $request->only(['issue_number', 'issue_date']);
         $issue->update($data);
+
+
+        // Set the issue_id to null for posts not in the request
+        Post::where('issue_id', $issue->id)->whereNotIn('id', $posts)->update(['issue_id' => null]);
+
 
         return redirect()->route('admin.issues.index')->with([
             'message' => 'Issue updated successfully',
             'alert-type' => 'success',
         ]);
     }
-
     public function destroy($id)
     {
         if (!\auth()->user()->ability('admin', 'delete_issues')) {

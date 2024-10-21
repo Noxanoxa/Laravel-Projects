@@ -79,26 +79,10 @@
                     </div>
                 </div>
 
-                <div class="row pt-4">
-                    <div class="col-12">
-                        <label for="posts">{{__('Backend/posts.posts')}}</label>
-                        <div class="form-group">
-                            @foreach($posts as $post)
-                                <div class="form-check" data-year="{{ $post->created_at->format('Y') }}">
-                                    <input class="form-check-input" type="checkbox" name="posts[]" value="{{ $post->id }}" {{ in_array($post->id, $selectedPosts) ? 'checked' : '' }}>
-                                    <label class="form-check-label">
-                                        {{ $post->title }}
-                                    </label>
-                                </div>
-                            @endforeach
-                        </div>
-                        @error('posts')<span class="text-danger">{{ $message }}</span>@enderror
-                    </div>
+                <div class="form-group pt-4">
+                    <button type="submit" class="btn btn-primary">{{ __('Backend/volumes.update_volume') }}</button>
                 </div>
 
-                <div class="form-group pt-4">
-                    <button type="submit" class="btn btn-primary">{{__('Backend/volumes.update_volume')}}</button>
-                </div>
             </form>
         </div>
     </div>
@@ -108,17 +92,15 @@
         $(document).ready(function() {
             function filterPostsByYear() {
                 var volumeYear = $('input[name="year"]').val();
-                console.log(volumeYear);
+
 
                 if (volumeYear) {
                     $('.form-check').each(function() {
                         var postDate = $(this).data('year');
-                        console.log('postdate');
+
                         if (postDate == volumeYear) {
-                            console.log('show');
                             $(this).show();
                         } else {
-                            console.log('hide');
                             $(this).hide();
                         }
                     });
@@ -132,8 +114,15 @@
 
             // Add change event listener to the year input
             $('input[name="year"]').on('change', function() {
-                console.log('change');
                 filterPostsByYear();
+            });
+
+            $('#select-all').click(function() {
+                $('input[name="posts[]"]').prop('checked', true);
+            });
+
+            $('#deselect-all').click(function() {
+                $('input[name="posts[]"]').prop('checked', false);
             });
         });
     </script>

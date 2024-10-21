@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.3.0|^8.0",
         "ext-curl": "*",
+        "ext-zip": "*",
         "beyondcode/laravel-websockets": "^1.12",
         "cviebrock/eloquent-sluggable": "^8.0",
         "fideloper/proxy": "^4.4",

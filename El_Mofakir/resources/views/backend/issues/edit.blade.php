@@ -21,15 +21,15 @@
                 <div class="row">
                     <div class="col-4">
                         <div class="form-group">
-                            <label for="name">{{ __('Backend/issues.number') }}</label>
-                            <input type="text" name="name" value="{{ old('name', $issue->issue_number) }}" class="form-control">
-                            @error('name')<span class="text-danger">{{ $message }}</span>@enderror
+                            <label for="issue_number">{{ __('Backend/issues.number') }}</label>
+                            <input type="text" name="issue_number" value="{{ old('issue_number', $issue->issue_number) }}" class="form-control">
+                            @error('issue_number')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group">
                             <label for="issue_date">{{__('Backend/issues.date')}}</label>
-                            <input type="date" name="issue_date[]" class="form-control" value="{{old('issue_date', $issue->issue_date)}}">
+                            <input type="date" name="issue_date" class="form-control" value="{{ old('issue_date', $issue->issue_date) }}">
                             @error('issue_date')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                     </div>
@@ -47,11 +47,13 @@
                     <div class="col-12">
                         <label for="posts">{{ __('Backend/posts.posts') }}</label>
                         <div class="form-group">
+                            <button type="button" id="select-all" class="btn btn-secondary btn-sm">{{ __('Select All') }}</button>
+                            <button type="button" id="deselect-all" class="btn btn-secondary btn-sm">{{ __('Deselect All') }}</button>
                             @foreach($issue->posts as $post)
                                 <div class="form-check" data-year="{{ $post->created_at }}">
-                                    <input class="form-check-input" type="checkbox" name="posts[]" value="{{ $post->id }}">
+                                    <input class="form-check-input" type="checkbox" name="posts[]" value="{{ $post->id }}" {{ in_array($post->id, $selectedPosts) ? 'checked' : '' }}>
                                     <label class="form-check-label">
-                                        {{ $post->title }}
+                                        {{ $post->title() }}
                                     </label>
                                 </div>
                             @endforeach
@@ -70,14 +72,11 @@
 @section('script')
     <script>
         $(document).ready(function() {
-            $('input[name="issue_date"]').on('change', function() {
-                var issue_date = $(this).val();
-                console.log(issue_date);
+            function filterPostsByDate() {
+                let issue_date = $('input[name="issue_date"]').val();
                 if (issue_date) {
-                    $('.form-check').each(function() {
-                        var postDate = $(this).data('year');
-                        console.log(postDate);
-
+                    $('.form-check').each(function () {
+                        let postDate = $(this).data('year').split(' ')[0];
                         if (postDate === issue_date) {
                             $(this).show();
                         } else {
@@ -85,12 +84,23 @@
                         }
                     });
                 } else {
-                    $('.form-check').hide();
+                    $('.form-check').show();
                 }
+            }
+
+            filterPostsByDate();
+
+            $('input[name="issue_date"]').on('change', function() {
+                filterPostsByDate();
             });
 
-            // Initially hide all post options
-            $('.form-check').hide();
+            $('#select-all').click(function() {
+                $('input[name="posts[]"]').prop('checked', true);
+            });
+
+            $('#deselect-all').click(function() {
+                $('input[name="posts[]"]').prop('checked', false);
+            });
         });
     </script>
 @endsection

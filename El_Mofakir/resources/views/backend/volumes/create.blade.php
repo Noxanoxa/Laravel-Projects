@@ -59,22 +59,6 @@
                 </div>
 
 
-                <div class="row pt-4">
-                    <div class="col-12">
-                        <label for="posts">{{__('Backend/posts.posts')}}</label>
-                        <div class="form-group">
-                            @foreach($posts as $post)
-                                <div class="form-check" data-year="{{$post->created_at->format('Y')}}">
-                                    <input class="form-check-input" type="checkbox" name="posts[]" value="{{$post->id}}">
-                                    <label class="form-check-label">
-                                        {{$post->title}}
-                                    </label>
-                                </div>
-                            @endforeach
-                        </div>
-                        @error('posts')<span class="text-danger">{{ $message }}</span>@enderror
-                    </div>
-                </div>
 
                 <div class="form-group pt-4">
                     <button type="submit" class="btn btn-primary">{{__('Backend/volumes.submit')}}</button>
@@ -89,17 +73,15 @@
         $(document).ready(function() {
             $('input[name="year"]').on('change', function() {
                 var volumeYear = $(this).val();
-                console.log(volumeYear);
+
 
                 if (volumeYear) {
 
                     $('.form-check').each(function() {
                         var postDate = $(this).data('year');
-                        console.log('postdate');
-                        console.log(postDate);
 
                         if (postDate == volumeYear) {
-                            console.log('show');
+
                             $(this).show();
                         } else {
                             $(this).hide();

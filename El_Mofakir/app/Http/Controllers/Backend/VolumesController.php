@@ -42,9 +42,7 @@ class VolumesController extends Controller
         if (!\auth()->user()->ability('admin', 'create_volumes')) {
             return redirect('admin/index');
         }
-
-        $posts = Post::post()->select('id', 'title', 'title_en', 'created_at')->get();
-        return view('backend.volumes.create', compact('posts'));
+        return view('backend.volumes.create');
     }
 
     public function store(Request $request)
@@ -59,7 +57,6 @@ class VolumesController extends Controller
             'status' => 'required',
             'issue_number' => 'required',
             'issue_date' => 'required|date',
-            'posts' => 'array',
         ]);
 
         if ($validator->fails()) {
@@ -105,9 +102,7 @@ class VolumesController extends Controller
 
         $volume = Volume::findOrFail($id);
         $issues = Issue::whereVolumeId($id)->select('id', 'issue_number', 'issue_date')->get();
-        $posts = Post::post()->select('id', 'title', 'title_en', 'created_at')->get();
-        $selectedPosts = $volume->issues()->with('posts')->get()->pluck('posts.*.id')->flatten()->toArray();
-        return view('backend.volumes.edit', compact('volume', 'posts', 'issues', 'selectedPosts'));
+        return view('backend.volumes.edit', compact('volume',  'issues'));
     }
 
     public function update(Request $request, $id)
@@ -125,7 +120,6 @@ class VolumesController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-
         $volume = Volume::findOrFail($id);
         $data = $request->only(['number', 'year', 'status']);
         $volume->update($data);

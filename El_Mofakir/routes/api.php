@@ -14,6 +14,7 @@ Route::get('/announcement/{slug}', [GeneralController::class, 'show_announcement
 
 Route::get('/all_posts', [GeneralController::class, 'get_posts']);
 Route::get('/post/{slug}', [GeneralController::class, 'show_post'])->name('post.show');;
+Route::get('/posts/{post}/download-all', [GeneralController::class, 'downloadAllPdfs'])->name('posts.download_all');
 Route::get('/page/{page}', [GeneralController::class, 'page_show']);
 
 

@@ -11,9 +11,12 @@ use App\Models\Volume;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
 use Stevebauman\Purify\Facades\Purify;
+use ZipArchive;
+
 
 class PostsController extends Controller
 {
@@ -91,11 +94,12 @@ class PostsController extends Controller
             'description_en' => 'required|min:50',
             'status'         => 'required',
             'category_id'    => 'required',
-            'images.*'       => 'nullable|mimes:jpg,jpeg,png,gif|max:20000',
+            'pdf.*'          => 'nullable|mimes:pdf|max:20000',
             'tags.*'         => 'required',
         ]);
 
         if($validator->fails()) {
+//            dd($validator->errors());
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
@@ -109,30 +113,24 @@ class PostsController extends Controller
 
         $post = auth()->user()->posts()->create($data);
 
-        if($request->images && count($request->images) > 0) {
-            $i = 1;
-            foreach ($request->images as $file) {
-                $filename = $post->slug . '-' . time() . '-' . $i . '.'
-                            . $file->getClientOriginalExtension();
+        // Handle PDF upload
+        if ($request->hasFile('pdf')) {
+            foreach ($request->file('pdf') as $file) {
+                $filename = $post->slug . '-' . time() . '-' . uniqid() . '.' . $file->getClientOriginalExtension();
                 $file_size = $file->getSize();
                 $file_type = $file->getMimeType();
-                $path = public_path('assets/posts/' . $filename);
-                Image::make($file->getRealPath())->resize(
-                    800,
-                    null,
-                    function ($constraint) {
-                        $constraint->aspectRatio();
-                    }
-                )->save($path, 100);
+                $file->move(public_path('assets/posts'), $filename);
 
                 $post->media()->create([
+                    'post_id' => $post->id,
                     'file_name' => $filename,
+                    'real_file_name' => $file->getClientOriginalName(), // Save the real file name
                     'file_size' => $file_size,
                     'file_type' => $file_type,
                 ]);
-                $i++;
             }
         }
+
 
         if(count($request->tags) > 0) {
             $new_tags = [];
@@ -165,6 +163,7 @@ class PostsController extends Controller
             return redirect('admin/index');
         }
         $post = Post::with(['media', 'user', 'category'])->whereId($id)->post()->first();
+
         return view('backend.posts.show', compact( 'post') );
 
     }
@@ -193,7 +192,7 @@ class PostsController extends Controller
             'description_en' => 'required|min:50',
             'status'         => 'required',
             'category_id'    => 'required',
-            'images.*'       => 'nullable|mimes:jpg,jpeg,png,gif|max:20000',
+            'pdf.*' => 'nullable|mimes:pdf|max:20000',
             'tags.*'         => 'required',
         ]);
 
@@ -214,25 +213,29 @@ class PostsController extends Controller
 
             $post->update($data);
 
-            if($request->images && count($request->images) > 0) {
-                $i = 1;
-                foreach($request->images as $file) {
-                    $filename   = $post->slug.'-'.time().'-'.$i.'.'.$file->getClientOriginalExtension();
-                    $file_size  = $file->getSize();
-                    $file_type  = $file->getMimeType();
-                    $path       = public_path('assets/posts/'. $filename);
-                    Image::make($file->getRealPath())->resize(800, null, function($constraint) {
-                        $constraint->aspectRatio();
-                    })->save($path, 100);
+            // Handle PDF upload
+            // Handle PDF upload
+            if ($request->hasFile('pdf')) {
 
+                // Store new PDFs
+                foreach ($request->file('pdf') as $file) {
+                    $filename = $post->slug . '-' . time() . '-' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $file_size = $file->getSize();
+                    $file_type = $file->getMimeType();
+                    $file->move(public_path('assets/posts'), $filename);
+
+
+                    // Save PDF info to database
                     $post->media()->create([
                         'file_name' => $filename,
-                        'file_size' => $file_size,
+                        'real_file_name' => $file->getClientOriginalName(), // Save the real file name
                         'file_type' => $file_type,
+                        'file_size' => $file_size
                     ]);
-                    $i++;
                 }
             }
+
+
 
             if(count($request->tags) > 0) {
                 $new_tags = [];
@@ -289,7 +292,7 @@ class PostsController extends Controller
 
     }
 
-    public function removeImage(Request $request){
+    public function removePdf(Request $request){
         if (!\auth()->user()->ability('admin', 'delete_posts')){
             return redirect('admin/index');
         }
@@ -302,5 +305,29 @@ class PostsController extends Controller
             return true;
         }
         return false;
+    }
+
+    public function downloadAllPdfs($postId)
+    {
+        $post = Post::findOrFail($postId);
+        $pdfFiles = $post->media()->where('file_type', 'application/pdf')->get();
+
+        if ($pdfFiles->isEmpty()) {
+            return redirect()->back()->with('error', 'No PDFs found for this post.');
+        }
+
+        $zip = new ZipArchive;
+        $zipFileName = 'post_pdfs_' . $postId . '.zip';
+        $zipFilePath = public_path($zipFileName);
+
+        if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
+            foreach ($pdfFiles as $file) {
+                $filePath = public_path('assets/posts/' . $file->file_name);
+                $zip->addFile($filePath, $file->file_name);
+            }
+            $zip->close();
+        }
+
+        return response()->download($zipFilePath)->deleteFileAfterSend(true);
     }
 }

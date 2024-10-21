@@ -6,7 +6,7 @@
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex">
             <h6 class="m-0 font-weight-bold text-primary">{{__('Backend/posts.edit_post')}}
-                ( {{ config('app.locale') == 'ar' ? $post->title : $post->title_en }} )</h6>
+                ( {{ $post->title() }} )</h6>
             <div class="ml-auto">
                 <a href="{{route('admin.posts.index')}}" class="btn btn-primary">
                     <span class="icon text-white-50">
@@ -53,7 +53,7 @@
                             <label for="description_en">{{__('Backend/posts.description_en')}}</label>
                             <textarea name="description_en" class="form-control summernote"
                                       placeholder="{{__('Backend/posts.ur_description_en')}}">{!! old('description_en' , $post->description_en) !!}</textarea>
-                            @error('description')<span class="text-danger">{{ $message }}</span>@enderror
+                            @error('description_en')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                     </div>
                 </div>
@@ -101,13 +101,13 @@
                 </div>
                 <div class="row pt-4">
                     <div class="col-12">
-                        <label for="images">{{__('Backend/posts.sliders')}}</label>
+                        <label for="pdf">{{__('Backend/posts.sliders')}}</label>
                         <br>
                         <div class="file-loading">
-                            <input type="file" name="images[]" id="post-images" class="file-input-overview"
+                            <input type="file" name="pdf[]" id="post-pdf" class="file-input-overview"
                                    multiple="multiple">
-                            <span class="form-text text-muted">{{__('Backend/posts.image_note')}}</span>
-                            @error('images')<span class="text-danger">{{ $message }}</span>@enderror
+                            <span class="form-text text-muted">{{__('Backend/posts.pdf_note')}}</span>
+                            @error('pdf')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                     </div>
                 </div>
@@ -149,10 +149,10 @@
                 $('#select_all_tags > option').prop('selected', '');
                 $('#select_all_tags').trigger('change');
             });
-            $('#post-images').fileinput({
+            $('#post-pdf').fileinput({
                 theme: 'fas',
                 maxFileCount: {{5 - $post->media->count()}},
-                allowedFileTypes: ['image'],
+                allowedFileTypes: ['pdf'],
                 showCancel: true,
                 showRemove: false,
                 showUpload: false,
@@ -165,19 +165,20 @@
                     @endif
                 ],
                 initialPreviewAsData: true,
-                initialPreviewFileType: 'image',
+                initialPreviewFileType: 'pdf',
                 initialPreviewConfig: [
                         @if($post->media->count() > 0)
                         @foreach($post->media as $media)
                     {
-                        caption: "{{ $media->file_name }}", size: {{ $media->file_size }}, width: '120px', url: "{{ route('admin.posts.media.destroy', [$media->id, '_token' => csrf_token()]) }}", key: "{{ $media->id }}",
+                        caption: "{{ $media->real_file_name }}",
+                        size: {{ $media->file_size }},
+                        key: {{ $media->id }},
+                        url: "{{ route('admin.posts.media.destroy', [$media->id, '_token' => csrf_token()]) }}",
                     },
                     @endforeach
                     @endif
                 ],
             });
         });
-
-
     </script>
 @endsection

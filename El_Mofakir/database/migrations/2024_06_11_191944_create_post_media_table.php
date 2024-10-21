@@ -17,6 +17,7 @@ class CreatePostMediaTable extends Migration
             $table->id();
             $table->foreignId('post_id')->constrained()->onDelete('cascade');
             $table->string('file_name');
+            $table->string('real_file_name');
             $table->string('file_type')->nullable();
             $table->string('file_size')->nullable();
             $table->timestamps();

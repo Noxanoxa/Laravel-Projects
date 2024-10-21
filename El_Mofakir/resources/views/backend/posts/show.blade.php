@@ -12,43 +12,68 @@
                 </a>
             </div>
         </div>
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <tbody>
-                        <tr>
-                            <td colspan="4"><a href="{{route('admin.posts.show', $post->id)}}">{{  $post->title() }}</a></td>
-                        </tr>
-                        <tr>
-                            <th>{{__('Backend/posts.status')}}</th>
-                            <td>{{ $post->status() }}</td>
-                        </tr>
-                        <tr>
-                            <th>{{__('Backend/posts.category')}}</th>
-                            <td>{{ $post->category->name()}}</td>
-                            <th>{{__('Backend/posts.author')}}</th>
-                            <td>{{ $post->user->name}}</td>
-                        </tr>
-                        <tr>
-                            <th>{{__('Backend/posts.created_at')}}</th>
-                            <td>{{ config('app.locale') == 'en' ? $post->created_at ->format('d-m-Y h:i a') :   $post->created_at->locale('ar')->translatedFormat('d-m-Y h:i a') }}</td>
-                            <th></th>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td colspan="4">
-                                <div class="row">
-                                    @if($post->media->count() > 0)
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <tbody>
+                <tr>
+                    <td colspan="4"><a href="{{route('admin.posts.show', $post->id)}}">{{  $post->title() }}</a></td>
+                </tr>
+                <tr>
+                    <th>{{__('Backend/posts.status')}}</th>
+                    <td>{{ $post->status() }}</td>
+                </tr>
+                <tr>
+                    <th>{{__('Backend/posts.category')}}</th>
+                    <td>{{ $post->category->name()}}</td>
+                    <th>{{__('Backend/posts.author')}}</th>
+                    <td>{{ $post->user->name}}</td>
+                </tr>
+                <tr>
+                    <th>{{__('Backend/posts.created_at')}}</th>
+                    <td>{{ config('app.locale') == 'en' ? $post->created_at ->format('d-m-Y h:i a') :   $post->created_at->locale('ar')->translatedFormat('d-m-Y h:i a') }}</td>
+                    <th></th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th colspan="4"> {{__('Backend/posts.sliders')}}</th>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <div class="row">
+                            <div class="col-12">
+                                @if($post->media->count() > 0)
+                                    <ul class="list-group">
                                         @foreach($post->media as $media)
-                                            <div class="col-2">
-                                                <img src="{{ asset('assets/posts/' . $media->file_name) }}" class="img-fluid">
-                                            </div>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <a href="{{ asset('assets/posts/' . $media->file_name) }}" target="_blank" style="text-decoration: none; color: inherit;">{{ $media->real_file_name }}</a>
+                                            </li>
                                         @endforeach
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                                    </ul>
+                                @else
+                                    <p>{{__('Backend/posts.no_pdfs')}}</p>
+                                @endif
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <div class="form-group pt-4">
+                            <button type="button" class="btn btn-primary" id="download-all-pdfs">{{ __('Backend/posts.download_all') }}</button>
+                        </div>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        document.getElementById('download-all-pdfs').addEventListener('click', function() {
+            window.location.href = "{{ route('admin.posts.downloadAllPdfs', $post->id) }}";
+        });
+    </script>
 @endsection

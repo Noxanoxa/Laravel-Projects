@@ -26,14 +26,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function() {
     Route::post('login',                                [Backend\Auth\LoginController::class, 'login'])->name('login');
     Route::post('logout',                               [Backend\Auth\LoginController::class, 'logout'])->name('logout');
 
-    Route::group(['middleware' => ['roles', 'role:admin|editor']], function() {
+    Route::group(['middleware' => ['roles', 'role:admin']], function() {
         Route::any('/notifications/get',                [Backend\NotificationsController::class, 'getNotifications']);
         Route::any('/notifications/read',               [Backend\NotificationsController::class, 'markAsRead']);
 
 //        Route::get('/',                                 [Backend\AdminController::class, 'index'])->name('index_route');
         Route::get('/index',                            [Backend\AdminController::class, 'index'])->name('index');
 
-        Route::post('/posts/removeImage/{media_id}',    [Backend\PostsController::class, 'removeImage'])->name('posts.media.destroy');
+
+
+        Route::post('/posts/removePdf/{media_id}',    [Backend\PostsController::class, 'removePdf'])->name('posts.media.destroy');
+        Route::get('/posts/{post}/download-all-pdfs', [Backend\PostsController::class, 'downloadAllPdfs'])->name('posts.downloadAllPdfs');
         Route::resource('posts',                        Backend\PostsController::class);
         // announcements
         Route::resource('announcements',                Backend\AnnouncementsController::class);
@@ -44,7 +47,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function() {
         // issues
         Route::resource('issues',                       Backend\IssuesController::class);
 
-        Route::post('/pages/removeImage/{media_id}',    [Backend\PagesController::class, 'removeImage'])->name('pages.media.destroy');
+        Route::post('/pages/removePdf/{media_id}',    [Backend\PagesController::class, 'removePdf'])->name('pages.media.destroy');
         Route::resource('pages',                        Backend\PagesController::class);
 
 

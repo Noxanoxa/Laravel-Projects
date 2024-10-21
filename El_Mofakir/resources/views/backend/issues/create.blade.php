@@ -1,3 +1,4 @@
+<!-- resources/views/backend/issues/create.blade.php -->
 @extends('layouts.admin')
 @section('content')
     <div class="card shadow mb-4">
@@ -26,7 +27,7 @@
                     <div class="col-4">
                         <div class="form-group">
                             <label for="issue_date">{{__('Backend/issues.date')}}</label>
-                            <input type="date" name="issue_date" class="form-control" value="{{old('issue_date')}}">
+                            <input type="date" name="issue_date" class="form-control" value="{{old('issue_date', $issueDate)}}">
                             @error('issue_date')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                     </div>
@@ -55,16 +56,17 @@
                     </div>
                 </div>
 
-
                 <div class="row pt-4">
                     <div class="col-12">
                         <label for="posts">{{__('Backend/posts.posts')}}</label>
                         <div class="form-group">
+                            <button type="button" id="select-all" class="btn btn-secondary btn-sm">{{ __('Select All') }}</button>
+                            <button type="button" id="deselect-all" class="btn btn-secondary btn-sm">{{ __('Deselect All') }}</button>
                             @foreach($posts as $post)
                                 <div class="form-check" data-date="{{$post->created_at->format('Y-m-d')}}">
                                     <input class="form-check-input" type="checkbox" name="posts[]" value="{{$post->id}}">
                                     <label class="form-check-label">
-                                        {{$post->title}}
+                                        {{$post->title()}}
                                     </label>
                                 </div>
                             @endforeach
@@ -84,16 +86,14 @@
 @section('script')
     <script>
         $(document).ready(function() {
-            $('input[name="issue_date"]').on('change', function() {
-                var issueDate = $(this).val();
-                var issueYear = new Date(issueDate).getFullYear();
-
+            function filterbyIssueDate() {
+                let issueDate =$('input[name="issue_date"]').val();
+                let issueYear = new Date(issueDate).getFullYear();
                 if (issueDate) {
                     $('select[name="volume_id"] option').each(function() {
-                        var volumeYear = $(this).data('year');
-                        console.log("volume" + volumeYear);
+                        var  volumeYear = $(this).data('year');
 
-                        if (volumeYear === issueYear) {
+                        if (volumeYear == issueYear) {
                             $(this).show();
                         } else {
                             $(this).hide();
@@ -101,8 +101,8 @@
                     });
 
                     $('.form-check').each(function() {
-                        var postDate = $(this).data('date');
-                        if (postDate === issueDate) {
+                        let postDate = $(this).data('date');
+                        if (postDate.split('-')[0] == issueYear) {
                             $(this).show();
                         } else {
                             $(this).hide();
@@ -112,11 +112,22 @@
                     $('select[name="volume_id"] option').hide();
                     $('.form-check').hide();
                 }
+            }
+
+            filterbyIssueDate();
+
+
+            $('input[name="issue_date"]').on('change', function() {
+                filterbyIssueDate();
             });
 
-            // Initially hide all volume and post options
-            $('select[name="volume_id"] option').hide();
-            $('.form-check').hide();
+            $('#select-all').click(function() {
+                $('input[name="posts[]"]').prop('checked', true);
+            });
+
+            $('#deselect-all').click(function() {
+                $('input[name="posts[]"]').prop('checked', false);
+            });
         });
     </script>
 @endsection
