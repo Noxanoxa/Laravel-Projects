@@ -408,16 +408,10 @@ class GeneralController extends Controller
                      ->post()
                      ->active()
                      ->orderBy('id', 'desc')
-                     ->get();
+                     ->paginate(5);
 
         if ($posts->count() > 0) {
-            return response()->json(
-                [
-                    'posts' => PostsResource::collection($posts),
-                    'error' => false,
-                ],
-                200
-            );
+            return  PostsResource::collection($posts);
         } else {
             return response()->json(
                 ['message' => 'No post found', 'error' => true],
