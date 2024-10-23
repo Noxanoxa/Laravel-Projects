@@ -71,7 +71,7 @@
                                         value="{{$tag->id}}" {{ in_array($tag->id, old('tags[]', $post->tags->pluck('id')->toArray() )) ? 'selected' : ''   }}>{{$tag->name()}}</option>
                                 @endforeach
                             </select>
-                            @error('tags')<span class="text-danger">{{ $message }}</span>@enderror
+                            @error('tags[]')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                     </div>
                 </div>
@@ -127,9 +127,6 @@
                 tabsize: 2,
                 height: 200,
                 toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
                     ['para', ['ul', 'ol', 'paragraph']],
                     ['table', ['table']],
                     ['insert', ['link', 'picture', 'video']],

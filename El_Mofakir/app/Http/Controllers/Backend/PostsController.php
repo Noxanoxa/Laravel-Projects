@@ -249,6 +249,9 @@ class PostsController extends Controller
                 }
                 $post->tags()->sync($new_tags);
             }
+            else {
+                $post->tags()->detach();
+            }
 
             return redirect()->route('admin.posts.index')->with([
                 'message' => 'Post Updated Successfully',

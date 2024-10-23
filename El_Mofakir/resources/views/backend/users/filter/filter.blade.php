@@ -1,6 +1,5 @@
 <div class="card-body">
-    <form method="post" action="{{route('admin.posts.store')}}" enctype="multipart/form-data">
-        @csrf
+    <form method="get" action="{{route('admin.users.index')}}">
         <div class="row">
             <div class="col-2">
                 <div class="form-group">

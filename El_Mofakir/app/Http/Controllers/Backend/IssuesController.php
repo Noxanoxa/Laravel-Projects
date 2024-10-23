@@ -22,15 +22,18 @@ class IssuesController extends Controller
         }
 
         $issues = Issue::with('posts')
-                       ->when(request('keyword') != '', function ($query) {
-                           $query->search(request('keyword'));
-                       })
-                       ->when(request('status') != '', function ($query) {
-                           $query->whereStatus(request('status'));
-                       })
-                       ->orderBy(request('sort_by') ?? 'id', request('order_by') ?? 'desc')
-                       ->paginate(request('limit_by') ?? '10')
-                       ->withQueryString();
+            ->when(request('volume_id'), function ($query) {
+                $query->where('volume_id', request('volume_id'));
+            })
+        ->when(request('keyword') != '', function ($query) {
+            $query->search(request('keyword'));
+        })
+        ->when(request('status') != '', function ($query) {
+            $query->whereStatus(request('status'));
+        })
+        ->orderBy(request('sort_by') ?? 'id', request('order_by') ?? 'desc')
+        ->paginate(request('limit_by') ?? '10')
+        ->withQueryString();
 
         return view('backend.issues.index', compact('issues'));
     }
@@ -76,15 +79,6 @@ class IssuesController extends Controller
         ]);
     }
 
-    public function show($id)
-    {
-        if (!\auth()->user()->ability('admin', 'display_issues')) {
-            return redirect('admin/index');
-        }
-
-        $issue = Issue::with(['posts'])->findOrFail($id);
-        return view('backend.issues.show', compact('issue'));
-    }
 
     public function edit($id)
     {

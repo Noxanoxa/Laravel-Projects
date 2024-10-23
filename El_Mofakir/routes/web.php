@@ -63,14 +63,4 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function() {
     });
 });
 
-//Route::get('/contact-us',                               [Frontend\IndexController::class, 'contact'])->name('frontend.contact');
-//Route::post('/contact-us',                              [Frontend\IndexController::class, 'do_contact'])->name('frontend.do_contact');
-//Route::get('/category/{category_slug}',                 [Frontend\IndexController::class, 'category'])->name('frontend.category.posts');
-
-//Route::get('/tag/{tag_slug}',                           [Frontend\IndexController::class, 'tag'])->name('frontend.tag.posts');
-//Route::get('/archive/{date}',                           [Frontend\IndexController::class, 'archive'])->name('frontend.archive.posts');
-//Route::get('/author/{username}',                        [Frontend\IndexController::class, 'author'])->name('frontend.author.posts');
-//Route::get('/search',                                   [Frontend\IndexController::class, 'search'])->name('frontend.search');
-
-//Route::get('/{post}',                                   [Frontend\IndexController::class, 'post_show'])->name('frontend.posts.show');
 

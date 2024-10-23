@@ -29,6 +29,7 @@ return [
             'inactive' => 'Inactive',
             'id' => 'ID',
             'update_volume' => 'Update Volume',
+    'no_issue'
 
 ];
 

@@ -39,8 +39,8 @@
                     <tbody>
                     @forelse($issues as $issue)
                         <tr>
-                            <td><a href="{{route('admin.issues.show', $issue->id)}}">{{ $issue->volume->number }}</a></td>
-                            <td><a href="{{route('admin.issues.show', $issue->id)}}">{{ $issue->issue_number }}</a></td>
+                            <td>{{ $issue->volume->number }}</td>
+                            <td>{{ $issue->issue_number }}</td>
                             <td><a href="{{route('admin.posts.index', ['issue_id' =>$issue->id])}}">{{ $issue->posts->count() }}</a></td>
                             <td>{{ $issue->issue_date }}</td>
                             <td>

@@ -3,13 +3,13 @@
 
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex">
-            <h6 class="m-0 font-weight-bold text-primary">{{__('Backend/users.users')}}</h6>
+            <h6 class="m-0 font-weight-bold text-primary">{{__('Backend/users.authors')}}</h6>
             <div class="ml-auto">
                 <a href="{{route('admin.users.create')}}" class="btn btn-primary">
                     <span class="icon text-white-50">
                         <i class="fa fa-plus"></i>
                     </span>
-                    <span class="text">{{__('Backend/users.add_user')}}</span>
+                    <span class="text">{{__('Backend/users.add_author')}}</span>
                 </a>
             </div>
         </div>

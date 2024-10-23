@@ -2,7 +2,7 @@
 @section('content')
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex">
-            <h6 class="m-0 font-weight-bold text-primary">{{__('Backend/volumes.edit_volume')}} {{ config('app.locale') =='en' ? $volume->number : $volume->number }}</h6>
+            <h6 class="m-0 font-weight-bold text-primary">{{__('Backend/volumes.volume')}} {{ $volume->number }}</h6>
             <div class="ml-auto">
                 <a href="{{route('admin.volumes.index')}}" class="btn btn-primary">
                     <span class="icon text-white-50">
@@ -49,8 +49,8 @@
                 <tbody>
                 @forelse($volume->issues as $issue)
                     <tr>
-                        <td>{{ $issue->number }}</td>
-                        <td>{{ $issue->date }}</td>
+                        <td>{{ $issue->issue_number }}</td>
+                        <td>{{ $issue->issue_date }}</td>
                         <td>
                             <div class="btn-group">
                                 <a href="{{route('admin.issues.edit', $issue->id)}}" class="btn btn-primary"><i class="fa fa-edit"></i></a>
