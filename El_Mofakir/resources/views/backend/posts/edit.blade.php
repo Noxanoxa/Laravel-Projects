@@ -43,7 +43,7 @@
                     <div class="col-6">
                         <div class="form-group">
                             <label for="description">{{__('Backend/posts.description')}}</label>
-                            <textarea name="description" class="form-control summernote"
+                            <textarea name="description" class="form-control"
                                       placeholder="{{__('Backend/posts.ur_description')}}">{!! old('description', $post->description) !!}</textarea>
                             @error('description')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
@@ -51,7 +51,7 @@
                     <div class="col-6">
                         <div class="form-group">
                             <label for="description_en">{{__('Backend/posts.description_en')}}</label>
-                            <textarea name="description_en" class="form-control summernote"
+                            <textarea name="description_en" class="form-control"
                                       placeholder="{{__('Backend/posts.ur_description_en')}}">{!! old('description_en' , $post->description_en) !!}</textarea>
                             @error('description_en')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
@@ -123,16 +123,6 @@
     <script src="{{ asset('backend/vendor/select2/js/select2.full.min.js')}}"></script>
     <script>
         $(function () {
-            $('.summernote').summernote({
-                tabsize: 2,
-                height: 200,
-                toolbar: [
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']],
-                ],
-            });
             $('.selects').select2({
                 tags: true,
                 minimumResultsForSearch: Infinity,
