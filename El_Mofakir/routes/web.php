@@ -22,9 +22,13 @@ Route::group(['middleware' => 'web'], function () {
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function() {
     // Authentication Routes...
-    Route::get('/login',                                [Backend\Auth\LoginController::class, 'showLoginForm'])->name('show_login_form');
-    Route::post('login',                                [Backend\Auth\LoginController::class, 'login'])->name('login');
-    Route::post('logout',                               [Backend\Auth\LoginController::class, 'logout'])->name('logout');
+
+    Route::controller(Backend\Auth\LoginController::class)->group(function() {
+        Route::get('/login',                                'showLoginForm')->name('show_login_form');
+        Route::post('login',                                'login')->name('login');
+        Route::post('logout',                               'logout')->name('logout');
+    });
+
 
     Route::group(['middleware' => ['roles', 'role:admin']], function() {
         Route::any('/notifications/get',                [Backend\NotificationsController::class, 'getNotifications']);
@@ -57,8 +61,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function() {
 
         Route::resource('contact_us',                   Backend\ContactUsController::class);
 
-        Route::post('/users/removeImage',               [Backend\UsersController::class, 'removeImage'])->name('users.remove_image');
-        Route::resource('users',                        Backend\UsersController::class);
+
+        Route::controller(Backend\UsersController::class)->group(function() {
+            Route::get('/users/{id}/download-cv',  'downloadCv')->name('users.download_cv');
+            Route::post('/users/removePdf/{media_id}',     'removePdf')->name('users.media.destroy');
+            Route::post('/users/removeImage',               'removeImage')->name('users.remove_image');
+        });
+            Route::resource('users',                        Backend\UsersController::class);
+
         Route::resource('settings',                     Backend\SettingsController::class);
     });
 });

@@ -50,47 +50,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-3">
-                        <div class="form-group">
-                            <label for="password">{{__('Backend/users.password')}}</label>
-                            <input type="password" name="password" value="{{ old('password') }}" class="form-control">
-                            @error('password')<span class="text-danger">{{ $message }}</span>@enderror
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="form-group">
-                            <label for="status">{{__('Backend/users.status')}}</label>
-                            <select name="status" class="form-control">
-                                <option value="">---</option>
-                                <option
-                                    value="0" {{ old('status', $user->status) == '0' ? 'selected' : '' }}>{{__('Backend/users.inactive')}}</option>
-                                <option
-                                    value="1" {{ old('status', $user->status) == '1' ? 'selected' : '' }}>{{__('Backend/users.active')}}</option>
-                            </select>
-                            @error('status')<span class="text-danger">{{ $message }}</span>@enderror
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="receive_email">{{__('Backend/users.receive_email')}}</label>
-                            <select name="receive_email" class="form-control">
-                                <option
-                                    value="1" {{ old('receive_email', $user->receive_email) == '1' ? 'selected' : '' }}>{{__('Backend/users.yes')}}</option>
-                                <option
-                                    value="0" {{ old('receive_email', $user->receive_email) == '0' ? 'selected' : '' }}>{{__('Backend/users.no')}}</option>
-                            </select>
-                            @error('receive_email')<span class="text-danger">{{ $message }}</span>@enderror
-                        </div>
-                    </div>
-                </div>
 
-                <div class="row">
+                <div class="row pt-4">
                     <div class="col-12">
-                        <div class="form-group">
-                            <label for="bio">{{__('Backend/users.bio')}}</label>
-                            <textarea name="bio" class="form-control">{{ old('bio', $user->bio) }}</textarea>
-                            @error('bio')<span class="text-danger">{{ $message }}</span>@enderror
+                        <label for="pdf">{{__('Backend/users.cv')}}</label>
+                        <br>
+                        <div class="file-loading">
+                            <input type="file" name="pdf" id="cv-pdf" class="file-input-overview"
+                                   multiple="multiple">
+                            <span class="form-text text-muted">{{__('Backend/users.pdf_note')}}</span>
+                            @error('pdf')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                     </div>
                 </div>
@@ -142,6 +111,41 @@
                     }
                 });
             });
+            @if(optional($user->media)->count() > 0)
+            $('#cv-pdf').fileinput({
+                theme: 'fas',
+                maxFileCount: 1,
+                allowedFileTypes: ['pdf'],
+                showCancel: true,
+                showRemove: false,
+                showUpload: false,
+                overwriteInitial: false,
+                initialPreview: [
+                        "{{ asset('assets/users/' . $user->media->file_name) }}",
+                ],
+                initialPreviewAsData: true,
+                initialPreviewFileType: 'pdf',
+                initialPreviewConfig: [
+                    {
+                        caption: "{{ $user->media->real_file_name }}",
+                        size: {{ $user->media->file_size }},
+                        key: {{ $user->media->id }},
+                        url: "{{ route('admin.users.media.destroy', [$user->media->id, '_token' => csrf_token()]) }}",
+                    },
+
+                ],
+            });
+            @else
+            $('#cv-pdf').fileinput({
+                theme: 'fas',
+                maxFileCount: 1,
+                allowedFileTypes: ['pdf'],
+                showCancel: true,
+                showRemove: false,
+                showUpload: false,
+                overwriteInitial: false,
+            });
+            @endif
         });
     </script>
 @endsection

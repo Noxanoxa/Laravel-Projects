@@ -61,10 +61,11 @@
                     <div class="col-12">
                         <div class="form-group">
                             <label for="tags">{{__('Backend/posts.tags')}}</label>
-                            <button type="button" class="btn btn-primary btn-xs"
+                            <button type="button" class="btn btn-primary btn-sm"
                                     id="select_btn_tag">{{__('Backend/posts.select_all')}}</button>
-                            <button type="button" class="btn btn-primary btn-xs"
+                            <button type="button" class="btn btn-primary btn-sm"
                                     id="deselect_btn_tag">{{__('Backend/posts.deselect_all')}}</button>
+
                             <select name="tags[]" class="form-control selects" multiple="multiple" id="select_all_tags">
                                 @foreach($tags as $tag)
                                     <option

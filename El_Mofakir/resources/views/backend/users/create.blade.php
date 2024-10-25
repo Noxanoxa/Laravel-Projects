@@ -9,7 +9,7 @@
                     <span class="icon text-white-50">
                         <i class="fa fa-home"></i>
                     </span>
-                    <span class="text">{{__('Backend/users.users')}}</span>
+                    <span class="text">{{__('Backend/users.authors')}}</span>
                 </a>
             </div>
         </div>
@@ -46,54 +46,22 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-3">
-                        <div class="form-group">
-                            <label for="password">{{__('Backend/users.password')}}</label>
-                            <input type="password" name="password" value="{{ old('password') }}" class="form-control">
-                            @error('password')<span class="text-danger">{{ $message }}</span>@enderror
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="form-group">
-                            <label for="status">{{__('Backend/users.status')}}</label>
-                            <select name="status" class="form-control">
-                                <option value="">---</option>
-                                <option
-                                    value="0" {{ old('status') == '0' ? 'selected' : '' }}>{{__('Backend/users.inactive')}}</option>
-                                <option
-                                    value="1" {{ old('status') == '1' ? 'selected' : '' }}>{{__('Backend/users.active')}}</option>
-                            </select>
-                            @error('status')<span class="text-danger">{{ $message }}</span>@enderror
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="receive_email">{{__('Backend/users.receive_email')}}</label>
-                            <select name="receive_email" class="form-control">
-                                <option value="">---</option>
-                                <option
-                                    value="1" {{ old('receive_email') == '1' ? 'selected' : '' }}>{{__('Backend/users.yes')}}</option>
-                                <option
-                                    value="0" {{ old('receive_email') == '0' ? 'selected' : '' }}>{{__('Backend/users.no')}}</option>
-                            </select>
-                            @error('receive_email')<span class="text-danger">{{ $message }}</span>@enderror
+
+                <div class="row pt-4">
+                    <div class="col-12">
+                        <label for="pdf">{{__('Backend/users.cv')}}</label>
+                        <br>
+                        <div class="file-loading">
+                            <input type="file" name="pdf" id="cv-pdf" class="file-input-overview">
+                            <span class="form-text text-muted">{{__('Backend/users.pdf_note')}}</span>
+                            @error('pdf')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label for="bio">{{__('Backend/users.bio')}}</label>
-                            <textarea name="bio" class="form-control">{{ old('bio') }}</textarea>
-                            @error('bio')<span class="text-danger">{{ $message }}</span>@enderror
-                        </div>
-                    </div>
-                </div>
                 <div class="row pt-4">
                     <div class="col-12">
-                        <label for="user_image">{{__('Backend/users.user_image')}}</label>
+                        <label for="user_image">{{__('Backend/users.author_image')}}</label>
                         <br>
                         <div class="file-loading">
                             <input id="user-image" type="file" name="user_image" class="file-input-overview">
@@ -116,6 +84,15 @@
                 theme: 'fas',
                 maxFileCount: 1,
                 allowedFileTypes: ['image'],
+                showCancel: true,
+                showRemove: false,
+                showUpload: false,
+                overwriteInitial: false,
+            });
+            $('#cv-pdf').fileinput({
+                theme: "fas",
+                maxFileCount: 1,
+                allowedFileTypes: ['pdf'],
                 showCancel: true,
                 showRemove: false,
                 showUpload: false,

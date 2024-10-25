@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Resources\Users;
+namespace App\Http\Resources\General;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+
 
 class UserResource extends JsonResource
 {

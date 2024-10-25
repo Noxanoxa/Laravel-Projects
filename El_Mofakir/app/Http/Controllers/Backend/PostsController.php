@@ -11,9 +11,7 @@ use App\Models\Volume;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Intervention\Image\Facades\Image;
 use Stevebauman\Purify\Facades\Purify;
 use ZipArchive;
 
@@ -53,9 +51,7 @@ class PostsController extends Controller
                 $query->whereCategoryId(request('category_id'));
             })
         ->when(request('tag_id') != '', function ($query){
-                $query->whereHas('tags', function ($q) {
-                    $q->where('id', request('tag_id'));
-                });
+                $query->whereRelation('tags', 'id', request('tag_id'));
             })
         ->when(request('status') != '', function ($query){
                 $query->whereStatus(request('status'));
@@ -95,7 +91,7 @@ class PostsController extends Controller
             'status'         => 'required',
             'category_id'    => 'required',
             'pdf.*'          => 'nullable|mimes:pdf|max:20000',
-            'tags.*'         => 'required',
+            'tags.*'         => 'nullable',
         ]);
 
         if($validator->fails()) {
@@ -116,7 +112,7 @@ class PostsController extends Controller
         // Handle PDF upload
         if ($request->hasFile('pdf')) {
             foreach ($request->file('pdf') as $file) {
-                $filename = $post->slug . '-' . time() . '-' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $filename = $post->slug . '-' . time() . '-' . uniqid() . '.' . $file->getClientOriginalExtension ();
                 $file_size = $file->getSize();
                 $file_type = $file->getMimeType();
                 $file->move(public_path('assets/posts'), $filename);
@@ -193,7 +189,7 @@ class PostsController extends Controller
             'status'         => 'required',
             'category_id'    => 'required',
             'pdf.*' => 'nullable|mimes:pdf|max:20000',
-            'tags.*'         => 'required',
+            'tags.*'         => 'nullable',
         ]);
 
         if($validator->fails()) {
@@ -213,11 +209,10 @@ class PostsController extends Controller
 
             $post->update($data);
 
-            // Handle PDF upload
-            // Handle PDF upload
+
             if ($request->hasFile('pdf')) {
 
-                // Store new PDFs
+
                 foreach ($request->file('pdf') as $file) {
                     $filename = $post->slug . '-' . time() . '-' . uniqid() . '.' . $file->getClientOriginalExtension();
                     $file_size = $file->getSize();
@@ -237,7 +232,7 @@ class PostsController extends Controller
 
 
 
-            if(count($request->tags) > 0) {
+            if (is_array($request->tags) && count($request->tags) > 0) {
                 $new_tags = [];
                 foreach ($request->tags as $tag) {
                     $tag = Tag::firstOrCreate([
@@ -248,10 +243,10 @@ class PostsController extends Controller
                     $new_tags[] = $tag->id;
                 }
                 $post->tags()->sync($new_tags);
-            }
-            else {
+            } else {
                 $post->tags()->detach();
             }
+
 
             return redirect()->route('admin.posts.index')->with([
                 'message' => 'Post Updated Successfully',

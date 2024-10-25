@@ -3,23 +3,29 @@
 namespace App\Http\Controllers\Api\General;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\General\AnnouncementsResource;
-use App\Http\Resources\General\PageResource;
-use App\Http\Resources\General\PostResource;
-use App\Http\Resources\General\TagsResource;
-use App\Http\Resources\Users\UserResource;
-use App\Http\Resources\General\PostsResource;
-use App\Models\Announcement;
-use App\Models\Category;
-use App\Models\Contact;
-use App\Models\Post;
-use App\Models\Tag;
-use App\Models\User;
-use App\Notifications\NewCommentForAdminNotify;
-use App\Notifications\NewCommentForPostOwnerNotify;
+
+use App\Http\Resources\General\{
+    AnnouncementsResource,
+    PageResource,
+    PostResource,
+    TagsResource,
+    UserResource,
+    PostsResource
+};
+use App\Models\{
+    Announcement,
+    Category,
+    Contact,
+    Post,
+    Tag,
+    User
+};
+use App\Notifications\{
+    NewCommentForAdminNotify,
+    NewCommentForPostOwnerNotify
+};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Stevebauman\Purify\Facades\Purify;
 use ZipArchive;
 
 class GeneralController extends Controller
@@ -27,13 +33,10 @@ class GeneralController extends Controller
 
     public function get_posts()
     {
-        $posts = Post::whereHas('category', function ($query) {
-            $query->whereStatus(1);
-        })
-                     ->whereHas('user', function ($query) {
-                         $query->whereStatus('1');
-                     })
-                     ->post()->active()->orderBy('id', 'desc')->paginate(10);
+        $posts = Post::whereRelation('category', 'status', 1)
+                                    ->whereRelation('user', 'status', 1)
+                                    ->post()->active()->orderBy('id', 'desc')
+                                    ->paginate(10);
 
         if ($posts->count() > 0) {
             return PostsResource::collection($posts);
@@ -48,9 +51,8 @@ class GeneralController extends Controller
     public function get_announcements()
     {
         $announcements = Announcement::with(['user'])
-                                     ->whereHas('user', function ($query) {
-                                         $query->whereStatus(1);
-                                     })->whereStatus(1)->orderBy('id', 'desc')
+                                    ->whereRelation('user', 'status', 1)
+                                   ->active()->orderBy('id', 'desc')
                                      ->get();
 
         if ($announcements->count() > 0) {
@@ -74,13 +76,9 @@ class GeneralController extends Controller
     public function get_recent_posts()
     {
         $posts = Post::with(['category', 'media', 'user'])
-                     ->whereHas('category', function ($query) {
-                         $query->whereStatus(1);
-                     })
-                     ->whereHas('user', function ($query) {
-                         $query->whereStatus(1);
-                     })
-                     ->wherePostType('post')->whereStatus(1)->orderBy(
+                     ->whereRelation('category', 'status', 1)
+                        ->whereRelation('user', 'status', 1)
+                     ->post()->active()->orderBy(
                 'id',
                 'desc'
             )->limit(5)->get();
@@ -104,9 +102,8 @@ class GeneralController extends Controller
     public function get_recent_announcements()
     {
         $announcements = Announcement::with(['user'])
-                                     ->whereHas('user', function ($query) {
-                                         $query->whereStatus(1);
-                                     })->whereStatus(1)->orderBy('id', 'desc')
+                                    ->whereRelation('user', 'status', 1)
+                                     ->active()->orderBy('id', 'desc')
                                      ->limit(5)->get();
 
         if ($announcements->count() > 0) {
@@ -130,9 +127,9 @@ class GeneralController extends Controller
 
     public function get_authors()
     {
-        $authors = User::whereStatus(1)->whereHas('posts', function ($query) {
-            $query->wherePostType('post');
-        })->withCount('posts')->orderBy('id', 'desc')->get();
+        $authors = User::active()
+                       ->whereRelation('posts', 'post_type', 'post')
+                       ->withCount('posts')->orderBy('id', 'desc')->get();
 
         if ($authors->count() > 0) {
             return response()->json(
@@ -155,8 +152,8 @@ class GeneralController extends Controller
         $archives = Post::selectRaw(
             'year(created_at) year, monthname(created_at) month, count(*) published'
         )
-                        ->wherePostType('post')
-                        ->whereStatus(1)
+                        ->post()
+                        ->active()
                         ->groupBy('year', 'month')
                         ->orderByRaw('min(created_at) desc')
                         ->get();
@@ -201,13 +198,8 @@ class GeneralController extends Controller
             },
         ]);
 
-        $post = $post->whereHas('category', function ($query) {
-            $query->whereStatus('1');
-        })
-                     ->whereHas('user', function ($query) {
-                         $query->whereStatus('1');
-                     });
-
+        $post = $post->whereRelation('category', 'status', 1)
+                                    ->whereRelation('user', 'status', 1);
         $post = Post::where('slug_en', $slug);
         $post = $post->active()->post()->first();
 
@@ -275,17 +267,14 @@ class GeneralController extends Controller
     {
         $announcement = Announcement::with(['user']);
 
-        $announcement = $announcement->whereHas('user', function ($query) {
-            $query->whereStatus('1');
-        });
-
+        $announcement = $announcement->whereRelation('user', 'status', 1);
         $announcement = Announcement::whereSlug($slug);
         $announcement = $announcement->active()->first();;
 
         if ($announcement) {
             return response()->json(
                 [
-                    'announcement' => new UsersAnnouncementResource(
+                    'announcement' => new AnnouncementsResource(
                         $announcement
                     ),
                     'error'        => false,
@@ -306,12 +295,8 @@ class GeneralController extends Controller
             ? $request->keyword : null;
 
         $posts = Post::with(['media', 'user', 'tags'])
-                     ->whereHas('category', function ($query) {
-                         $query->whereStatus('1');
-                     })
-                     ->whereHas('user', function ($query) {
-                         $query->whereStatus('1');
-                     });
+                    ->whereRelation('category', 'status', 1)
+                    ->whereRelation('user', 'status', 1);
 
         if ($keyword != null) {
             $posts = $posts->search($keyword, null, true);
@@ -331,7 +316,7 @@ class GeneralController extends Controller
 
     public function category($slug)
     {
-        $category = Category::whereSlug($slug)->whereStatus(1)->first();
+        $category = Category::whereSlug($slug)->active()->first();
         if ($category) {
             $posts = Post::with(['media', 'user', 'tags'])
                          ->whereCategoryId($category->id)
@@ -367,9 +352,7 @@ class GeneralController extends Controller
         $tag = Tag::whereSlug($slug)->first()->id;
         if ($tag) {
             $posts = Post::with(['media', 'user', 'tags'])
-                         ->whereHas('tags', function ($query) use ($slug) {
-                             $query->where('slug', $slug);
-                         })
+                ->whereRelation('tags', 'slug' , $slug)
                          ->post()
                          ->active()
                          ->orderBy('id', 'desc')
@@ -422,7 +405,7 @@ class GeneralController extends Controller
 
     public function author($username)
     {
-        $author = User::whereUsername($username)->whereStatus(1)->first();
+        $author = User::whereUsername($username)->active()->first();
         if ($author) {
             $posts = Post::with(['media', 'user', 'tags'])
                          ->whereUserId($author->id)

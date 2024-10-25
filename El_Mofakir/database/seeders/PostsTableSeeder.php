@@ -23,7 +23,7 @@ class PostsTableSeeder extends Seeder
     {
         $faker = Factory::create();
 
-        $volumes = Volume::all();
+        $volumes = Volume::toBase()->get();
         $categories = Category::all()->modelKeys();
         $users = User::where('id', '>', 2)->get()->modelKeys();
         $posts = [];

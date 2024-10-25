@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Cache;
 
 class ViewServiceProvider extends ServiceProvider
 {
+
     /**
      * Register services.
      *
@@ -30,94 +31,120 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if(! request()->is('admin/*')) {
+        if ( ! request()->is('admin/*')) {
             Paginator::defaultView('vendor.pagination.boighor');
 
-            view()->composer('*', function($view){
-                if(! Cache::has('recent_posts')){
-
+            view()->composer('*', function ($view) {
+                if ( ! Cache::has('recent_posts')) {
                     $recent_posts = Post::with(['category', 'media', 'user'])
-                                        ->whereHas('category', function($query){
-                                            $query->where('status', 1);
-                                        })
-                                        ->whereHas('user', function($query){
-                                            $query->where('status', 1);
-                                        })
-                                        ->wherePostType('post')->whereStatus(1)->orderBy('id', 'desc')->limit(5)->get();
+                                        ->whereRelation('category', 'status', 1)
+                                        ->whereRelation('user', 'status', 1)
+                                        ->post()->active()->orderBy(
+                            'id',
+                            'desc'
+                        )->limit(5)->get();
 
-                    Cache::remember('recent_posts', 3600, function() use($recent_posts){
-                        return $recent_posts;
-                    });
+                    Cache::remember(
+                        'recent_posts',
+                        3600,
+                        function () use ($recent_posts) {
+                            return $recent_posts;
+                        }
+                    );
                 }
 
                 $recent_posts = Cache::get('recent_posts');
 
-
-
-                if(! Cache::has('global_categories')){
-
-                    $global_categories = Category::whereStatus(1)->orderBy('id', 'desc')->get();
-                    Cache::remember('global_categories', 3600, function() use($global_categories){
-                        return $global_categories;
-                    });
+                if ( ! Cache::has('global_categories')) {
+                    $global_categories = Category::active()->orderBy(
+                        'id',
+                        'desc'
+                    )->get();
+                    Cache::remember(
+                        'global_categories',
+                        3600,
+                        function () use ($global_categories) {
+                            return $global_categories;
+                        }
+                    );
                 }
 
                 $global_categories = Cache::get('global_categories');
 
-                if(! Cache::has('global_tags')){
-
+                if ( ! Cache::has('global_tags')) {
                     $global_tags = Tag::withCount('posts')->get();
-                    Cache::remember('global_tags', 3600, function() use($global_tags){
-                        return $global_tags;
-                    });
+                    Cache::remember(
+                        'global_tags',
+                        3600,
+                        function () use ($global_tags) {
+                            return $global_tags;
+                        }
+                    );
                 }
 
                 $global_tags = Cache::get('global_tags');
 
-
-                if(! Cache::has('global_archives')){
-
-                    $global_archives = Post::whereStatus(1)->orderBy('created_at', 'desc')
-                                             ->select(DB::raw("Year(created_at) as year"), DB::raw("Month(created_at) as month"))
-                                             ->pluck('year', 'month')->toArray();
-                    Cache::remember('global_archives', 3600, function() use($global_archives){
-                        return $global_archives;
-                    });
+                if ( ! Cache::has('global_archives')) {
+                    $global_archives = Post::active()->orderBy(
+                        'created_at',
+                        'desc'
+                    )
+                                           ->select(
+                                               DB::raw(
+                                                   "Year(created_at) as year"
+                                               ),
+                                               DB::raw(
+                                                   "Month(created_at) as month"
+                                               )
+                                           )
+                                           ->pluck('year', 'month')->toArray();
+                    Cache::remember(
+                        'global_archives',
+                        3600,
+                        function () use ($global_archives) {
+                            return $global_archives;
+                        }
+                    );
                 }
 
                 $global_archives = Cache::get('global_archives');
 
-                if(! Cache::has('recent_announcements')){
-
+                if ( ! Cache::has('recent_announcements')) {
                     $recent_announcements = Post::with(['user'])
-                                                ->whereHas('user', function($query){
-                                            $query->where('status', 1);
-                                        })
-                                        ->whereStatus(1)->orderBy('id', 'desc')->limit(5)->get();
+                                                ->whereRelation(
+                                                    'user',
+                                                    'status',
+                                                    1
+                                                )
+                                                ->active()->orderBy(
+                            'id',
+                            'desc'
+                        )->limit(5)->get();
 
-                    Cache::remember('recent_announcements', 3600, function() use($recent_announcements){
-                        return $recent_announcements;
-                    });
+                    Cache::remember(
+                        'recent_announcements',
+                        3600,
+                        function () use ($recent_announcements) {
+                            return $recent_announcements;
+                        }
+                    );
                 }
 
                 $recent_announcements = Cache::get('recent_announcements');
-
-
 
                 $view->with([
                     'recent_posts' => $recent_posts,
                     'recent_announcements' => $recent_announcements,
                     'global_categories' => $global_categories,
                     'global_tags' => $global_tags,
-                    'global_archives' => $global_archives
+                    'global_archives' => $global_archives,
                 ]);
             });
         }
 
-        if(request()->is('admin/*')) {
-
-            view()->composer('*', function($view){
-                if(! Cache::has('admin_side_menu')){
+        if (request()->is('admin/*')) {
+            view()->composer('*', function ($view) {
+                if ( ! Cache::has('admin_side_menu')) {
                     Cache::forever('admin_side_menu', Permission::tree());
                 }
 
@@ -129,7 +156,6 @@ class ViewServiceProvider extends ServiceProvider
                 ]);
             });
         }
-
-
     }
+
 }

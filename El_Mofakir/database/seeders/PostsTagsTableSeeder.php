@@ -15,7 +15,7 @@ class PostsTagsTableSeeder extends Seeder
      */
     public function run()
     {
-        $posts = Post::all();
+        $posts = Post::toBase()->get();
         foreach ($posts as $post) {
             $tags = Tag::inRandomOrder()->take(3)->pluck('id')->toArray();
             $post->tags()->sync($tags);

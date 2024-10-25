@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\General;
 
-use App\Http\Resources\Users\UsersPostsMediaResource;
+
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PostResource extends JsonResource
@@ -30,7 +30,7 @@ class PostResource extends JsonResource
             'issue' => new IssueResource($this->issue),
             'category' => new CategoriesResource($this->category), // in this case category as one  element
             'tags' => TagsResource::collection($this->tags), // in this case tags as multiple elements
-            'media' => UsersPostsMediaResource::collection($this->media), // in this case media as multiple elements
+            'media' => PostsMediaResource::collection($this->media), // in this case media as multiple elements
         ];
     }
 }

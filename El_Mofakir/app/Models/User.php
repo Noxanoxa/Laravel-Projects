@@ -35,9 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+
 
     protected $searchable = [
         'columns' => [
@@ -45,15 +43,21 @@ class User extends Authenticatable implements MustVerifyEmail
             'users.username' => 10,
             'users.email' => 10,
             'users.mobile' => 10,
-            'users.bio' => 10,
         ],
     ];
-    public function receivesBroadcastNotificationsOn()
+
+    public function scopeActive($query)
     {
-        return 'App.User.'.$this->id;
+        return $query->where('status', 1);
     }
+
     public function posts() {
         return $this->hasMany(Post::class);
+    }
+
+    public function media()
+    {
+        return $this->hasOne(UserMedia::class);
     }
 
     public  function status() {

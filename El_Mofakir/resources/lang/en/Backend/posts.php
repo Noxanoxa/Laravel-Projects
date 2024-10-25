@@ -47,6 +47,7 @@ return [
     'download_all'      => 'Download All',
     'update_post'       => 'Update Post',
     'disallow'          => 'Disallow',
+    'pdf'  => 'Upload PDF',
 
 ];
 

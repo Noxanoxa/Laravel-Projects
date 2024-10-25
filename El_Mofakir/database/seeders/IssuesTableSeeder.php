@@ -13,7 +13,7 @@ class IssuesTableSeeder extends Seeder
 {
     public function run()
     {
-        $volumes = Volume::all();
+        $volumes = Volume::toBase()->get();
 
 
         foreach ($volumes as $volume) {
