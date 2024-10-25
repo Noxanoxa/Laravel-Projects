@@ -1,20 +1,15 @@
-<style>
-    label {
-        font-size: 14px; /* Adjust the size as needed */
-    }
-</style>
 <div class="card-body">
     <form method="get" action="{{route('admin.posts.index')}}">
         <div class="row">
             <div class="col-2">
                 <div class="form-group">
-                    <label for="keyword">{{ __('Backend/posts.search') }}</label>
+                    <label id="label" for="keyword">{{ __('Backend/posts.search') }}</label>
                     <input type="text" name="keyword" value="{{old('keyword', request('keyword'))}}" class="form-control" placeholder="{{ __('Backend/posts.search_here')}}">
                 </div>
             </div>
             <div class="col-2">
                 <div class="form-group">
-                    <label for="volume_id">{{ __('Backend/posts.volume') }}</label>
+                    <label  for="volume_id">{{ __('Backend/posts.volume') }}</label>
                     <select name="volume_id" id="volume_id" class="form-control">
                         <option value="">---</option>
                         @foreach($volumes as $volume)
@@ -36,7 +31,7 @@
             </div>
             <div class="col-1">
                 <div class="form-group">
-                    <label for="tag_id">{{ __('Backend/posts.tag') }}</label>
+                    <label  for="tag_id">{{ __('Backend/posts.tag') }}</label>
                     <select name="tag_id" id="tag_id" class="form-control">
                         <option value="">---</option>
                         @foreach($tags as $tag)
@@ -57,7 +52,7 @@
             </div>
             <div class="col-1">
                 <div class="form-group">
-                    <label for="sort_by">{{ __('Backend/posts.sort_by') }}</label>
+                    <label  for="sort_by">{{ __('Backend/posts.sort_by') }}</label>
                     <select name="sort_by" id="sort_by" class="form-control">
                         <option value="">---</option>
                         <option value="title" {{ old('sort_by', request('sort_by')) == 'title' ? 'selected' : '' }}>{{__('Backend/posts.title')}}</option>
@@ -77,7 +72,7 @@
             </div>
             <div class="col-1">
                 <div class="form-group">
-                    <label for="limit_by">{{ __('Backend/posts.limit_by') }}</label>
+                    <label  for="limit_by">{{ __('Backend/posts.limit_by') }}</label>
                     <select name="limit_by" id="limit_by" class="form-control">
                         <option value="">---</option>
                         <option value="10" {{ old('limit_by', request('limit_by')) == '10' ? 'selected' : '' }}>10</option>

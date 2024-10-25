@@ -79,7 +79,7 @@ class AnnouncementsController extends Controller
         }
 
         return redirect()->route('admin.announcements.index')->with([
-            'message' => 'announcement Created Successfully',
+            'message' => __('messages.announcement_created_successfully'),
             'alert-type' => 'success',
         ]);
     }
@@ -135,12 +135,12 @@ class AnnouncementsController extends Controller
 
 
             return redirect()->route('admin.announcements.index')->with([
-                'message' => 'Announcement Updated Successfully',
+                'message' => __('messages.announcement_updated_successfully'),
                 'alert-type' => 'success',
             ]);
         }
         return redirect()->route('admin.announcements.index')->with([
-            'message' => 'Something was wrong please try again later',
+            'message' => __('messages.something_was_wrong'),
             'alert-type' => 'danger',
         ]);
     }
@@ -155,12 +155,12 @@ class AnnouncementsController extends Controller
         {
             $announcement->delete();
             return  redirect()->route('admin.announcements.index')->with([
-                'message' => 'Announcement Deleted Successfully',
+                'message' => __('messages.announcement_deleted_successfully'),
                 'alert-type' => 'success',
             ]);
         }
         return redirect()->route('admin.announcements.index')->with([
-            'message' => 'Something was wrong. Announcement Not Found',
+            'message' => __('messages.something_was_wrong'),
             'alert-type' => 'danger',
         ]);
 

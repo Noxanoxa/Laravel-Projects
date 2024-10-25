@@ -462,7 +462,7 @@ class GeneralController extends Controller
 
         return response()->json(
             [
-                'message' => 'Your message has been sent successfully',
+                'message' => __('messages.contact_message_sent'),
                 'error'   => false,
             ],
             200

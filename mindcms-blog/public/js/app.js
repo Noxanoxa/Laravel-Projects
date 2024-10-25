@@ -2228,8 +2228,13 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
   \*****************************/
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -2237,7 +2242,8 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
-window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+
+
 
 /**
  * The following block of code may be used to automatically register your
@@ -2250,8 +2256,8 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js"
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('user-notification', (__webpack_require__(/*! ./components/UserNotification.vue */ "./resources/js/components/UserNotification.vue")["default"]));
-Vue.component('admin-notification', (__webpack_require__(/*! ./components/AdminNotification.vue */ "./resources/js/components/AdminNotification.vue")["default"]));
+vue__WEBPACK_IMPORTED_MODULE_1__["default"].component('user-notification', (__webpack_require__(/*! ./components/UserNotification.vue */ "./resources/js/components/UserNotification.vue")["default"]));
+vue__WEBPACK_IMPORTED_MODULE_1__["default"].component('admin-notification', (__webpack_require__(/*! ./components/AdminNotification.vue */ "./resources/js/components/AdminNotification.vue")["default"]));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -2259,7 +2265,7 @@ Vue.component('admin-notification', (__webpack_require__(/*! ./components/AdminN
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-var app = new Vue({
+var app = new vue__WEBPACK_IMPORTED_MODULE_1__["default"]({
   el: '#app'
 });
 
@@ -2274,8 +2280,6 @@ var app = new Vue({
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var laravel_echo__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! laravel-echo */ "./node_modules/laravel-echo/dist/echo.js");
-window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
  * for JavaScript based Bootstrap features such as modals and tabs. This
@@ -2314,7 +2318,7 @@ if (token) {
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
-  key: "39d097102831e5e2fed7",
+  key: "088ce7dbafbccd592b35",
   cluster: "eu",
   forceTLS: true,
   wsHost: window.location.hostname,
@@ -56661,6 +56665,18 @@ module.exports = /*#__PURE__*/JSON.parse('{"name":"axios","version":"0.21.4","de
 /******/ 				}
 /******/ 			}
 /******/ 			return result;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
 /******/ 		};
 /******/ 	})();
 /******/ 	

@@ -48,6 +48,5 @@ return [
     'update_post'       => 'Update Post',
     'disallow'          => 'Disallow',
     'pdf'  => 'Upload PDF',
-
 ];
 

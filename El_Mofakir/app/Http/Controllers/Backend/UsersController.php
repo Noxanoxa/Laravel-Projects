@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
 
+use App\Models\UserMedia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
@@ -115,7 +116,7 @@ class UsersController extends Controller
         $user->attachRole(Role::whereName('user')->first()->id);
 
         return redirect()->route('admin.users.index')->with([
-            'message'    => 'User Created Successfully',
+            'message'    => __('messages.user_created_successfully'),
             'alert-type' => 'success',
         ]);
     }
@@ -132,7 +133,7 @@ class UsersController extends Controller
         }
 
         return redirect()->route('admin.users.index')->with([
-            'message'    => 'Something was wrong. User Not Found',
+            'message'    => __('messages.something_was_wrong'),
             'alert-type' => 'danger',
         ]);
     }
@@ -148,7 +149,7 @@ class UsersController extends Controller
         }
 
         return redirect()->route('admin.users.index')->with([
-            'message'    => 'Something was wrong. User Not Found',
+            'message'    => __('messages.something_was_wrong'),
             'alert-type' => 'danger',
         ]);
     }
@@ -215,13 +216,13 @@ class UsersController extends Controller
             $user->update($data);
 
             return redirect()->route('admin.users.index')->with([
-                'message'    => 'User Updated Successfully',
+                'message'    => __('messages.user_updated_successfully'),
                 'alert-type' => 'success',
             ]);
         }
 
         return redirect()->route('admin.users.index')->with([
-            'message'    => 'Something was wrong please try again later',
+            'message'    => __('messages.something_was_wrong'),
             'alert-type' => 'danger',
         ]);
     }
@@ -241,13 +242,13 @@ class UsersController extends Controller
             $user->delete();
 
             return redirect()->route('admin.users.index')->with([
-                'message'    => 'User Deleted Successfully',
+                'message'    => __('messages.user_deleted_successfully'),
                 'alert-type' => 'success',
             ]);
         }
 
         return redirect()->route('admin.users.index')->with([
-            'message'    => 'Something was wrong. User Not Found',
+            'message'    => __('messages.something_was_wrong'),
             'alert-type' => 'danger',
         ]);
     }

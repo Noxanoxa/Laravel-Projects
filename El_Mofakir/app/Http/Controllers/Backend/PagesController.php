@@ -118,7 +118,7 @@ class PagesController extends Controller
         }
 
         return redirect()->route('admin.pages.index')->with([
-            'message' => 'Page Created Successfully',
+            'message' => __('messages.page_created_successfully'),
             'alert-type' => 'success',
         ]);
     }
@@ -197,15 +197,16 @@ class PagesController extends Controller
             }
 
             return redirect()->route('admin.pages.index')->with([
-                'message' => 'Page Updated Successfully',
+                'message' => __('messages.page_updated_successfully'),
                 'alert-type' => 'success',
             ]);
 
+            }
             return redirect()->route('admin.pages.index')->with([
-                'message' => 'Something was wrong please try again later',
+                'message' => __('messages.something_was_wrong'),
                 'alert-type' => 'danger',
             ]);
-        }
+
     }
 
     public function destroy($id)
@@ -227,12 +228,12 @@ class PagesController extends Controller
             $page->delete();
 
             return  redirect()->route('admin.pages.index')->with([
-                'message' => 'Page Deleted Successfully',
+                'message' => __('messages.page_deleted_successfully'),
                 'alert-type' => 'success',
             ]);
         }
         return redirect()->route('admin.pages.index')->with([
-            'message' => 'Something was wrong. Page Not Found',
+            'message' => __('messages.something_was_wrong'),
             'alert-type' => 'danger',
         ]);
 

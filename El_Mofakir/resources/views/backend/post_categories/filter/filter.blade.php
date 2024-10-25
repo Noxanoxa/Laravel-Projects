@@ -1,8 +1,3 @@
-<style>
-    label {
-        font-size: 14px; /* Adjust the size as needed */
-    }
-</style>
 <div class="card-body">
     <form action="{{ route('admin.post_categories.index') }}" method="get">
         <div class="row">

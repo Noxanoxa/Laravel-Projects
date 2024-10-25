@@ -95,7 +95,6 @@ class PostsController extends Controller
         ]);
 
         if($validator->fails()) {
-//            dd($validator->errors());
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
@@ -109,7 +108,6 @@ class PostsController extends Controller
 
         $post = auth()->user()->posts()->create($data);
 
-        // Handle PDF upload
         if ($request->hasFile('pdf')) {
             foreach ($request->file('pdf') as $file) {
                 $filename = $post->slug . '-' . time() . '-' . uniqid() . '.' . $file->getClientOriginalExtension ();
@@ -120,7 +118,7 @@ class PostsController extends Controller
                 $post->media()->create([
                     'post_id' => $post->id,
                     'file_name' => $filename,
-                    'real_file_name' => $file->getClientOriginalName(), // Save the real file name
+                    'real_file_name' => $file->getClientOriginalName(),
                     'file_size' => $file_size,
                     'file_type' => $file_type,
                 ]);
@@ -148,7 +146,7 @@ class PostsController extends Controller
             }
 
             return redirect()->route('admin.posts.index')->with([
-                'message' => 'Post Created Successfully',
+                'message' => __('messages.post_created_successfully'),
                 'alert-type' => 'success',
             ]);
     }
@@ -220,7 +218,6 @@ class PostsController extends Controller
                     $file->move(public_path('assets/posts'), $filename);
 
 
-                    // Save PDF info to database
                     $post->media()->create([
                         'file_name' => $filename,
                         'real_file_name' => $file->getClientOriginalName(), // Save the real file name
@@ -238,7 +235,8 @@ class PostsController extends Controller
                     $tag = Tag::firstOrCreate([
                         'id' => $tag
                     ], [
-                        'name' => $tag
+                        'name' => $tag,
+                        'name_en' => $tag,
                     ]);
                     $new_tags[] = $tag->id;
                 }
@@ -249,12 +247,12 @@ class PostsController extends Controller
 
 
             return redirect()->route('admin.posts.index')->with([
-                'message' => 'Post Updated Successfully',
+                'message' => __('messages.post_updated_successfully'),
                 'alert-type' => 'success',
             ]);
         }
         return redirect()->route('admin.posts.index')->with([
-            'message' => 'Something was wrong please try again later',
+            'message' => __('messages.something_was_wrong'),
             'alert-type' => 'danger',
         ]);
     }
@@ -278,12 +276,12 @@ class PostsController extends Controller
             $post->delete();
 
             return  redirect()->route('admin.posts.index')->with([
-                'message' => 'Post Deleted Successfully',
+                'message' => __('messages.post_deleted_successfully'),
                 'alert-type' => 'success',
             ]);
         }
         return redirect()->route('admin.posts.index')->with([
-            'message' => 'Something was wrong. Post Not Found',
+            'message' => __('messages.something_was_wrong'),
             'alert-type' => 'danger',
         ]);
 
@@ -311,7 +309,7 @@ class PostsController extends Controller
         $pdfFiles = $post->media()->where('file_type', 'application/pdf')->get();
 
         if ($pdfFiles->isEmpty()) {
-            return redirect()->back()->with('error', 'No PDFs found for this post.');
+            return redirect()->back()->with('error', __('messages.no_pdf_files'));
         }
 
         $zip = new ZipArchive;

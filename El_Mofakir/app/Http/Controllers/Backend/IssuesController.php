@@ -74,7 +74,7 @@ class IssuesController extends Controller
         Issue::create($data);
 
         return redirect()->route('admin.issues.index')->with([
-            'message' => 'Issue created successfully',
+            'message' => __('messages.issue_created_successfully'),
             'alert-type' => 'success',
         ]);
     }
@@ -121,7 +121,7 @@ class IssuesController extends Controller
 
 
         return redirect()->route('admin.issues.index')->with([
-            'message' => 'Issue updated successfully',
+            'message' => __('messages.issue_updated_successfully'),
             'alert-type' => 'success',
         ]);
     }
@@ -135,7 +135,7 @@ class IssuesController extends Controller
         $issue->delete();
 
         return redirect()->route('admin.issues.index')->with([
-            'message' => 'Issue deleted successfully',
+            'message' => __('messages.issue_deleted_successfully'),
             'alert-type' => 'success',
         ]);
     }

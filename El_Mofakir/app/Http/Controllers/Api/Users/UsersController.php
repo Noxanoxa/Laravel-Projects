@@ -45,7 +45,6 @@ class UsersController extends Controller
             'email' => 'required|email',
             'mobile' => 'required|numeric',
             'bio' => 'nullable|min:10',
-            //            'receive_email' => 'required|in:0,1',
             'receive_email' => 'required',
             'user_image' => 'nullable|image|max:20000|mimes:jpeg,jpg,png',
         ]);
@@ -54,7 +53,6 @@ class UsersController extends Controller
 
             return response()->json(['errors' => true, 'message' => $validation->errors()], 201);
         }
-        dd($request->all());
         $data['name'] = $request->name;
         $data['email'] = $request->email;
         $data['mobile'] = $request->mobile;
@@ -80,9 +78,9 @@ class UsersController extends Controller
         $update = auth()->user()->update($data);
         if($update)
         {
-            return response()->json(['errors' => false, 'message' => 'User Information Updated Successfully'], 200);
+            return response()->json(['errors' => false, 'message' =>  __('messages.user_infos_updated_successfully')], 200);
         } else {
-            return response()->json(['errors' => true, 'message' => 'Something was wrong'], 201);
+            return response()->json(['errors' => true, 'message' => __('messages.something_was_wrong')], 201);
         }
     }
 
@@ -104,20 +102,20 @@ class UsersController extends Controller
             ]);
             if($update)
             {
-                return response()->json(['errors' => false, 'message' => 'Password Updated Successfully'], 200);
+                return response()->json(['errors' => false, 'message' => __('messages.password_updated_successfully')], 200);
             } else {
-                return response()->json(['errors' => true, 'message' => 'Something was wrong'], 201);
+                return response()->json(['errors' => true, 'message' => __('messages.something_was_wrong')], 201);
             }
         } else
         {
-            return response()->json(['errors' => true, 'message' => 'Current Password is wrong'], 201);
+            return response()->json(['errors' => true, 'message' => __('messages.current_password_wrong')], 201);
         }
     }
 
     public function logout(Request $request)
     {
         $request->user()->token()->revoke();
-        return response()->json(['errors' => false, 'message' => 'Successfully logged out']);
+        return response()->json(['errors' => false, 'message' => __('messages.logout_successfully')], 200);
     }
 
 }

@@ -56,8 +56,8 @@ class PostTagsController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'name'          => 'required',
-            'name_en'       => 'required',
+            'name'          => 'required|unique:tags,name',
+            'name_en'       => 'nullable|unique:tags,name_en',
         ]);
         if($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
@@ -72,14 +72,6 @@ class PostTagsController extends Controller
             'message' => 'Tag created successfully',
             'alert-type' => 'success',
         ]);
-    }
-
-    public function show($id)
-    {
-        /*        if (!\auth()->user()->ability('admin', 'display_post')){
-                    return redirect('admin/index');
-                }*/
-
     }
 
     public function edit($id)
@@ -98,8 +90,8 @@ class PostTagsController extends Controller
             return redirect('admin/index');
         }
         $validator = Validator::make($request->all(), [
-            'name'          => 'required',
-            'name_en'       => 'required',
+            'name'          => 'required|unique:tags,name,' . $id,
+            'name_en'       => 'required|unique:tags,name_en,' . $id,
         ]);
 
         if($validator->fails()) {
