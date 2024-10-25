@@ -85,9 +85,9 @@ class  RoleTableSeeder extends Seeder
         $user2->attachRole($userRole);
         $user3 = User::create(
             [
-                'name'              => 'onax xano',
-                'username'          => 'onax55',
-                'email'             => 'onax@elmofakir.test',
+                'name'              => 'ميمون عبد الحميد ',
+                'username'          => 'mimoun',
+                'email'             => 'mimoun@elmofakir.test',
                 'mobile'            => '0771015432',
                 'password'          => bcrypt('123123123'),
                 'status'            => 1,

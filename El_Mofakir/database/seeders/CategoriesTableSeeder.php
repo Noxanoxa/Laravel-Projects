@@ -13,8 +13,10 @@ class CategoriesTableSeeder extends Seeder
     public function run()
     {
         Category::create([ 'name' => 'غير مصنف', 'name_en' => 'un-categorized', 'status'=> 1 ]);
-        Category::create([ 'name' => 'طبيعية', 'name_en' => 'Natural', 'status'=> 1 ]);
-        Category::create([ 'name' => 'ورود', 'name_en' => 'Flowers', 'status'=> 1 ]);
-        Category::create([ 'name' => 'مطابخ', 'name_en' => 'Kitchen', 'status'=> 0 ]);
+        Category::create([ 'name' => 'قانون', 'name_en' => 'Law', 'status'=> 1 ]);
+        Category::create([ 'name' => 'سياسة' , 'name_en' => 'Politics', 'status'=> 1 ]);
+        Category::create([ 'name' => 'اقتصاد', 'name_en' => 'Economy', 'status'=> 1 ]);
+        Category::create([ 'name' => 'شوؤن دولية', 'name_en' => 'International Affairs', 'status'=> 1 ]);
+        Category::create([ 'name' => 'ثقافة', 'name_en' => 'Culture', 'status'=> 1 ]);
     }
 }

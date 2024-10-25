@@ -35,7 +35,7 @@
                     <td>{{ $user->mobile}}</td>
                     <th>{{ __('Backend/users.cv') }}</th>
                     <td>
-                        @if($user->media->where('file_type', 'application/pdf')->first())
+                        @if($user->media && $user->media->where('file_type', 'application/pdf')->first())
                             <a href="{{ route('admin.users.download_cv', $user->id) }}" class="btn btn-primary">
                                 {{ __('Backend/users.download_cv') }}
                             </a>
