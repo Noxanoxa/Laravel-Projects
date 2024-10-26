@@ -12,13 +12,13 @@ Route::controller(GeneralController::class)->group(function () {
     Route::get('/all_announcements', 'get_announcements');
     Route::get('/announcement/{slug}', 'show_announcement');
 
-    Route::get('/all_posts', [GeneralController::class, 'get_posts']);
-    Route::get('/post/{slug}', [GeneralController::class, 'show_post']);
+    Route::get('/all_posts',  'get_posts');
+    Route::get('/post/{slug}',  'show_post');
     Route::get(
         '/posts/{post}/download-all',
-        [GeneralController::class, 'downloadAllPdfs']
+         'downloadAllPdfs'
     );
-    Route::get('/page/{page}', [GeneralController::class, 'page_show']);
+    Route::get('/page/{page}',  'page_show');
 
     Route::get('/all_posts', 'get_posts');
     Route::get('/post/{slug}', 'show_post')->name('post.show');
@@ -43,42 +43,6 @@ Route::controller(GeneralController::class)->group(function () {
     Route::get('/archive/{date}', 'archive');
     Route::get('/author/{username}', 'author');
 
-});
-
-Route::controller(AuthController::class)->group(function () {
-    Route::post('register', 'register');
-    Route::post('login', 'login');
-    Route::post('refresh_token', 'refresh_token');
-});
-
-Route::group(['middleware' => ['auth:api']], function () {
-    Route::controller(UsersController::class)->group(function () {
-        Route::any('/notifications/get', 'getNotifications');
-        Route::any('/notifications/read', 'markAsRead');
-
-        Route::get('/user_information', 'user_information');
-        Route::patch('/edit_user_information', 'update_user_information');
-        Route::patch('/edit_user_password', 'update_user_password');
-
-        // announcements
-        Route::get('/my_announcements', 'my_announcements');
-        Route::get('/my_announcements/create', 'create_announcement');
-        Route::post('/my_announcements/create', 'store_announcement');
-        Route::get(
-            '/my_announcements/{announcement}/edit',
-            'edit_announcement'
-        );
-        Route::patch(
-            '/my_announcements/{announcement}/edit',
-            'update_announcement'
-        );
-        Route::delete(
-            '/my_announcements/{announcement}',
-            'delete_announcement'
-        );
-
-        Route::post('logout', 'logout');
-    });
 });
 
 

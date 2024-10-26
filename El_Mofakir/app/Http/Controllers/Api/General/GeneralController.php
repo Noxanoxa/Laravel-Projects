@@ -216,7 +216,6 @@ class GeneralController extends Controller
         }
     }
 
-    // app/Http/Controllers/Api/General/GeneralController.php
     public function downloadAllPdfs($slug)
     {
         $post = Post::where('slug_en', $slug)->firstOrFail();
@@ -405,34 +404,13 @@ class GeneralController extends Controller
 
     public function author($username)
     {
-        $author = User::whereUsername($username)->active()->first();
-        if ($author) {
-            $posts = Post::with(['media', 'user', 'tags'])
-                         ->whereUserId($author->id)
-                         ->post()
-                         ->active()
-                         ->orderBy('id', 'desc')
-                         ->get();
-            if ($posts->count() > 0) {
-                return response()->json(
-                    [
-                        'posts' => PostsResource::collection($posts),
-                        'error' => false,
-                    ],
-                    200
-                );
-            } else {
-                return response()->json(
-                    ['message' => 'No post found', 'error' => true],
-                    201
-                );// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
-            }
+        $user  = User::whereName($username)->first();
+        $media = $user->media->where('file_type', 'application/pdf')->first();
+        if ($media) {
+            $filePath = public_path('assets/users/' . $media->file_name);
+            return response()->download($filePath, $media->real_file_name);
         }
-
-        return response()->json(
-            ['message' => 'Something was Wrong', 'error' => true],
-            201
-        );// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
+        return response()->json(['errors' => true, 'message' => __('messages.no_pdf_files')], 201);
     }
 
     public function do_contact(Request $request)
