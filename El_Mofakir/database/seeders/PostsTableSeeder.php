@@ -40,7 +40,7 @@ class PostsTableSeeder extends Seeder
                 'status' => 1,
                 'user_id' => 5,
                 'category_id' => 4,
-                'volume_id' => 19,
+                'volume_id' => 5,
                 'issue_id' => 1,
                 'created_at' => "2024-06-30 01:01:01",
                 'updated_at' => "2024-06-30 01:01:01",
@@ -55,7 +55,7 @@ class PostsTableSeeder extends Seeder
                 'status' => 1,
                 'user_id' => 5,
                 'category_id' => 2,
-                'volume_id' => 19,
+                'volume_id' => 5,
                 'issue_id' => 1,
                 'created_at' => '2024-06-30 01:01:01',
                 'updated_at' => '2024-06-30 01:01:01',
@@ -70,7 +70,7 @@ class PostsTableSeeder extends Seeder
                 'status' => 1,
                 'user_id' => 5,
                 'category_id' => 1,
-                'volume_id' => 19,
+                'volume_id' => 5,
                 'issue_id' => 1,
                 'created_at' => '2024-06-30 01:01:01',
                 'updated_at' => '2024-06-30 01:01:01',
@@ -85,7 +85,7 @@ class PostsTableSeeder extends Seeder
                 'status' => 1,
                 'user_id' => 5,
                 'category_id' => 3,
-                'volume_id' => 19,
+                'volume_id' => 5,
                 'issue_id' => 1,
                 'created_at' => '2024-06-30 01:01:01',
                 'updated_at' => '2024-06-30 01:01:01',
@@ -100,7 +100,7 @@ class PostsTableSeeder extends Seeder
                 'status' => 1,
                 'user_id' => 5,
                 'category_id' => 1,
-                'volume_id' => 19,
+                'volume_id' => 5,
                 'issue_id' => 1,
                 'created_at' => '2024-06-30 01:01:01',
                 'updated_at' => '2024-06-30 01:01:01',
@@ -111,15 +111,32 @@ class PostsTableSeeder extends Seeder
         foreach ($volumes as $volume) {
             $volumeIssues = Issue::where('volume_id', $volume->id)->get();
             foreach ($volumeIssues as $issue) {
-                for ($i = 0; $i < 3; $i++) {
+                for ($i = 0; $i < 1000; $i++) {
                     $post_title = $faker->sentence(mt_rand(3, 6), true);
                     $post_title_en = $faker->sentence(mt_rand(3, 6), true);
+
+                    $slug = Str::slug($post_title);
+                    $slug_en = Str::slug($post_title_en);
+
+                    // Ensure unique slugs
+                    $original_slug = $slug;
+                    $original_slug_en = $slug_en;
+                    $counter = 1;
+
+                    while (Post::where('slug', $slug)->exists()) {
+                        $slug = $original_slug . '-' . $counter++;
+                    }
+
+                    $counter = 1;
+                    while (Post::where('slug_en', $slug_en)->exists()) {
+                        $slug_en = $original_slug_en . '-' . $counter++;
+                    }
 
                     $posts[] = [
                         'title' => $post_title,
                         'title_en' => $post_title_en,
-                        'slug' => Str::slug($post_title),
-                        'slug_en' => Str::slug($post_title_en),
+                        'slug' => $slug,
+                        'slug_en' => $slug_en,
                         'description' => $faker->paragraph(),
                         'description_en' => $faker->paragraph(),
                         'status' => rand(0, 1),
@@ -134,11 +151,12 @@ class PostsTableSeeder extends Seeder
             }
         }
 
-        $chunks = array_chunk($posts, 50);
+        $chunks = array_chunk($posts, 1000);
         foreach ($chunks as $chunk) {
             Post::insert($chunk);
         }
 
+//        Post::insert($posts);
 
     }
 }

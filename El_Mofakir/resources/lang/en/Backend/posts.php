@@ -32,7 +32,7 @@ return [
     'deselect_all'      => 'Deselect All',
     'yes'               => 'Yes',
     'no'                => 'No',
-    'sliders'           => 'Sliders',
+    'sliders'           => 'Files',
     'description'       => 'Description',
     'description_en'    => 'Description (English)',
     'ur_description'    => 'Your Description',
@@ -48,5 +48,6 @@ return [
     'update_post'       => 'Update Post',
     'disallow'          => 'Disallow',
     'pdf'  => 'Upload PDF',
+    'no_pdfs'           => 'No PDFs Attached',
 ];
 

@@ -21,6 +21,8 @@
                 <tr>
                     <th>{{__('Backend/posts.status')}}</th>
                     <td>{{ $post->status() }}</td>
+                    <th>{{__('Backend/posts.created_at')}}</th>
+                    <td>{{ config('app.locale') == 'en' ? $post->created_at ->format('d-m-Y h:i a') :   $post->created_at->locale('ar')->translatedFormat('d-m-Y h:i a') }}</td>
                 </tr>
                 <tr>
                     <th>{{__('Backend/posts.category')}}</th>
@@ -28,11 +30,17 @@
                     <th>{{__('Backend/posts.author')}}</th>
                     <td>{{ $post->user->name}}</td>
                 </tr>
+{{--                tags --}}
                 <tr>
-                    <th>{{__('Backend/posts.created_at')}}</th>
-                    <td>{{ config('app.locale') == 'en' ? $post->created_at ->format('d-m-Y h:i a') :   $post->created_at->locale('ar')->translatedFormat('d-m-Y h:i a') }}</td>
-                    <th></th>
-                    <td></td>
+                    <th>{{__('Backend/posts.tags')}}</th>
+                    <td colspan="3">
+                        @foreach($post->tags as $tag)
+                            <span class="badge badge-primary">{{ $tag->name() }}</span>
+                        @endforeach
+                    </td>
+                <tr>
+                    <th>{{__('Backend/posts.description')}}</th>
+                    <td colspan="3">{!! $post->description() !!}</td>
                 </tr>
                 <tr>
                     <th colspan="4"> {{__('Backend/posts.sliders')}}</th>
@@ -49,9 +57,6 @@
                                             </li>
                                         @endforeach
                                     </ul>
-                                @else
-                                    <p>{{__('Backend/posts.no_pdfs')}}</p>
-                                @endif
                             </div>
                         </div>
                     </td>
@@ -63,6 +68,9 @@
                         </div>
                     </td>
                 </tr>
+                @else
+                    <p>{{__('Backend/posts.no_pdfs')}}</p>
+                @endif
 
                 </tbody>
             </table>

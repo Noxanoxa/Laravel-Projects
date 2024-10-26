@@ -15,77 +15,82 @@ use Illuminate\Support\Facades\Validator;
 use Stevebauman\Purify\Facades\Purify;
 use ZipArchive;
 
-
 class PostsController extends Controller
 {
 
-    public function __construct() {
-        if(\auth()->check()){
+    public function __construct()
+    {
+        if (\auth()->check()) {
             $this->middleware('auth');
-        }
-        else {
+        } else {
             return view('backend.auth.login');
         }
     }
 
     public function index()
     {
-        if (!\auth()->user()->ability('admin', 'manage_posts,show_posts')){
+        if ( ! \auth()->user()->ability('admin', 'manage_posts,show_posts')) {
             return redirect('admin/index');
         }
 
-        $posts = Post::with(['media', 'user'])->post()
-        ->when(request('keyword') != '', function ($query){
-            $query->search(request('keyword'));
-        })
+        $filters    = request()->only(
+            [
+                'keyword',
+                'volume_id',
+                'issue_id',
+                'category_id',
+                'tag_id',
+                'status',
+                'sort_by',
+                'order_by',
+            ]
+        );
+        $pagination = request()->only(['limit_by']);
 
-                ->when(request('volume_id') != '', function ($query){
-                $query->whereVolumeId(request('volume_id'));
-            })
+        $posts = Post::getPosts($filters, $pagination);
 
-                ->when(request('issue_id') != '', function ($query){
-                $query->whereIssueId(request('issue_id'));
-            })
+        $tags       = Tag::orderBy('id', 'desc')->select(
+            'id',
+            'name',
+            'name_en'
+        )->get();
+        $categories = Category::orderBy('id', 'desc')->select(
+            'id',
+            'name',
+            'name_en'
+        )->get();
+        $volumes    = Volume::orderBy('id', 'desc')->select('id', 'number')
+                            ->get();
 
-        ->when(request('category_id') != '', function ($query){
-                $query->whereCategoryId(request('category_id'));
-            })
-        ->when(request('tag_id') != '', function ($query){
-                $query->whereRelation('tags', 'id', request('tag_id'));
-            })
-        ->when(request('status') != '', function ($query){
-                $query->whereStatus(request('status'));
-            })
-        ->orderBy(request('sort_by') ??  'id', request('order_by') ??  'desc')
-        ->paginate(request('limit_by')?? '10')
-        ->withQueryString();
-
-
-        $tags = Tag::orderBy('id', 'desc')->select('id', 'name', 'name_en')->get();
-        $categories= Category::orderBy('id', 'desc')->select('id', 'name',  'name_en')->get();
-        $volumes = Volume::orderBy('id', 'desc')->select('id', 'number')->get();
-        return view('backend.posts.index', compact('posts', 'categories', 'tags', 'volumes'));
+        return view(
+            'backend.posts.index',
+            compact('posts', 'categories', 'tags', 'volumes')
+        );
     }
 
     public function create()
     {
-        if (!\auth()->user()->ability('admin', 'create_posts')){
+        if ( ! \auth()->user()->ability('admin', 'create_posts')) {
             return redirect('admin/index');
         }
-        $tags = Tag::select('id', 'name', 'name_en')->get();
-        $categories = Category::orderBy('id', 'desc')->select('id', 'name', 'name_en')->get();
-        return view('backend.posts.create', compact('categories', 'tags'));
+        $tags       = Tag::select('id', 'name', 'name_en')->get();
+        $categories = Category::orderBy('id', 'desc')->select(
+            'id',
+            'name',
+            'name_en'
+        )->get();
 
+        return view('backend.posts.create', compact('categories', 'tags'));
     }
 
     public function store(Request $request)
     {
-        if (!\auth()->user()->ability('admin', 'create_posts')){
+        if ( ! \auth()->user()->ability('admin', 'create_posts')) {
             return redirect('admin/index');
         }
         $validator = Validator::make($request->all(), [
             'title'          => 'required',
-            'title_en' => 'required',
+            'title_en'       => 'required',
             'description'    => 'required|min:50',
             'description_en' => 'required|min:50',
             'status'         => 'required',
@@ -94,229 +99,165 @@ class PostsController extends Controller
             'tags.*'         => 'nullable',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $data ['title']                   = $request->title;
-        $data ['title_en']                   = $request->title_en;
-        $data ['description']             = Purify::clean($request->description);
-        $data ['description_en']             = Purify::clean($request->description_en);
-        $data ['status']                  = $request->status;
-        $data ['post_type']                  = 'post';
-        $data ['category_id']             = $request->category_id;
-
-        $post = auth()->user()->posts()->create($data);
+        $post = Post::createPost($request->all(), auth()->user());
 
         if ($request->hasFile('pdf')) {
-            foreach ($request->file('pdf') as $file) {
-                $filename = $post->slug . '-' . time() . '-' . uniqid() . '.' . $file->getClientOriginalExtension ();
-                $file_size = $file->getSize();
-                $file_type = $file->getMimeType();
-                $file->move(public_path('assets/posts'), $filename);
-
-                $post->media()->create([
-                    'post_id' => $post->id,
-                    'file_name' => $filename,
-                    'real_file_name' => $file->getClientOriginalName(),
-                    'file_size' => $file_size,
-                    'file_type' => $file_type,
-                ]);
-            }
+            $post->addMedia($request->file('pdf'));
         }
 
-
-        if(count($request->tags) > 0) {
-            $new_tags = [];
-            foreach ($request->tags as $tag) {
-                $tag = Tag::firstOrCreate([
-                    'id' => $tag
-                ], [
-                    'name' => $tag,
-                    'name_en' => $tag,
-                ]);
-                $new_tags[] = $tag->id;
-            }
-            $post->tags()->sync($new_tags);
+        if (count($request->tags) > 0) {
+            $post->syncTags($request->tags);
         }
 
-            if($request->status == 1) {
-                Cache::forget('recent_posts');
-                Cache::forget('global_tags');
-            }
+        if ($request->status == 1) {
+            Cache::forget('recent_posts');
+            Cache::forget('global_tags');
+        }
 
-            return redirect()->route('admin.posts.index')->with([
-                'message' => __('messages.post_created_successfully'),
-                'alert-type' => 'success',
-            ]);
+        return redirect()->route('admin.posts.index')->with([
+            'message'    => __('messages.post_created_successfully'),
+            'alert-type' => 'success',
+        ]);
     }
 
     public function show($id)
     {
-        if (!\auth()->user()->ability('admin', 'display_posts')){
+        if ( ! \auth()->user()->ability('admin', 'display_posts')) {
             return redirect('admin/index');
         }
-        $post = Post::with(['media', 'user', 'category'])->whereId($id)->post()->first();
+        $post = Post::with(['media', 'user', 'category'])->whereId($id)->post()
+                    ->first();
 
-        return view('backend.posts.show', compact( 'post') );
-
+        return view('backend.posts.show', compact('post'));
     }
 
     public function edit($id)
     {
-        if (!\auth()->user()->ability('admin', 'update_posts')){
+        if ( ! \auth()->user()->ability('admin', 'update_posts')) {
             return redirect('admin/index');
         }
-        $tags = Tag::select('id', 'name', 'name_en')->get();
-        $categories = Category::orderBy('id', 'desc')->select('id', 'name', 'name_en')->get();
-        $post = Post::with('media')->whereId($id)->post()->first();
-        return view('backend.posts.edit', compact('categories', 'post', 'tags'));
+        $tags       = Tag::select('id', 'name', 'name_en')->get();
+        $categories = Category::orderBy('id', 'desc')->select(
+            'id',
+            'name',
+            'name_en'
+        )->get();
+        $post       = Post::with('media')->whereId($id)->post()->first();
 
+        return view(
+            'backend.posts.edit',
+            compact('categories', 'post', 'tags')
+        );
     }
 
     public function update(Request $request, $id)
     {
-        if (!\auth()->user()->ability('admin', 'update_posts')){
+        if ( ! \auth()->user()->ability('admin', 'update_posts')) {
             return redirect('admin/index');
         }
         $validator = Validator::make($request->all(), [
             'title'          => 'required',
-            'title_en' => 'required',
+            'title_en'       => 'required',
             'description'    => 'required|min:50',
             'description_en' => 'required|min:50',
             'status'         => 'required',
             'category_id'    => 'required',
-            'pdf.*' => 'nullable|mimes:pdf|max:20000',
+            'pdf.*'          => 'nullable|mimes:pdf|max:20000',
             'tags.*'         => 'nullable',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
         $post = Post::whereId($id)->post()->first();
-        if($post) {
-            $data ['title']                   = $request->title;
-            $data ['title_en']                   = $request->title_en;
-            $data ['slug']                   = null;
-            $data ['slug_en']                   = null;
-            $data ['description']             = Purify::clean($request->description);
-            $data ['description_en']             = Purify::clean($request->description_en);
-            $data ['status']                  = $request->status;
-            $data ['category_id']             = $request->category_id;
-
-            $post->update($data);
-
+        if ($post) {
+            $post->updatePost($request->all());
 
             if ($request->hasFile('pdf')) {
-
-
-                foreach ($request->file('pdf') as $file) {
-                    $filename = $post->slug . '-' . time() . '-' . uniqid() . '.' . $file->getClientOriginalExtension();
-                    $file_size = $file->getSize();
-                    $file_type = $file->getMimeType();
-                    $file->move(public_path('assets/posts'), $filename);
-
-
-                    $post->media()->create([
-                        'file_name' => $filename,
-                        'real_file_name' => $file->getClientOriginalName(), // Save the real file name
-                        'file_type' => $file_type,
-                        'file_size' => $file_size
-                    ]);
-                }
+                $post->addMedia($request->file('pdf'));
             }
 
-
-
             if (is_array($request->tags) && count($request->tags) > 0) {
-                $new_tags = [];
-                foreach ($request->tags as $tag) {
-                    $tag = Tag::firstOrCreate([
-                        'id' => $tag
-                    ], [
-                        'name' => $tag,
-                        'name_en' => $tag,
-                    ]);
-                    $new_tags[] = $tag->id;
-                }
-                $post->tags()->sync($new_tags);
+                $post->syncTags($request->tags);
             } else {
                 $post->tags()->detach();
             }
 
-
             return redirect()->route('admin.posts.index')->with([
-                'message' => __('messages.post_updated_successfully'),
+                'message'    => __('messages.post_updated_successfully'),
                 'alert-type' => 'success',
             ]);
         }
+
         return redirect()->route('admin.posts.index')->with([
-            'message' => __('messages.something_was_wrong'),
+            'message'    => __('messages.something_was_wrong'),
             'alert-type' => 'danger',
         ]);
     }
 
     public function destroy($id)
     {
-        if (!\auth()->user()->ability('admin', 'delete_posts')){
+        if ( ! \auth()->user()->ability('admin', 'delete_posts')) {
             return redirect('admin/index');
         }
         $post = Post::whereId($id)->post()->first();
-        if($post)
-        {
-            if($post->media->count() >0) {
-                foreach($post->media as $media) {
-                    if(File::exists('assets/posts/'. $media->file_name)){
-                        unlink('assets/posts/'. $media->file_name);
-                    }
-                }
-            }
-
+        if ($post) {
+            $post->removeMedia();
             $post->delete();
 
-            return  redirect()->route('admin.posts.index')->with([
-                'message' => __('messages.post_deleted_successfully'),
+            return redirect()->route('admin.posts.index')->with([
+                'message'    => __('messages.post_deleted_successfully'),
                 'alert-type' => 'success',
             ]);
         }
+
         return redirect()->route('admin.posts.index')->with([
-            'message' => __('messages.something_was_wrong'),
+            'message'    => __('messages.something_was_wrong'),
             'alert-type' => 'danger',
         ]);
-
-
     }
 
-    public function removePdf(Request $request){
-        if (!\auth()->user()->ability('admin', 'delete_posts')){
+    public function removePdf(Request $request)
+    {
+        if ( ! \auth()->user()->ability('admin', 'delete_posts')) {
             return redirect('admin/index');
         }
         $media = PostMedia::whereId($request->media_id)->first();
-        if($media){
-            if(File::exists('assets/posts/'.$media->file_name)) {
-                unlink('assets/posts/'.$media->file_name);
+        if ($media) {
+            if (File::exists('assets/posts/' . $media->file_name)) {
+                unlink('assets/posts/' . $media->file_name);
             }
             $media->delete();
+
             return true;
         }
+
         return false;
     }
 
     public function downloadAllPdfs($postId)
     {
-        $post = Post::findOrFail($postId);
-        $pdfFiles = $post->media()->where('file_type', 'application/pdf')->get();
+        $post     = Post::findOrFail($postId);
+        $pdfFiles = $post->media()->where('file_type', 'application/pdf')->get(
+        );
 
         if ($pdfFiles->isEmpty()) {
-            return redirect()->back()->with('error', __('messages.no_pdf_files'));
+            return redirect()->back()->with(
+                'error',
+                __('messages.no_pdf_files')
+            );
         }
 
-        $zip = new ZipArchive;
-        $zipFileName = $postId->real_file_name. '.zip';
+        $zip         = new ZipArchive();
+        $zipFileName = $postId->real_file_name . '.zip';
         $zipFilePath = public_path($zipFileName);
 
-        if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
+        if ($zip->open($zipFilePath, ZipArchive::CREATE) === true) {
             foreach ($pdfFiles as $file) {
                 $filePath = public_path('assets/posts/' . $file->file_name);
                 $zip->addFile($filePath, $file->file_name);
@@ -326,4 +267,5 @@ class PostsController extends Controller
 
         return response()->download($zipFilePath)->deleteFileAfterSend(true);
     }
+
 }

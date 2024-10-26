@@ -17,8 +17,8 @@ class CreatePostsTable extends Migration
             $table->id();
             $table->string('title')->index();
             $table->string('title_en')->index();
-            $table->string('slug')->unique();
-            $table->string('slug_en')->unique();
+            $table->string('slug');
+            $table->string('slug_en');
             $table->longText('description')->index();
             $table->longText('description_en')->index();
             $table->unsignedTinyInteger('status')->default(0);

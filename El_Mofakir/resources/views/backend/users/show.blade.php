@@ -8,7 +8,7 @@
                     <span class="icon text-white-50">
                         <i class="fa fa-home"></i>
                     </span>
-                    <span class="text">Users</span>
+                    <span class="text">{{ __('Backend/users.authors') }}</span>
                 </a>
             </div>
         </div>

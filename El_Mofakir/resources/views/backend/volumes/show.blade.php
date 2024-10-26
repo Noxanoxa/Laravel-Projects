@@ -16,9 +16,6 @@
             <table class="table table-hover">
                 <tbody>
                 <tr>
-                    <td colspan="4"><a href="{{route('admin.volumes.show', $volume->id)}}">{{  $volume->number }}</a></td>
-                </tr>
-                <tr>
                     <th>{{__('Backend/volumes.issues')}}</th>
                     <td>{{ $volume->issues->count() }}</td>
                     <th>{{__('Backend/volumes.status')}}</th>

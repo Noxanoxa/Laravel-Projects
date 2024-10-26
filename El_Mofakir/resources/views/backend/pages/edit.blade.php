@@ -37,14 +37,14 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label for="description">{{__('backend/pages.description')}}</label>
-                        <textarea name="description" id="description" class="form-control summernote">{{ old('description', $page->description) }}</textarea>
+                        <textarea name="description" id="description" class="form-control">{{ old('description', $page->description) }}</textarea>
                         @error('description')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-group">
                         <label for="description_en">{{__('backend/pages.description_en')}}</label>
-                        <textarea name="description_en" id="description_en" class="form-control summernote" placeholder="{{__('backend/pages.ur_description_en')}}">{{ old('description_en', $page->description_en) }}</textarea>
+                        <textarea name="description_en" id="description_en" class="form-control" placeholder="{{__('backend/pages.ur_description_en')}}">{{ old('description_en', $page->description_en) }}</textarea>
                         @error('description_en')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
@@ -69,13 +69,6 @@
                     @error('status')<span class="text-danger">{{ $message }}</span>@enderror
                 </div>
             </div>
-            <div class="row pt-4">
-                <div class="col-12">
-                    <div class="file-loading">
-                        <input type="file" name="images[]" id="page-images" multiple>
-                    </div>
-                </div>
-            </div>
             <div class="form-group pt-4">
                 <button type="submit" class="btn btn-primary">{{__('backend/pages.update_page')}}</button>
             </div>
@@ -84,51 +77,4 @@
     </div>
 
 @endsection
-@section('script')
-    <script src="{{ asset('frontend/js/summernote/summernote-bs4.min.js')}}"></script>
-    <script>
-        $(function() {
-            $('.summernote').summernote({
-                tabsize: 2,
-                height: 200,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-            $('#page-images').fileinput({
-                theme: "fas",
-                maxFileCount:  {{5 - $page->media->count()}},
-                allowedFileTypes: ['image'],
-                showCancel: true,
-                showRemove: false,
-                showUpload: false,
-                overwriteInitial: false,
-                initialPreview: [
-                    @if($page->media->count() > 0)
-                        @foreach($page->media as $media)
-                        "{{ asset('assets/posts/' . $media->file_name) }}",
-                    @endforeach
-                    @endif
-                ],
-                initialPreviewAsData: true,
-                initialPreviewFileType: 'image',
-                initialPreviewConfig: [
-                        @if($page->media->count() > 0)
-                        @foreach($page->media as $media)
-                    {caption: "{{ $media->file_name }}", size: {{ $media->file_size }}, width: "120px", url: "{{ route('admin.pages.media.destroy', [$media->id, '_token' => csrf_token()]) }}", key: "{{ $media->id }}"},
-                    @endforeach
-                    @endif
-                ],
-            });
-        });
 
-
-
-    </script>
-@endsection
