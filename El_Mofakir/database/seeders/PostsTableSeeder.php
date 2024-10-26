@@ -29,7 +29,52 @@ class PostsTableSeeder extends Seeder
         $posts = [];
 
 
-        $posts =[
+
+
+
+        foreach ($volumes as $volume) {
+            $volumeIssues = Issue::where('volume_id', $volume->id)->get();
+            foreach ($volumeIssues as $issue) {
+                for ($i = 0; $i < 1000; $i++) {
+                    $post_title = $faker->sentence(mt_rand(3, 6), true);
+                    $post_title_en = $faker->sentence(mt_rand(3, 6), true);
+
+                    $slug = Str::slug($post_title);
+                    $slug_en = Str::slug($post_title_en);
+
+                    // Ensure unique slugs
+                    $original_slug = $slug;
+                    $original_slug_en = $slug_en;
+                    $counter = 1;
+
+                    while (Post::where('slug', $slug)->exists()) {
+                        $slug = $original_slug . '-' . $counter++;
+                    }
+
+                    $counter = 1;
+                    while (Post::where('slug_en', $slug_en)->exists()) {
+                        $slug_en = $original_slug_en . '-' . $counter++;
+                    }
+
+                    $posts[] = [
+                        'title' => $post_title,
+                        'title_en' => $post_title_en,
+                        'slug' => $slug,
+                        'slug_en' => $slug_en,
+                        'description' => $faker->paragraph(),
+                        'description_en' => $faker->paragraph(),
+                        'status' => rand(0, 1),
+                        'user_id' => Arr::random($users),
+                        'category_id' => Arr::random($categories),
+                        'volume_id' => $volume->id,
+                        'issue_id' => $issue->id,
+                        'created_at' => $issue->issue_date . " 01:01:01",
+                        'updated_at' => $issue->issue_date . " 01:01:01",
+                    ];
+                }
+            }
+        }
+        $posts [] =[
             [
                 'title' => 'الوساطة كآلية لحل النزاعات الدولية المعاصرة - دراسة حالة الوساطة الجزائرية في ليبيا',
                 'title_en' => 'Mediation as a Mechanism for Resolving Contemporary International Conflicts - A Case Study of Algerian Mediation in Libya',
@@ -106,51 +151,6 @@ class PostsTableSeeder extends Seeder
                 'updated_at' => '2024-06-30 01:01:01',
             ],
         ];
-
-
-        foreach ($volumes as $volume) {
-            $volumeIssues = Issue::where('volume_id', $volume->id)->get();
-            foreach ($volumeIssues as $issue) {
-                for ($i = 0; $i < 1000; $i++) {
-                    $post_title = $faker->sentence(mt_rand(3, 6), true);
-                    $post_title_en = $faker->sentence(mt_rand(3, 6), true);
-
-                    $slug = Str::slug($post_title);
-                    $slug_en = Str::slug($post_title_en);
-
-                    // Ensure unique slugs
-                    $original_slug = $slug;
-                    $original_slug_en = $slug_en;
-                    $counter = 1;
-
-                    while (Post::where('slug', $slug)->exists()) {
-                        $slug = $original_slug . '-' . $counter++;
-                    }
-
-                    $counter = 1;
-                    while (Post::where('slug_en', $slug_en)->exists()) {
-                        $slug_en = $original_slug_en . '-' . $counter++;
-                    }
-
-                    $posts[] = [
-                        'title' => $post_title,
-                        'title_en' => $post_title_en,
-                        'slug' => $slug,
-                        'slug_en' => $slug_en,
-                        'description' => $faker->paragraph(),
-                        'description_en' => $faker->paragraph(),
-                        'status' => rand(0, 1),
-                        'user_id' => Arr::random($users),
-                        'category_id' => Arr::random($categories),
-                        'volume_id' => $volume->id,
-                        'issue_id' => $issue->id,
-                        'created_at' => $issue->issue_date . " 01:01:01",
-                        'updated_at' => $issue->issue_date . " 01:01:01",
-                    ];
-                }
-            }
-        }
-
         $chunks = array_chunk($posts, 1000);
         foreach ($chunks as $chunk) {
             Post::insert($chunk);
