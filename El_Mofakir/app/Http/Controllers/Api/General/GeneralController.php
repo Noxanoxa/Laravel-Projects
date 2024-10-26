@@ -405,7 +405,8 @@ class GeneralController extends Controller
     public function author($username)
     {
         $user  = User::whereName($username)->first();
-        $media = $user->media->where('file_type', 'application/pdf')->first();
+
+        $media = $user->media->whereUserId($user->id)->where('file_type', 'application/pdf')->first();
         if ($media) {
             $filePath = public_path('assets/users/' . $media->file_name);
             return response()->download($filePath, $media->real_file_name);
