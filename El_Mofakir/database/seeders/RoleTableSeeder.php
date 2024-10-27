@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\UserMedia;
 use Illuminate\Database\Seeder;
 use App\Models\Role;
 use App\Models\User;
@@ -72,6 +73,8 @@ class  RoleTableSeeder extends Seeder
             ]
         );
         $user1->attachRole($userRole);
+        $this->addUserMedia($user1);
+
         $user2 = User::create(
             [
                 'name'              => 'hana ben said',
@@ -83,6 +86,8 @@ class  RoleTableSeeder extends Seeder
             ]
         );
         $user2->attachRole($userRole);
+        $this->addUserMedia($user2);
+
         $user3 = User::create(
             [
                 'name'              => 'ميمون عبد الحميد ',
@@ -94,6 +99,8 @@ class  RoleTableSeeder extends Seeder
             ]
         );
         $user3->attachRole($userRole);
+        $this->addUserMedia($user3);
+
 
         for ($i = 0; $i < 10; $i++) {
             $user = User::create([
@@ -107,6 +114,20 @@ class  RoleTableSeeder extends Seeder
             ]);
 
             $user->attachRole($userRole);
+            $this->addUserMedia($user);
+        }
+    }
+
+    private function addUserMedia($user)
+    {
+        if ($user->hasRole('user')) {
+            UserMedia::create([
+                'user_id'        => $user->id,
+                'file_name'      => 'default.pdf',
+                'real_file_name' => 'default.pdf',
+                'file_size'      => 12345, // Example size
+                'file_type'      => 'application/pdf',
+            ]);
         }
     }
 

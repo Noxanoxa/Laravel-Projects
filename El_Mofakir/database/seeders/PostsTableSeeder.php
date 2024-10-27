@@ -149,12 +149,12 @@ class PostsTableSeeder extends Seeder
             }
         }
 
-        $chunks = array_chunk($posts, 1000);
-        foreach ($chunks as $chunk) {
-            Post::insert($chunk);
-        }
+//        $chunks = array_chunk($posts, 1000);
+//        foreach ($chunks as $chunk) {
+//            Post::insert($chunk);
+//        }
 
-//        Post::insert($posts);
+        Post::insert($posts);
 
     }
 }
