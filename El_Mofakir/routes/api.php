@@ -40,7 +40,7 @@ Route::controller(GeneralController::class)->group(function () {
     Route::get('/authors', 'get_authors');
     Route::get('/tags', 'get_tags');
 
-    Route::get('/archive/{date}', 'archive');
+    Route::get('/volume/{number}', 'issues');
     Route::get('/author/{username}', 'author');
 
 });

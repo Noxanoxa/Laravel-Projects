@@ -370,27 +370,37 @@ class GeneralController extends Controller
         );// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
     }
 
-    public function archive($date)
+    public function issues($volumeNumber)
     {
-        $exploded_date = explode('-', $date);
-        $month         = $exploded_date[0];
-        $year          = $exploded_date[1];
 
-        $posts = Post::with(['media', 'user', 'tags', 'volumes', 'issues'])
-                     ->whereMonth('created_at', $month)
-                     ->whereYear('created_at', $year)
-                     ->post()
-                     ->active()
-                     ->orderBy('id', 'desc')
-                     ->paginate(5);
+        $volume = Volume::whereNumber( $volumeNumber)->first();
 
-        if ($posts->count() > 0) {
-            return  PostsResource::collection($posts);
+        if (!$volume) {
+            return response()->json(['message' => 'Volume not found', 'error' => true], 201);
+        }
+
+        $issues = $volume->issues()->with('posts')->get();
+
+        if ($issues->count() > 0) {
+            return response()->json([
+                'issues' => $issues->map(function ($issue) {
+                    return [
+                        'issue_number' => $issue->issue_number,
+                        'issue_date' => $issue->issue_date,
+                        'posts' => $issue->posts->map(function ($post) {
+                            return [
+                                'title' => $post->title,
+                                'slug' => $post->slug,
+                                'description' => $post->description,
+                                'created_date' => $post->created_at->format('d-m-Y h:i a'),
+                            ];
+                        }),
+                    ];
+                }),
+                'error' => false,
+            ], 200);
         } else {
-            return response()->json(
-                ['message' => 'No post found', 'error' => true],
-                201
-            );// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
+            return response()->json(['message' => 'No issues found for this volume', 'error' => true], 201);
         }
     }
 
