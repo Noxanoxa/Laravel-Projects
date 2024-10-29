@@ -12,14 +12,7 @@ use App\Http\Resources\General\{
     UserResource,
     PostsResource
 };
-use App\Models\{
-    Announcement,
-    Category,
-    Contact,
-    Post,
-    Tag,
-    User
-};
+use App\Models\{Announcement, Category, Contact, Post, Tag, User, Volume};
 use App\Notifications\{
     NewCommentForAdminNotify,
     NewCommentForPostOwnerNotify
@@ -149,23 +142,36 @@ class GeneralController extends Controller
 
     public function get_archives()
     {
-        $archives = Post::selectRaw(
-            'year(created_at) year, monthname(created_at) month, count(*) published'
-        )
-                        ->post()
-                        ->active()
-                        ->groupBy('year', 'month')
-                        ->orderByRaw('min(created_at) desc')
-                        ->get();
 
-        if ($archives->count() > 0) {
-            return response()->json(['archives' => $archives, 'error' => false],
-                200);
+        $volumes = Volume::with(['issues.posts'])->get();
+
+        if ($volumes->count() > 0) {
+            return response()->json([
+                'volumes' => $volumes->map(function ($volume) {
+                    return [
+                        'number' => $volume->number,
+                        'year' => $volume->year,
+                        'status' => $volume->status(),
+                        'issues' => $volume->issues->map(function ($issue) {
+                            return [
+                                'issue_number' => $issue->issue_number,
+                                'issue_date' => $issue->issue_date,
+                                'posts' => $issue->posts->map(function ($post) {
+                                    return [
+                                        'title' => $post->title,
+                                        'slug' => $post->slug,
+                                        'description' => $post->description,
+                                        'created_date' => $post->created_at->format('d-m-Y h:i a'),
+                                    ];
+                                }),
+                            ];
+                        }),
+                    ];
+                }),
+                'error' => false,
+            ], 200);
         } else {
-            return response()->json(
-                ['message' => 'No archives found', 'error' => true],
-                201
-            );// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
+            return response()->json(['message' => 'No volumes found', 'error' => true], 201);
         }
     }
 
@@ -384,7 +390,7 @@ class GeneralController extends Controller
         $month         = $exploded_date[0];
         $year          = $exploded_date[1];
 
-        $posts = Post::with(['media', 'user', 'tags'])
+        $posts = Post::with(['media', 'user', 'tags', 'volumes', 'issues'])
                      ->whereMonth('created_at', $month)
                      ->whereYear('created_at', $year)
                      ->post()

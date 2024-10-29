@@ -66,4 +66,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public  function userImage() {
         return $this->user_image != '' ? asset('assets/users/'. $this->user_image ) : asset('assets/users/default.png');
     }
+
+
+    public function announcements()
+    {
+        return $this->hasMany(Announcement::class);
+    }
 }

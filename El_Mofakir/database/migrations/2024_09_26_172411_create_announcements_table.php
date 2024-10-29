@@ -21,8 +21,8 @@ class CreateAnnouncementsTable extends Migration
             $table->string('slug_en')->unique();
             $table->longText('description')->index();
             $table->longText('description_en')->index();
-            $table->unsignedTinyInteger('status')->default(0);
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->unsignedTinyInteger('status')->default(0);
             $table->timestamps();
         });
     }
