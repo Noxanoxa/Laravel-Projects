@@ -4,15 +4,21 @@ namespace App\Http\Controllers\Api\General;
 
 use App\Http\Controllers\Controller;
 
-use App\Http\Resources\General\{
-    AnnouncementsResource,
+use App\Http\Resources\General\{AnnouncementsResource,
     PageResource,
     PostResource,
+    SettingResource,
     TagsResource,
     UserResource,
-    PostsResource
-};
-use App\Models\{Announcement, Category, Contact, Post, Tag, User, Volume};
+    PostsResource};
+use App\Models\{Announcement,
+    Category,
+    Contact,
+    Post,
+    Setting,
+    Tag,
+    User,
+    Volume};
 use App\Notifications\{
     NewCommentForAdminNotify,
     NewCommentForPostOwnerNotify
@@ -448,6 +454,22 @@ class GeneralController extends Controller
             ],
             200
         );
+    }
+
+    public function settings()
+    {
+        $settings = Setting::whereIn('key', [
+            'facebook_id',
+            'google_map_api_key',
+            'address',
+            'phone_number',
+            'website_univ',
+        ])->get();
+
+        return response()->json([
+            'settings' => $settings->pluck('value', 'key'),
+            'error' => false,
+        ], 200);
     }
 
 }

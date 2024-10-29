@@ -42,6 +42,7 @@ Route::controller(GeneralController::class)->group(function () {
 
     Route::get('/volume/{number}', 'issues');
     Route::get('/author/{username}', 'author');
+    Route::get('/contact-info', 'settings');
 
 });
 
