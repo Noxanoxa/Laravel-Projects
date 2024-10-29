@@ -36,7 +36,7 @@ Route::controller(GeneralController::class)->group(function () {
     Route::get('/recent_posts', 'get_recent_posts');
     Route::get('/recent_announcements', 'get_recent_announcements');
 
-    Route::get('/archives', 'get_archives');
+    Route::get('/volumes', 'get_volumes');
     Route::get('/authors', 'get_authors');
     Route::get('/tags', 'get_tags');
 

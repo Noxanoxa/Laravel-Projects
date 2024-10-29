@@ -28,11 +28,9 @@ class PostsResource extends JsonResource
             'issue' => new IssueResource($this->issue),
             'created_date' => $this->created_at->format('d-m-Y h:i a'),
             'author' => new UsersResource($this->user),
-            'category' => new CategoriesResource($this->category), // in this case category as one  element
-            'tags' => TagsResource::collection($this->tags), // in this case tags as multiple elements
-            'media' => PostsMediaResource::collection($this->media), // in this case media as multiple elements
-
-
+            'category' => new CategoriesResource($this->category),
+            'tags' => TagsResource::collection($this->tags),
+            'media' => PostsMediaResource::collection($this->media),
         ];
     }
 }

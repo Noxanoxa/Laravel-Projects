@@ -140,10 +140,10 @@ class GeneralController extends Controller
         }
     }
 
-    public function get_archives()
+    public function get_volumes()
     {
 
-        $volumes = Volume::with(['issues.posts'])->get();
+        $volumes = Volume::where('status', 1)->get();
 
         if ($volumes->count() > 0) {
             return response()->json([
@@ -152,20 +152,6 @@ class GeneralController extends Controller
                         'number' => $volume->number,
                         'year' => $volume->year,
                         'status' => $volume->status(),
-                        'issues' => $volume->issues->map(function ($issue) {
-                            return [
-                                'issue_number' => $issue->issue_number,
-                                'issue_date' => $issue->issue_date,
-                                'posts' => $issue->posts->map(function ($post) {
-                                    return [
-                                        'title' => $post->title,
-                                        'slug' => $post->slug,
-                                        'description' => $post->description,
-                                        'created_date' => $post->created_at->format('d-m-Y h:i a'),
-                                    ];
-                                }),
-                            ];
-                        }),
                     ];
                 }),
                 'error' => false,
