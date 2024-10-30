@@ -49,5 +49,6 @@ return [
     'disallow'          => 'Disallow',
     'pdf'  => 'Upload PDF',
     'no_pdfs'           => 'No PDFs Attached',
+    'pdf_note' => 'Note: You can upload multiple PDFs and the PDF size should not exceed 20MB',
 ];
 

@@ -39,14 +39,14 @@
                 <div class="col-6">
                     <div class="form-group">
                         <label for="description">{{__('Backend/announcements.description')}}</label>
-                        <textarea name="description" class="form-control summernote">{!! old('description', $announcement->description) !!}</textarea>
+                        <textarea name="description" class="form-control">{!! old('description', $announcement->description) !!}</textarea>
                         @error('description')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-group">
                         <label for="description_en">{{__('Backend/announcements.description_en')}}</label>
-                        <textarea name="description_en" class="form-control summernote">{!! old('description_en', $announcement->description_en) !!}</textarea>
+                        <textarea name="description_en" class="form-control">{!! old('description_en', $announcement->description_en) !!}</textarea>
                         @error('description_en')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>

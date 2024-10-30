@@ -196,33 +196,6 @@ class GeneralController extends Controller
         }
     }
 
-    public function downloadAllPdfs($slug)
-    {
-        $post = Post::where('slug_en', $slug)->firstOrFail();
-        $pdfFiles = $post->media()->where('file_type', 'application/pdf')->get();
-
-        if ($pdfFiles->isEmpty()) {
-            return response()->json(['error' => 'No PDFs found for this post.'], 404);
-        }
-
-        $zip = new ZipArchive();
-        $zipFileName = $post->title(). '.zip';
-        $zipFilePath = public_path($zipFileName);
-
-        if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
-            foreach ($pdfFiles as $file) {
-                $filePath = public_path('assets/posts/' . $file->file_name);
-                $zip->addFile($filePath, $file->real_file_name);
-            }
-            $zip->close();
-        }
-
-        return response()->download($zipFilePath, $zipFileName, [
-            'Content-Type' => 'application/zip',
-            'Content-Disposition' => 'attachment; filename="' . $zipFileName . '"',
-        ])->deleteFileAfterSend(true);
-    }
-
 
     public function page_show($slug)
     {
@@ -389,35 +362,66 @@ class GeneralController extends Controller
         }
     }
 
+    public function downloadAllPdfs($slug)
+    {
+        $post = Post::where('slug_en', $slug)->firstOrFail();
+        $pdfFiles = $post->media()->where('file_type', 'application/pdf')->get();
+
+        if ($pdfFiles->isEmpty()) {
+            return response()->json(['error' => 'No PDFs found for this post.'], 404);
+        }
+
+        $zip = new ZipArchive();
+        $zipFileName = $post->title(). '.zip';
+        $zipFilePath = public_path($zipFileName);
+
+        if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
+            foreach ($pdfFiles as $file) {
+                $filePath = public_path('assets/posts/' . $file->file_name);
+                $zip->addFile($filePath, $file->real_file_name);
+            }
+            $zip->close();
+        }
+
+        return response()->download($zipFilePath, $zipFileName, [
+            'Content-Type' => 'application/zip',
+            'Content-Disposition' => 'attachment; filename="' . $zipFileName . '"',
+        ])->deleteFileAfterSend(true);
+    }
+
     public function downloadIssuePdfs($issueDate)
     {
-//        dd($issueDate);
-        $issue = Issue::where('issue_date', $issueDate)->first();
+        // Retrieve the issue by its date
+        $issue = Issue::where('issue_date', $issueDate)->firstOrFail();
+
+        // Get all posts related to the issue
         $posts = $issue->posts;
 
+        // Collect all PDF files associated with these posts
         $pdfFiles = [];
         foreach ($posts as $post) {
-            $pdfFiles = array_merge($pdfFiles, $post->media()->where('file_type', 'application/pdf')->get()->toArray());
+            $postMedia = $post->media()->where('file_type', 'application/pdf')->get();
+            foreach ($postMedia as $media) {
+                $pdfFiles[] = $media;
+            }
         }
+        dd($pdfFiles);
 
         if (empty($pdfFiles)) {
             return response()->json(['error' => 'No PDFs found for this issue.'], 404);
         }
 
+        // Create a ZIP archive containing all the PDF files
         $zip = new ZipArchive();
-        $zipFileName = 'issue_' . $issue->issue_number . '_pdfs.zip';
+        $zipFileName = 'issue_' . $issueDate . '_pdfs.zip';
         $zipFilePath = public_path($zipFileName);
 
         if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
             foreach ($pdfFiles as $file) {
-                $filePath = public_path('assets/posts/' . $file['file_name']);
-                if (File::exists($filePath)) {
-                    $zip->addFile($filePath, $file['real_file_name']);
-                }
+                $filePath = public_path('assets/posts/' . $file->file_name);
+                $zip->addFile($filePath, $file->real_file_name);
             }
             $zip->close();
-        } else {
-            return response()->json(['error' => 'Failed to create ZIP file.'], 500);
         }
 
         // Return the ZIP file as a download response
