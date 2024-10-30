@@ -40,6 +40,8 @@ Route::controller(GeneralController::class)->group(function () {
     Route::get('/authors', 'get_authors');
     Route::get('/tags', 'get_tags');
 
+    Route::get('issues/{issueDate}/download-pdfs',  'downloadIssuePdfs');
+
     Route::get('/volume/{number}', 'issues');
     Route::get('/author/{username}', 'author');
     Route::get('/contact-info', 'settings');

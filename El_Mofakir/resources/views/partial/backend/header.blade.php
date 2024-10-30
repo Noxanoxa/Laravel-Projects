@@ -22,14 +22,7 @@
             </li>
         @endif
 
-            @if(auth()->user()->ability('admin', 'manage_supervisors,show_supervisors'))
-                <!-- Nav Item - Messages -->
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.supervisors.index') }}">
-                        {{__('Backend/supervisors.supervisors')}}
-                    </a>
-                </li>
-            @endif
+
 
 
             @if(auth()->user()->ability('admin', 'manage_settings,show_settings'))

@@ -30,13 +30,13 @@ class  RoleTableSeeder extends Seeder
             'allowed_route'   => 'admin',
         ]);
 
-        $editorRole = Role::create([
-            'name' => 'editor',
-            'display_name' => 'مشرف',
-            'display_name_en' => 'Supervisor',
-            'description' => 'مشرف النظام',
-            'description_en' => 'System Supervisor',
-            'allowed_route' => 'admin'
+        $professionalRole = Role::create([
+            'name' => 'professional',
+            'display_name' => 'خبير',
+            'display_name_en' => 'Professional',
+            'description' => 'الخبير',
+            'description_en' => 'Professional',
+            'allowed_route' => null,
         ]);
 
         $userRole = Role::create([
@@ -70,16 +70,16 @@ class  RoleTableSeeder extends Seeder
 
         $admin->attachRole($adminRole);
 
-        $editor = User::create([
-            'name' => 'Editor',
-            'username' => 'editor',
-            'email' => 'editor@bloggi.test',
+        $professional = User::create([
+            'name' => 'Samer',
+            'username' => 'Sameramri53',
+            'email' => 'amrisamer06@gmail.com',
             'mobile' => '0675388002',
             'password' => bcrypt('123123123'),
             'status' => 1,
         ]);
 
-        $editor->attachRole($editorRole);
+        $professional->attachRole($professionalRole);
 
         $user1 = User::create(
             [

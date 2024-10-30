@@ -14,11 +14,13 @@ use App\Http\Resources\General\{AnnouncementsResource,
 use App\Models\{Announcement,
     Category,
     Contact,
+    Issue,
     Post,
     Setting,
     Tag,
     User,
     Volume};
+use Illuminate\Support\Facades\File;
 use App\Notifications\{
     NewCommentForAdminNotify,
     NewCommentForPostOwnerNotify
@@ -407,6 +409,43 @@ class GeneralController extends Controller
         }
     }
 
+    public function downloadIssuePdfs($issueDate)
+    {
+//        dd($issueDate);
+        $issue = Issue::where('issue_date', $issueDate)->first();
+        $posts = $issue->posts;
+
+        $pdfFiles = [];
+        foreach ($posts as $post) {
+            $pdfFiles = array_merge($pdfFiles, $post->media()->where('file_type', 'application/pdf')->get()->toArray());
+        }
+
+        if (empty($pdfFiles)) {
+            return response()->json(['error' => 'No PDFs found for this issue.'], 404);
+        }
+
+        $zip = new ZipArchive();
+        $zipFileName = 'issue_' . $issue->issue_number . '_pdfs.zip';
+        $zipFilePath = public_path($zipFileName);
+
+        if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
+            foreach ($pdfFiles as $file) {
+                $filePath = public_path('assets/posts/' . $file['file_name']);
+                if (File::exists($filePath)) {
+                    $zip->addFile($filePath, $file['real_file_name']);
+                }
+            }
+            $zip->close();
+        } else {
+            return response()->json(['error' => 'Failed to create ZIP file.'], 500);
+        }
+
+        // Return the ZIP file as a download response
+        return response()->download($zipFilePath, $zipFileName, [
+            'Content-Type' => 'application/zip',
+            'Content-Disposition' => 'attachment; filename="' . $zipFileName . '"',
+        ])->deleteFileAfterSend(true);
+    }
     public function author($username)
     {
         $user  = User::whereName($username)->first();

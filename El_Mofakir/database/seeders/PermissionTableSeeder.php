@@ -969,10 +969,11 @@ class PermissionTableSeeder extends Seeder
         ]);
 
         // PROFESSIONALS
-        $manageProfessionals = Permission::create([
+
+        $manageProfessionals              = Permission::create([
             'name'            => 'manage_professionals',
-            'display_name'    => 'المحترفين',
-            'description'     => 'إدارة المحترفين',
+            'display_name'    => 'الخبراء',
+            'description'     => 'إدارة الخبراء',
             'display_name_en' => 'Professionals',
             'description_en'  => 'Manage Professionals',
             'route'           => 'professionals',
@@ -989,9 +990,9 @@ class PermissionTableSeeder extends Seeder
 
         $showProfessionals = Permission::create([
             'name'            => 'show_professionals',
-            'display_name'    => 'عرض المحترفين',
-            'description'     => 'عرض المحترفين',
-            'display_name_en' => 'Show Professionals',
+            'display_name'    => 'الخبراء',
+            'description'     => 'عرض الخبراء',
+            'display_name_en' => 'Professionals',
             'description_en'  => 'Show Professionals',
             'route'           => 'professionals',
             'module'          => 'professionals',
@@ -1001,6 +1002,74 @@ class PermissionTableSeeder extends Seeder
             'parent_show'     => $manageProfessionals->id,
             'parent_original' => $manageProfessionals->id,
             'appear'          => '1',
+            'ordering'        => '0',
+        ]);
+
+        $createProfessionals = Permission::create([
+            'name'            => 'create_professionals',
+            'display_name'    => 'إنشاء خبير',
+            'description'     => 'إنشاء خبير جديد',
+            'display_name_en' => 'Create Professional',
+            'description_en'  => 'Create Professional',
+            'route'           => 'professionals/create',
+            'module'          => 'professionals',
+            'as'              => 'professionals.create',
+            'icon'            => null,
+            'parent'          => $manageProfessionals->id,
+            'parent_show'     => $manageProfessionals->id,
+            'parent_original' => $manageProfessionals->id,
+            'appear'          => '0',
+            'ordering'        => '0',
+        ]);
+
+        $displayProfessionals = Permission::create([
+            'name'            => 'display_professionals',
+            'display_name'    => 'عرض الخبير',
+            'description'     => 'عرض تفاصيل الخبير',
+            'display_name_en' => 'Show Professional',
+            'description_en'  => 'Show Professional',
+            'route'           => 'professionals/{professionals}',
+            'module'          => 'professionals',
+            'as'              => 'professionals.show',
+            'icon'            => null,
+            'parent'          => $manageProfessionals->id,
+            'parent_show'     => $manageProfessionals->id,
+            'parent_original' => $manageProfessionals->id,
+            'appear'          => '0',
+            'ordering'        => '0',
+        ]);
+
+        $updateProfessionals = Permission::create([
+            'name'            => 'update_professionals',
+            'display_name'    => 'تحديث الخبير',
+            'description'     => 'تحديث بيانات الخبير',
+            'display_name_en' => 'Update Professional',
+            'description_en'  => 'Update Professional',
+            'route'           => 'professionals/{professionals}/edit',
+            'module'          => 'professionals',
+            'as'              => 'professionals.edit',
+            'icon'            => null,
+            'parent'          => $manageProfessionals->id,
+            'parent_show'     => $manageProfessionals->id,
+            'parent_original' => $manageProfessionals->id,
+            'appear'          => '0',
+            'ordering'        => '0',
+        ]);
+
+        $destroyProfessionals = Permission::create([
+            'name'            => 'delete_professionals',
+            'display_name'    => 'حذف الخبير',
+            'description'     => 'حذف الخبير',
+            'display_name_en' => 'Delete Professional',
+            'description_en'  => 'Delete Professional',
+            'route'           => 'professionals/{professionals}',
+            'module'          => 'professionals',
+            'as'              => 'professionals.delete',
+            'icon'            => null,
+            'parent'          => $manageProfessionals->id,
+            'parent_show'     => $manageProfessionals->id,
+            'parent_original' => $manageProfessionals->id,
+            'appear'          => '0',
             'ordering'        => '0',
         ]);
 

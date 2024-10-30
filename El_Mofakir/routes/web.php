@@ -20,9 +20,7 @@ Route::group(['middleware' => 'web'], function () {
 });
 
 // In `routes/web.php`
-Route::get('professionals/{professional}/edit', [Backend\ProfessionalController::class, 'edit'])->name('professionals.edit');
-Route::post('professionals/{professional}', [Backend\ProfessionalController::class, 'update'])->name('professionals.update');
-Route::resource('professionals', Backend\ProfessionalController::class);
+
 
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function() {
@@ -66,6 +64,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function() {
 
         Route::resource('contact_us',                   Backend\ContactUsController::class);
 
+        Route::controller(Backend\ProfessionalController::class)->group(function() {
+            Route::get('/professionals/{id}/download-cv',  'downloadCv')->name('professionals.download_cv');
+            Route::post('/professionals/removePdf/{media_id}',     'removePdf')->name('professionals.media.destroy');
+            Route::post('/professionals/removeImage',               'removeImage')->name('professionals.remove_image');
+        });
+      Route::resource('professionals', Backend\ProfessionalController::class);
 
         Route::controller(Backend\UsersController::class)->group(function() {
             Route::get('/users/{id}/download-cv',  'downloadCv')->name('users.download_cv');
