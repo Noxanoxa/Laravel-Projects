@@ -126,27 +126,7 @@ class GeneralController extends Controller
     }
 
 
-    public function get_authors()
-    {
-        $authors = User::active()
-                       ->whereRelation('posts', 'post_type', 'post')
-                       ->withCount('posts')->orderBy('id', 'desc')->get();
 
-        if ($authors->count() > 0) {
-            return response()->json(
-                [
-                    'authors' => UserResource::collection($authors),
-                    'error'   => false,
-                ],
-                200
-            );
-        } else {
-            return response()->json(
-                ['message' => 'No authors found', 'error' => true],
-                201
-            );// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
-        }
-    }
 
     public function get_volumes()
     {
@@ -446,9 +426,66 @@ class GeneralController extends Controller
             'Content-Disposition' => 'attachment; filename="' . $zipFileName . '"',
         ])->deleteFileAfterSend(true);
     }
-    public function author($username)
+
+    public function get_authors()
     {
-        $user  = User::whereName($username)->first();
+        $authors = User::active()
+                       ->whereRelation('posts', 'post_type', 'post')
+                       ->withCount('posts')->orderBy('id', 'desc')->get();
+
+        if ($authors->count() > 0) {
+            return response()->json(
+                [
+                    'authors' => UserResource::collection($authors),
+                    'error'   => false,
+                ],
+                200
+            );
+        } else {
+            return response()->json(
+                ['message' => 'No authors found', 'error' => true],
+                201
+            );// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
+        }
+    }
+    public function author($name)
+    {
+        $user  = User::whereName($name)->whereRelation('roles', 'name', 'user')->first();
+
+        $media = $user->media->whereUserId($user->id)->where('file_type', 'application/pdf')->first();
+        if ($media) {
+            $filePath = public_path('assets/users/' . $media->file_name);
+            return response()->download($filePath, $media->real_file_name);
+        }
+        return response()->json(['errors' => true, 'message' => __('messages.no_pdf_files')], 201);
+    }
+
+    public function get_professionals()
+    {
+        $authors = User::active()
+                        ->whereRelation('roles', 'name', 'professional')
+                       ->whereRelation('posts', 'post_type', 'post')
+                       ->withCount('posts')->orderBy('id', 'desc')->get();
+
+        if ($authors->count() > 0) {
+            return response()->json(
+                [
+                    'professionals' => UserResource::collection($authors),
+                    'error'   => false,
+                ],
+                200
+            );
+        } else {
+            return response()->json(
+                ['message' => 'No professionals found', 'error' => true],
+                201
+            );// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
+        }
+    }
+
+    public function professional($name)
+    {
+        $user  = User::whereName($name)->whereRelation('roles', 'name', 'professional')->first();
 
         $media = $user->media->whereUserId($user->id)->where('file_type', 'application/pdf')->first();
         if ($media) {
@@ -491,6 +528,7 @@ class GeneralController extends Controller
             200
         );
     }
+
 
     public function settings()
     {

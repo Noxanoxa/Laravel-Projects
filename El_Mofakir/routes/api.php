@@ -29,7 +29,9 @@ Route::controller(GeneralController::class)->group(function () {
 
     Route::get('/category/{category_slug}', 'category')->name('category.show');
     Route::get('/tag/{tag_slug}', 'tag')->name('tag.show');
-    Route::post('/contact-us', 'do_contact');
+    Route::get('/tags', 'get_tags');
+
+
 
     // sidebar
     Route::get('/search', 'search');
@@ -37,13 +39,16 @@ Route::controller(GeneralController::class)->group(function () {
     Route::get('/recent_announcements', 'get_recent_announcements');
 
     Route::get('/volumes', 'get_volumes');
-    Route::get('/authors', 'get_authors');
-    Route::get('/tags', 'get_tags');
-
     Route::get('issues/{issueDate}/download-pdfs',  'downloadIssuePdfs');
-
     Route::get('/volume/{number}', 'issues');
+
+    Route::get('/authors', 'get_authors');
     Route::get('/author/{username}', 'author');
+
+    Route::get('/professionals', 'get_professionals');
+    Route::get('/professional/{username}', 'professional');
+
+    Route::post('/contact-us', 'do_contact');
     Route::get('/contact-info', 'settings');
 
 });
