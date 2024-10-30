@@ -7,10 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\General\{AnnouncementsResource,
     PageResource,
     PostResource,
-    SettingResource,
     TagsResource,
     UserResource,
-    PostsResource};
+    PostsResource
+};
 use App\Models\{Announcement,
     Category,
     Contact,
@@ -19,12 +19,9 @@ use App\Models\{Announcement,
     Setting,
     Tag,
     User,
-    Volume};
-use Illuminate\Support\Facades\File;
-use App\Notifications\{
-    NewCommentForAdminNotify,
-    NewCommentForPostOwnerNotify
+    Volume
 };
+use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use ZipArchive;
@@ -35,9 +32,9 @@ class GeneralController extends Controller
     public function get_posts()
     {
         $posts = Post::whereRelation('category', 'status', 1)
-                                    ->whereRelation('user', 'status', 1)
-                                    ->post()->active()->orderBy('id', 'desc')
-                                    ->paginate(10);
+                     ->whereRelation('user', 'status', 1)
+                     ->post()->active()->orderBy('id', 'desc')
+                     ->paginate(10);
 
         if ($posts->count() > 0) {
             return PostsResource::collection($posts);
@@ -52,8 +49,8 @@ class GeneralController extends Controller
     public function get_announcements()
     {
         $announcements = Announcement::with(['user'])
-                                    ->whereRelation('user', 'status', 1)
-                                   ->active()->orderBy('id', 'desc')
+                                     ->whereRelation('user', 'status', 1)
+                                     ->active()->orderBy('id', 'desc')
                                      ->get();
 
         if ($announcements->count() > 0) {
@@ -78,7 +75,7 @@ class GeneralController extends Controller
     {
         $posts = Post::with(['category', 'media', 'user'])
                      ->whereRelation('category', 'status', 1)
-                        ->whereRelation('user', 'status', 1)
+                     ->whereRelation('user', 'status', 1)
                      ->post()->active()->orderBy(
                 'id',
                 'desc'
@@ -103,7 +100,7 @@ class GeneralController extends Controller
     public function get_recent_announcements()
     {
         $announcements = Announcement::with(['user'])
-                                    ->whereRelation('user', 'status', 1)
+                                     ->whereRelation('user', 'status', 1)
                                      ->active()->orderBy('id', 'desc')
                                      ->limit(5)->get();
 
@@ -125,12 +122,8 @@ class GeneralController extends Controller
         }
     }
 
-
-
-
     public function get_volumes()
     {
-
         $volumes = Volume::where('status', 1)->get();
 
         if ($volumes->count() > 0) {
@@ -138,14 +131,17 @@ class GeneralController extends Controller
                 'volumes' => $volumes->map(function ($volume) {
                     return [
                         'number' => $volume->number,
-                        'year' => $volume->year,
+                        'year'   => $volume->year,
                         'status' => $volume->status(),
                     ];
                 }),
-                'error' => false,
+                'error'   => false,
             ], 200);
         } else {
-            return response()->json(['message' => 'No volumes found', 'error' => true], 201);
+            return response()->json(
+                ['message' => 'No volumes found', 'error' => true],
+                201
+            );
         }
     }
 
@@ -179,7 +175,7 @@ class GeneralController extends Controller
         ]);
 
         $post = $post->whereRelation('category', 'status', 1)
-                                    ->whereRelation('user', 'status', 1);
+                     ->whereRelation('user', 'status', 1);
         $post = Post::where('slug_en', $slug);
         $post = $post->active()->post()->first();
 
@@ -195,7 +191,6 @@ class GeneralController extends Controller
             );// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
         }
     }
-
 
     public function page_show($slug)
     {
@@ -247,8 +242,8 @@ class GeneralController extends Controller
             ? $request->keyword : null;
 
         $posts = Post::with(['media', 'user', 'tags'])
-                    ->whereRelation('category', 'status', 1)
-                    ->whereRelation('user', 'status', 1);
+                     ->whereRelation('category', 'status', 1)
+                     ->whereRelation('user', 'status', 1);
 
         if ($keyword != null) {
             $posts = $posts->search($keyword, null, true);
@@ -304,7 +299,7 @@ class GeneralController extends Controller
         $tag = Tag::whereSlug($slug)->first()->id;
         if ($tag) {
             $posts = Post::with(['media', 'user', 'tags'])
-                ->whereRelation('tags', 'slug' , $slug)
+                         ->whereRelation('tags', 'slug', $slug)
                          ->post()
                          ->active()
                          ->orderBy('id', 'desc')
@@ -333,11 +328,13 @@ class GeneralController extends Controller
 
     public function issues($volumeNumber)
     {
+        $volume = Volume::whereNumber($volumeNumber)->first();
 
-        $volume = Volume::whereNumber( $volumeNumber)->first();
-
-        if (!$volume) {
-            return response()->json(['message' => 'Volume not found', 'error' => true], 201);
+        if ( ! $volume) {
+            return response()->json(
+                ['message' => 'Volume not found', 'error' => true],
+                201
+            );
         }
 
         $issues = $volume->issues()->with('posts')->get();
@@ -347,35 +344,43 @@ class GeneralController extends Controller
                 'issues' => $issues->map(function ($issue) {
                     return [
                         'issue_number' => $issue->issue_number,
-                        'issue_date' => $issue->issue_date,
-                        'posts' => $issue->posts->map(function ($post) {
+                        'issue_date'   => $issue->issue_date,
+                        'posts'        => $issue->posts->map(function ($post) {
                             return [
-                               'post' => new PostResource($post),
+                                'post' => new PostResource($post),
                             ];
                         }),
                     ];
                 }),
-                'error' => false,
+                'error'  => false,
             ], 200);
         } else {
-            return response()->json(['message' => 'No issues found for this volume', 'error' => true], 201);
+            return response()->json(
+                [
+                    'message' => 'No issues found for this volume',
+                    'error'   => true,
+                ],
+                201
+            );
         }
     }
 
     public function downloadAllPdfs($slug)
     {
-        $post = Post::where('slug_en', $slug)->firstOrFail();
-        $pdfFiles = $post->media()->where('file_type', 'application/pdf')->get();
+        $post     = Post::where('slug_en', $slug)->firstOrFail();
+        $pdfFiles = $post->media()->where('file_type', 'application/pdf')->get(
+        );
 
         if ($pdfFiles->isEmpty()) {
-            return response()->json(['error' => 'No PDFs found for this post.'], 404);
+            return response()->json(['error' => 'No PDFs found for this post.'],
+                404);
         }
 
-        $zip = new ZipArchive();
-        $zipFileName = $post->title(). '.zip';
+        $zip         = new ZipArchive();
+        $zipFileName = $post->title() . '.zip';
         $zipFilePath = public_path($zipFileName);
 
-        if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
+        if ($zip->open($zipFilePath, ZipArchive::CREATE) === true) {
             foreach ($pdfFiles as $file) {
                 $filePath = public_path('assets/posts/' . $file->file_name);
                 $zip->addFile($filePath, $file->real_file_name);
@@ -384,39 +389,37 @@ class GeneralController extends Controller
         }
 
         return response()->download($zipFilePath, $zipFileName, [
-            'Content-Type' => 'application/zip',
-            'Content-Disposition' => 'attachment; filename="' . $zipFileName . '"',
+            'Content-Type'        => 'application/zip',
+            'Content-Disposition' => 'attachment; filename="' . $zipFileName
+                                     . '"',
         ])->deleteFileAfterSend(true);
     }
 
     public function downloadIssuePdfs($issueDate)
     {
-        // Retrieve the issue by its date
-        $issue = Issue::where('issue_date', $issueDate)->firstOrFail();
-
-        // Get all posts related to the issue
-        $posts = $issue->posts;
-
-        // Collect all PDF files associated with these posts
+        $issue    = Issue::where('issue_date', $issueDate)->firstOrFail();
+        $posts    = $issue->posts;
         $pdfFiles = [];
         foreach ($posts as $post) {
-            $postMedia = $post->media()->where('file_type', 'application/pdf')->get();
+            $postMedia = $post->media()->where('file_type', 'application/pdf')
+                              ->get();
             foreach ($postMedia as $media) {
                 $pdfFiles[] = $media;
             }
         }
-        dd($pdfFiles);
 
         if (empty($pdfFiles)) {
-            return response()->json(['error' => 'No PDFs found for this issue.'], 404);
+            return response()->json(
+                ['error' => 'No PDFs found for this issue.'],
+                404
+            );
         }
 
-        // Create a ZIP archive containing all the PDF files
-        $zip = new ZipArchive();
+        $zip         = new ZipArchive();
         $zipFileName = 'issue_' . $issueDate . '_pdfs.zip';
         $zipFilePath = public_path($zipFileName);
 
-        if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
+        if ($zip->open($zipFilePath, ZipArchive::CREATE) === true) {
             foreach ($pdfFiles as $file) {
                 $filePath = public_path('assets/posts/' . $file->file_name);
                 $zip->addFile($filePath, $file->real_file_name);
@@ -424,10 +427,10 @@ class GeneralController extends Controller
             $zip->close();
         }
 
-        // Return the ZIP file as a download response
         return response()->download($zipFilePath, $zipFileName, [
-            'Content-Type' => 'application/zip',
-            'Content-Disposition' => 'attachment; filename="' . $zipFileName . '"',
+            'Content-Type'        => 'application/zip',
+            'Content-Disposition' => 'attachment; filename="' . $zipFileName
+                                     . '"',
         ])->deleteFileAfterSend(true);
     }
 
@@ -452,22 +455,32 @@ class GeneralController extends Controller
             );// 201 or 200 success for mobile app developer they have problem with status 400.* or 500.*
         }
     }
+
     public function author($name)
     {
-        $user  = User::whereName($name)->whereRelation('roles', 'name', 'user')->first();
+        $user = User::whereName($name)->whereRelation('roles', 'name', 'user')
+                    ->first();
 
-        $media = $user->media->whereUserId($user->id)->where('file_type', 'application/pdf')->first();
+        $media = $user->media->whereUserId($user->id)->where(
+            'file_type',
+            'application/pdf'
+        )->first();
         if ($media) {
             $filePath = public_path('assets/users/' . $media->file_name);
+
             return response()->download($filePath, $media->real_file_name);
         }
-        return response()->json(['errors' => true, 'message' => __('messages.no_pdf_files')], 201);
+
+        return response()->json(
+            ['errors' => true, 'message' => __('messages.no_pdf_files')],
+            201
+        );
     }
 
     public function get_professionals()
     {
         $authors = User::active()
-                        ->whereRelation('roles', 'name', 'professional')
+                       ->whereRelation('roles', 'name', 'professional')
                        ->whereRelation('posts', 'post_type', 'post')
                        ->withCount('posts')->orderBy('id', 'desc')->get();
 
@@ -475,7 +488,7 @@ class GeneralController extends Controller
             return response()->json(
                 [
                     'professionals' => UserResource::collection($authors),
-                    'error'   => false,
+                    'error'         => false,
                 ],
                 200
             );
@@ -489,14 +502,26 @@ class GeneralController extends Controller
 
     public function professional($name)
     {
-        $user  = User::whereName($name)->whereRelation('roles', 'name', 'professional')->first();
+        $user = User::whereName($name)->whereRelation(
+            'roles',
+            'name',
+            'professional'
+        )->first();
 
-        $media = $user->media->whereUserId($user->id)->where('file_type', 'application/pdf')->first();
+        $media = $user->media->where('user_id', $user->id)->where(
+            'file_type',
+            'application/pdf'
+        )->first();
         if ($media) {
             $filePath = public_path('assets/users/' . $media->file_name);
+
             return response()->download($filePath, $media->real_file_name);
         }
-        return response()->json(['errors' => true, 'message' => __('messages.no_pdf_files')], 201);
+
+        return response()->json(
+            ['errors' => true, 'message' => __('messages.no_pdf_files')],
+            201
+        );
     }
 
     public function do_contact(Request $request)
@@ -533,7 +558,6 @@ class GeneralController extends Controller
         );
     }
 
-
     public function settings()
     {
         $settings = Setting::whereIn('key', [
@@ -546,7 +570,7 @@ class GeneralController extends Controller
 
         return response()->json([
             'settings' => $settings,
-            'error' => false,
+            'error'    => false,
         ], 200);
     }
 

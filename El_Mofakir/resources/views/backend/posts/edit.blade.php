@@ -108,7 +108,7 @@
                             <input type="file" name="pdf[]" id="post-pdf" class="file-input-overview"
                                    multiple="multiple">
                             <span class="form-text text-muted">{{__('Backend/posts.pdf_note')}}</span>
-                            @error('pdf')<span class="text-danger">{{ $message }}</span>@enderror
+                            @error('pdf[]')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                     </div>
                 </div>
@@ -137,6 +137,7 @@
                 $('#select_all_tags > option').prop('selected', '');
                 $('#select_all_tags').trigger('change');
             });
+            @if(optional($post->media->count() > 0))
             $('#post-pdf').fileinput({
                 theme: 'fas',
                 maxFileCount: {{5 - $post->media->count()}},
@@ -146,16 +147,13 @@
                 showUpload: false,
                 overwriteInitial: false,
                 initialPreview: [
-                    @if($post->media->count() > 0)
                         @foreach($post->media as $media)
                         "{{ asset('assets/posts/' . $media->file_name) }}",
                     @endforeach
-                    @endif
                 ],
                 initialPreviewAsData: true,
                 initialPreviewFileType: 'pdf',
                 initialPreviewConfig: [
-                        @if($post->media->count() > 0)
                         @foreach($post->media as $media)
                     {
                         caption: "{{ $media->real_file_name }}",
@@ -164,9 +162,19 @@
                         url: "{{ route('admin.posts.media.destroy', [$media->id, '_token' => csrf_token()]) }}",
                     },
                     @endforeach
-                    @endif
                 ],
             });
+            @else
+            $('#post-pdf').fileinput({
+                theme: 'fas',
+                maxFileCount: {{5 - $post->media->count()}},
+                allowedFileTypes: ['pdf'],
+                showCancel: true,
+                showRemove: false,
+                showUpload: false,
+                overwriteInitial: false,
+            });
+            @endif
         });
     </script>
 @endsection
