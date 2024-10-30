@@ -22,8 +22,8 @@
 
                     <th>{{__('Backend/posts.status')}}</th>
                     <th>{{__('Backend/posts.category')}}</th>
-                    <th>{{__('Backend/posts.user')}}</th>
-                    <th>{{__('Backend/posts.created_at')}}</th>
+                    <th>{{__('Backend/posts.authors')}}</th>
+                    <th>{{__('Backend/posts.published_at')}}</th>
                     <th class="text-center" style="width:30px;">{{__('Backend/posts.actions')}}</th>
                 </tr>
                 </thead>
@@ -35,8 +35,12 @@
                         <td>
                             <a href="{{route('admin.posts.index', ['category_id' =>$post->category_id])}}">{{ $post->category->name() }}</a>
                         </td>
-                        <td>{{ $post->user->name}}</td>
-                        <td>{{ config('app.locale') == 'en' ? $post->created_at ->format('d-m-Y h:i a') :   $post->created_at->locale('ar')->translatedFormat('d-m-Y h:i a') }}</td>
+                        <td>
+                            @foreach($post->authors as $author)
+                                <span>{{ $author->name }}</span>@if(!$loop->last), @endif
+                            @endforeach
+                        </td>
+                        <td>{{ $post->published_at }}</td>
                         <td>
                             <div class="btn-group">
                                 <a href="{{route('admin.posts.edit', $post->id)}}" class="btn btn-primary"><i

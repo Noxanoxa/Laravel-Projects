@@ -10,8 +10,8 @@
                 <div class="form-group">
                     <select name="status" class="form-control">
                         <option value="">---</option>
-                        <option value="0" {{ old('status', request()->input('status')) == '0' ? 'selected' : '' }}>{{ __('Backend/professionals.inactive') }}</option>
-                        <option value="1" {{ old('status', request()->input('status')) == '1' ? 'selected' : '' }}>{{ __('Backend/professionals.active') }}</option>
+                        <option value="0" {{ old('status', request()->input('status')) == '0' ? 'selected' : '' }}>{{ __('Backend/professionals.national') }}</option>
+                        <option value="1" {{ old('status', request()->input('status')) == '1' ? 'selected' : '' }}>{{ __('Backend/professionals.international') }}</option>
                     </select>
                 </div>
             </div>

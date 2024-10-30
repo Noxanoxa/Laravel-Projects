@@ -63,7 +63,7 @@
                             <button type="button" id="select-all" class="btn btn-secondary btn-sm">{{ __('Select All') }}</button>
                             <button type="button" id="deselect-all" class="btn btn-secondary btn-sm">{{ __('Deselect All') }}</button>
                             @foreach($posts as $post)
-                                <div class="form-check" data-date="{{$post->created_at->format('Y-m-d')}}">
+                                <div class="form-check" data-date="{{$post->published_at}}">
                                     <input class="form-check-input" type="checkbox" name="posts[]" value="{{$post->id}}">
                                     <label class="form-check-label">
                                         {{$post->title()}}
@@ -102,7 +102,7 @@
 
                     $('.form-check').each(function() {
                         let postDate = $(this).data('date');
-                        if (postDate.split('-')[0] == issueYear) {
+                        if (postDate == issueYear) {
                             $(this).show();
                         } else {
                             $(this).hide();

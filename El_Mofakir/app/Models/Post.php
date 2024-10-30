@@ -24,6 +24,7 @@ class Post extends Model
             'description_en',
             'status',
             'post_type',
+            'published_at',
             'user_id',
             'category_id',
             'volume_id',
@@ -73,6 +74,11 @@ class Post extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function authors()
+    {
+        return $this->belongsToMany(User::class, 'post_user');
     }
 
     public function media()
@@ -174,6 +180,7 @@ class Post extends Model
         $data['description']    = Purify::clean($data['description']);
         $data['description_en'] = Purify::clean($data['description_en']);
         $data['post_type']      = 'post';
+        $data['user_id']        = $user->id;
 
         return $user->posts()->create($data);
     }

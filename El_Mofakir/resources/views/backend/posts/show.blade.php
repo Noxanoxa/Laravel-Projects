@@ -21,14 +21,18 @@
                 <tr>
                     <th>{{__('Backend/posts.status')}}</th>
                     <td>{{ $post->status() }}</td>
-                    <th>{{__('Backend/posts.created_at')}}</th>
+                    <th>{{__('Backend/posts.publish_at')}}</th>
                     <td>{{ config('app.locale') == 'en' ? $post->created_at ->format('d-m-Y h:i a') :   $post->created_at->locale('ar')->translatedFormat('d-m-Y h:i a') }}</td>
                 </tr>
                 <tr>
                     <th>{{__('Backend/posts.category')}}</th>
                     <td>{{ $post->category->name()}}</td>
                     <th>{{__('Backend/posts.author')}}</th>
-                    <td>{{ $post->user->name}}</td>
+                    <td>
+                        @foreach($post->authors as $author)
+                            <span>{{ $author->name }}</span>@if(!$loop->last), @endif
+                        @endforeach
+                    </td>
                 </tr>
 {{--                tags --}}
                 <tr>

@@ -67,6 +67,7 @@ class ProfessionalController extends Controller
             'username' => 'required|max:20|unique:users',
             'email'    => 'required|email|max:255|unique:users',
             'mobile'   => 'required|numeric|unique:users',
+            'status' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -77,6 +78,7 @@ class ProfessionalController extends Controller
         $data ['username'] = $request->username;
         $data ['email']    = $request->email;
         $data ['mobile']   = $request->mobile;
+        $data['status'] = $request->status;
         $data ['password'] = bcrypt('123123123');
 
         if ($user_image = $request->file('user_image')) {
@@ -175,6 +177,7 @@ class ProfessionalController extends Controller
             $data ['username'] = $request->username;
             $data ['email']    = $request->email;
             $data ['mobile']   = $request->mobile;
+            $data['status'] = $request->status;
             $data ['password'] = bcrypt('123123123');
 
             if ($request->hasFile('pdf')) {

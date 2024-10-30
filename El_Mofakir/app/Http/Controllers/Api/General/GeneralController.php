@@ -73,9 +73,8 @@ class GeneralController extends Controller
 
     public function get_recent_posts()
     {
-        $posts = Post::with(['category', 'media', 'user'])
+        $posts = Post::with(['category', 'media', 'authors'])
                      ->whereRelation('category', 'status', 1)
-                     ->whereRelation('user', 'status', 1)
                      ->post()->active()->orderBy(
                 'id',
                 'desc'

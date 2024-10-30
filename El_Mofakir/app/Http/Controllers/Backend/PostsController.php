@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Post;
 use App\Models\PostMedia;
 use App\Models\Tag;
+use App\Models\User;
 use App\Models\Volume;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -79,8 +80,10 @@ class PostsController extends Controller
             'name',
             'name_en'
         )->get();
+        $authors = User::whereRelation('roles', 'name', 'user')->orderBy('id', 'desc')->select('id', 'name')
+                    ->get();
 
-        return view('backend.posts.create', compact('categories', 'tags'));
+        return view('backend.posts.create', compact('categories', 'tags', 'authors'));
     }
 
     public function store(Request $request)
@@ -97,6 +100,7 @@ class PostsController extends Controller
             'category_id'    => 'required',
             'pdf.*'          => 'nullable|mimes:pdf|max:20000',
             'tags.*'         => 'nullable',
+            'published_at'     => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -111,6 +115,10 @@ class PostsController extends Controller
 
         if (count($request->tags) > 0) {
             $post->syncTags($request->tags);
+        }
+
+        if (is_array($request->authors) && count($request->authors) > 0) {
+            $post->authors()->sync($request->authors);
         }
 
         if ($request->status == 1) {
@@ -131,8 +139,9 @@ class PostsController extends Controller
         }
         $post = Post::with(['media', 'user', 'category'])->whereId($id)->post()
                     ->first();
+        $authors = $post->authors()->pluck('name')->toArray();
 
-        return view('backend.posts.show', compact('post'));
+        return view('backend.posts.show', compact('post', 'authors'));
     }
 
     public function edit($id)
@@ -146,11 +155,13 @@ class PostsController extends Controller
             'name',
             'name_en'
         )->get();
+        $authors    = User::whereRelation('roles', 'name', 'user')->orderBy('id', 'desc')->select('id', 'name')
+                    ->get();
         $post       = Post::with('media')->whereId($id)->post()->first();
 
         return view(
             'backend.posts.edit',
-            compact('categories', 'post', 'tags')
+            compact('categories', 'post', 'tags', 'authors')
         );
     }
 
@@ -186,6 +197,11 @@ class PostsController extends Controller
                 $post->syncTags($request->tags);
             } else {
                 $post->tags()->detach();
+            }
+            if (is_array($request->authors) && count($request->authors) > 0) {
+                $post->authors()->sync($request->authors);
+            } else {
+                $post->authors()->detach();
             }
 
             return redirect()->route('admin.posts.index')->with([

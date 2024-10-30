@@ -25,7 +25,7 @@ return [
     'posts_count'       => 'Posts Count',
     'search'            => 'Search',
     'search_here'       => 'Search Here',
-    'created_at'        => 'Created At',
+    'published_at'        => 'Published At',
     'active'            => 'Active',
     'inactive'          => 'Inactive',
     'select_all'        => 'Select All',
@@ -43,7 +43,8 @@ return [
     'asc'               => 'Ascending',
     'desc'              => 'Descending',
     'id'                => 'ID',
-    'author'            => 'Author',
+    'authors'            => 'Authors',
+
     'download_all'      => 'Download All',
     'update_post'       => 'Update Post',
     'disallow'          => 'Disallow',

@@ -1,6 +1,13 @@
 @extends('layouts.admin')
 @section('style')
     <link rel="stylesheet" href="{{ asset('backend/vendor/select2/css/select2.min.css') }}"/>
+    <style>
+        .form-check {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+    </style>
 @endsection
 @section('content')
 
@@ -82,7 +89,6 @@
                         </select>
                         @error('category_id')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
-
                     <div class="col-4">
                         <label for="status">{{__('Backend/posts.status')}}</label>
                         <select name="status" class="form-control">
@@ -91,6 +97,32 @@
                             <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>{{__('Backend/posts.inactive')}}</option>
                         </select>
                         @error('status')<span class="text-danger">{{ $message }}</span>@enderror
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="published_at">{{__('Backend/posts.published_at')}}</label>
+                            <input type="date" name="published_at" class="form-control" value="{{old('published_at')}}">
+                            @error('published_at')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="author">{{__('Backend/posts.author')}}</label>
+                            <div class="d-flex flex-wrap">
+                                @foreach($authors as $author)
+                                    <div class="form-check mr-3">
+                                        <input type="checkbox" name="authors[]" value="{{$author->id}}" class="form-check-input"
+                                            {{ in_array($author->id, old('authors', [] )) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="author{{$author->id}}">{{$author->name}}</label>
+                                    </div>
+                                @endforeach
+                            </div>
+                            @error('authors')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
                     </div>
                 </div>
 

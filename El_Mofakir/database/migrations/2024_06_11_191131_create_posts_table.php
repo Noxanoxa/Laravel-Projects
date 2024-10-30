@@ -23,6 +23,7 @@ class CreatePostsTable extends Migration
             $table->longText('description_en')->index();
             $table->unsignedTinyInteger('status')->default(0);
             $table->string('post_type')->default('post');
+            $table->date('published_at');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->foreignId('volume_id')->nullable()->constrained()->onDelete('cascade');

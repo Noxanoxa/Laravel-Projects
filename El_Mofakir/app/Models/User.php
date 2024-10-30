@@ -52,7 +52,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function posts() {
-        return $this->hasMany(Post::class);
+        return $this->belongsToMany(Post::class, 'post_user');
     }
 
     public function media()
@@ -60,8 +60,14 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(UserMedia::class);
     }
 
-    public  function status() {
-        return $this->status == 1 ? __('Backend/supervisors.active') : __('Backend/supervisors.inactive');
+    public function status() {
+        $role = $this->roles()->first();
+        if ($role) {
+            return $role->name == 'professional' ?
+                ($this->status == 1 ? __('Backend/professionals.international') : __('Backend/professionals.national')) :
+                ($this->status == 1 ? __('Backend/supervisors.active') : __('Backend/supervisors.inactive'));
+        }
+        return __('Backend/supervisors.inactive'); // or any default value
     }
     public  function userImage() {
         return $this->user_image != '' ? asset('assets/users/'. $this->user_image ) : asset('assets/users/default.png');

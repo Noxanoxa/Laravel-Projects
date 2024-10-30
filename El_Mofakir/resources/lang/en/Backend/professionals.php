@@ -37,5 +37,8 @@ return [
     'no_cv'        => 'No CV uploaded',
     'posts_count'   => 'Posts Count',
     'remove_image' => 'Remove Image',
+    'national' => 'National',
+    'international' => 'International',
+
 ];
 

@@ -1,6 +1,13 @@
 ﻿@extends('layouts.admin')
 @section('style')
     <link rel="stylesheet" href="{{ asset('backend/vendor/select2/css/select2.min.css') }}"/>
+    <style>
+        .form-check {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+    </style>
 @endsection
 @section('content')
     <div class="card shadow mb-4">
@@ -88,7 +95,6 @@
                         </select>
                         @error('category_id')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
-
                     <div class="col-4">
                         <label for="status">{{__('Backend/posts.status')}}</label>
                         <select name="status" class="form-control">
@@ -99,7 +105,33 @@
                         </select>
                         @error('status')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="published_at">{{__('Backend/posts.published_at')}}</label>
+                            <input type="date" name="published_at" class="form-control" value="{{old('published_at', $post->published_at)}}">
+                            @error('published_at')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
+                    </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="author">{{__('Backend/posts.author')}}</label>
+                            <div class="d-flex flex-wrap">
+                                @foreach($authors as $author)
+                                    <div class="form-check mr-3">
+                                        <input type="checkbox" name="authors[]" value="{{$author->id}}" class="form-check-input"
+                                            {{ in_array($author->id, old('authors', $post->authors->pluck('id')->toArray())) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="author{{$author->id}}">{{$author->name}}</label>
+                                    </div>
+                                @endforeach
+                            </div>
+                            @error('authors')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row pt-4">
                     <div class="col-12">
                         <label for="pdf">{{__('Backend/posts.sliders')}}</label>
@@ -137,23 +169,28 @@
                 $('#select_all_tags > option').prop('selected', '');
                 $('#select_all_tags').trigger('change');
             });
-            @if(optional($post->media->count() > 0))
+
+
+
             $('#post-pdf').fileinput({
                 theme: 'fas',
-                maxFileCount: {{5 - $post->media->count()}},
+                maxFileCount: {{ 5 - $post->media->count() }},
                 allowedFileTypes: ['pdf'],
                 showCancel: true,
                 showRemove: false,
                 showUpload: false,
                 overwriteInitial: false,
                 initialPreview: [
-                        @foreach($post->media as $media)
+                    @if($post->media->count() > 0)
+                    @foreach($post->media as $media)
                         "{{ asset('assets/posts/' . $media->file_name) }}",
                     @endforeach
+                    @endif
                 ],
                 initialPreviewAsData: true,
                 initialPreviewFileType: 'pdf',
                 initialPreviewConfig: [
+                        @if($post->media->count() > 0)
                         @foreach($post->media as $media)
                     {
                         caption: "{{ $media->real_file_name }}",
@@ -162,19 +199,9 @@
                         url: "{{ route('admin.posts.media.destroy', [$media->id, '_token' => csrf_token()]) }}",
                     },
                     @endforeach
+                    @endif
                 ],
             });
-            @else
-            $('#post-pdf').fileinput({
-                theme: 'fas',
-                maxFileCount: {{5 - $post->media->count()}},
-                allowedFileTypes: ['pdf'],
-                showCancel: true,
-                showRemove: false,
-                showUpload: false,
-                overwriteInitial: false,
-            });
-            @endif
         });
     </script>
 @endsection

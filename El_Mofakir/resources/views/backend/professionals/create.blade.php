@@ -17,35 +17,47 @@
             <form method="post" action="{{route('admin.professionals.store')}}" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-4">
                         <div class="form-group">
                             <label for="name">{{__('Backend/professionals.name')}}</label>
                             <input type="text" name="name" value="{{ old('name') }}" class="form-control">
                             @error('name')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-4">
                         <div class="form-group">
-                            <label for="username">{{__('Backend/professionals.username')}}</label>
-                            <input type="text" name="username" value="{{ old('username') }}" class="form-control">
-                            @error('username')<span class="text-danger">{{ $message }}</span>@enderror
+                        <label for="username">{{__('Backend/professionals.username')}}</label>
+                        <input type="text" name="username" value="{{ old('username') }}" class="form-control">
+                        @error('username')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
                     </div>
-                    <div class="col-3">
-                        <div class="form-group">
-                            <label for="email">{{__('Backend/professionals.email')}}</label>
-                            <input type="email" name="email" value="{{ old('email') }}" class="form-control">
-                            @error('email')<span class="text-danger">{{ $message }}</span>@enderror
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="email">{{__('Backend/professionals.email')}}</label>
+                                <input type="email" name="email" value="{{ old('email') }}" class="form-control">
+                                @error('email')<span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="form-group">
-                            <label for="mobile">{{__('Backend/professionals.mobile')}}</label>
-                            <input type="text" name="mobile" value="{{ old('mobile') }}" class="form-control">
-                            @error('mobile')<span class="text-danger">{{ $message }}</span>@enderror
-                        </div>
-                    </div>
                 </div>
+
+                    <div class="row">
+                        <div class="col-3">
+                            <label for="status">{{__('Backend/professionals.international')}}</label>
+                            <select name="status" class="form-control">
+                                <option value="">---</option>
+                                <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>{{__('Backend/professionals.yes')}}</option>
+                                <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>{{__('Backend/professionals.no')}}</option>
+                            </select>
+                            @error('status')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label for="mobile">{{__('Backend/professionals.mobile')}}</label>
+                                <input type="text" name="mobile" value="{{ old('mobile') }}" class="form-control">
+                                @error('mobile')<span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+                    </div>
 
                 <div class="row pt-4">
                     <div class="col-12">
