@@ -32,7 +32,6 @@ class GeneralController extends Controller
     public function get_posts()
     {
         $posts = Post::whereRelation('category', 'status', 1)
-                     ->whereRelation('user', 'status', 1)
                      ->post()->active()->orderBy('id', 'desc')
                      ->paginate(10);
 

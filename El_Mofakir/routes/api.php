@@ -12,12 +12,7 @@ Route::controller(GeneralController::class)->group(function () {
     Route::get('/all_announcements', 'get_announcements');
     Route::get('/announcement/{slug}', 'show_announcement');
 
-    Route::get('/all_posts',  'get_posts');
-    Route::get('/post/{slug}',  'show_post');
-    Route::get(
-        '/posts/{post}/download-all',
-         'downloadAllPdfs'
-    );
+
     Route::get('/page/{page}',  'page_show');
 
     Route::get('/all_posts', 'get_posts');
