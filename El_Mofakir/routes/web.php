@@ -19,6 +19,11 @@ Route::group(['middleware' => 'web'], function () {
 
 });
 
+// In `routes/web.php`
+Route::get('professionals/{professional}/edit', [Backend\ProfessionalController::class, 'edit'])->name('professionals.edit');
+Route::post('professionals/{professional}', [Backend\ProfessionalController::class, 'update'])->name('professionals.update');
+Route::resource('professionals', Backend\ProfessionalController::class);
+
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function() {
     // Authentication Routes...
@@ -30,7 +35,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function() {
     });
 
 
-    Route::group(['middleware' => ['roles', 'role:admin']], function() {
+    Route::group(['middleware' => ['roles', 'role:admin|editor']], function() {
         Route::any('/notifications/get',                [Backend\NotificationsController::class, 'getNotifications']);
         Route::any('/notifications/read',               [Backend\NotificationsController::class, 'markAsRead']);
 

@@ -968,6 +968,42 @@ class PermissionTableSeeder extends Seeder
             'ordering'        => '0',
         ]);
 
+        // PROFESSIONALS
+        $manageProfessionals = Permission::create([
+            'name'            => 'manage_professionals',
+            'display_name'    => 'المحترفين',
+            'description'     => 'إدارة المحترفين',
+            'display_name_en' => 'Professionals',
+            'description_en'  => 'Manage Professionals',
+            'route'           => 'professionals',
+            'module'          => 'professionals',
+            'as'              => 'professionals.index',
+            'icon'            => 'fas fa-user-tie',
+            'parent'          => $manageUsers->id,
+            'parent_original' => '0',
+            'appear'          => '1',
+            'ordering'        => '30',
+        ]);
+        $manageProfessionals->parent_show = $manageProfessionals->id;
+        $manageProfessionals->save();
+
+        $showProfessionals = Permission::create([
+            'name'            => 'show_professionals',
+            'display_name'    => 'عرض المحترفين',
+            'description'     => 'عرض المحترفين',
+            'display_name_en' => 'Show Professionals',
+            'description_en'  => 'Show Professionals',
+            'route'           => 'professionals',
+            'module'          => 'professionals',
+            'as'              => 'professionals.index',
+            'icon'            => 'fas fa-user-tie',
+            'parent'          => $manageProfessionals->id,
+            'parent_show'     => $manageProfessionals->id,
+            'parent_original' => $manageProfessionals->id,
+            'appear'          => '1',
+            'ordering'        => '0',
+        ]);
+
         // SETTINGS
         $manageSettings              = Permission::create([
             'name'            => 'manage_settings',

@@ -395,10 +395,7 @@ class GeneralController extends Controller
                         'issue_date' => $issue->issue_date,
                         'posts' => $issue->posts->map(function ($post) {
                             return [
-                                'title' => $post->title,
-                                'slug' => $post->slug,
-                                'description' => $post->description,
-                                'created_date' => $post->created_at->format('d-m-Y h:i a'),
+                               'post' => new PostResource($post),
                             ];
                         }),
                     ];
@@ -464,10 +461,10 @@ class GeneralController extends Controller
             'address',
             'phone_number',
             'website_univ',
-        ])->get();
+        ])->select('value', 'key', 'lang')->get();
 
         return response()->json([
-            'settings' => $settings->pluck('value', 'key'),
+            'settings' => $settings,
             'error' => false,
         ], 200);
     }
