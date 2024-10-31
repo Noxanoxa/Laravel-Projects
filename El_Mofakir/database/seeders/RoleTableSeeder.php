@@ -80,6 +80,7 @@ class  RoleTableSeeder extends Seeder
         ]);
 
         $professional->attachRole($professionalRole);
+        $this->addUserMedia($professional);
 
         $user1 = User::create(
             [
@@ -140,7 +141,7 @@ class  RoleTableSeeder extends Seeder
 
     private function addUserMedia($user)
     {
-        if ($user->hasRole('user')) {
+        if ($user->hasRole('user') || $user->hasRole('professional')) {
             UserMedia::create([
                 'user_id'        => $user->id,
                 'file_name'      => 'default.pdf',
