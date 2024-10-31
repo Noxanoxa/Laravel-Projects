@@ -112,8 +112,8 @@ class AnnouncementsController extends Controller
         $validator = Validator::make($request->all(), [
             'title'          => 'required',
             'title_en'          => 'required',
-            'description'    => 'required|min:50',
-            'description_en'    => 'required|min:50',
+            'description'    => 'required|min:10',
+            'description_en'    => 'required|min:10',
             'status'         => 'required',
         ]);
 

@@ -8,9 +8,9 @@ return [
     'post_updated_successfully'         => 'تم تحديث المقال بنجاح',
 
     // issues
-    'issue_created_successfully'        => 'تم انشاء العدد بنجاح',
-    'issue_updated_successfully'        => 'تم تحديث العدد بنجاح',
-    'issue_deleted_successfully'        => 'تم حذف العدد بنجاح',
+    'issue_created_successfully'        => 'تم انشاء الرقم بنجاح',
+    'issue_updated_successfully'        => 'تم تحديث الرقم بنجاح',
+    'issue_deleted_successfully'        => 'تم حذف الرقم بنجاح',
 
     // users
     'user_created_successfully'         => 'تم انشاء المؤلف بنجاح',

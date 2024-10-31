@@ -14,11 +14,11 @@ class CreateSettingsTable extends Migration
             $table->string('display_name_en');
             $table->string('key');
             $table->string('value')->nullable();
+            $table->string('value_en')->nullable();
             $table->string('details')->nullable();
             $table->string('type');
             $table->string('section_en');
             $table->string('section');
-            $table->string('lang')->default('en');
             $table->string('ordering');
         });
     }

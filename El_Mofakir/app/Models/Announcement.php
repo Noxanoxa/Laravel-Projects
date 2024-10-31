@@ -5,10 +5,11 @@ namespace App\Models;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Announcement extends Model
 {
-    use HasFactory, Sluggable;
+    use HasFactory, Sluggable, SearchableTrait;
 
     protected $guarded = [];
 
@@ -23,6 +24,14 @@ class Announcement extends Model
             ],
         ];
     }
+
+    protected $searchable
+        = [
+            'columns' => [
+                'announcements.title'    => 10,
+                'announcements.title_en' => 10,
+            ],
+        ];
 
     public function  scopeActive($query)
     {

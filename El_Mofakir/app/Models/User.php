@@ -69,7 +69,8 @@ class User extends Authenticatable implements MustVerifyEmail
         }
         return __('Backend/supervisors.inactive'); // or any default value
     }
-    public  function userImage() {
+    public  function userImage(): string
+    {
         return $this->user_image != '' ? asset('assets/users/'. $this->user_image ) : asset('assets/users/default.png');
     }
 

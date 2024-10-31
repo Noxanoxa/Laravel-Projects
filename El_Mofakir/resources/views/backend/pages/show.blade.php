@@ -19,30 +19,13 @@
                             <td colspan="4"><a href="{{route('admin.posts.show', $page->id)}}">{{ $page->title() }}</a></td>
                         </tr>
                         <tr>
-                            <th>{{__('backend/pages.category')}}</th>
-                            <td>{{ $page->category->name()}}</td>
-                            <th>{{__('backend/pages.status')}}</th>
-                            <td>{{ $page->status() == 'Active'? __('Backend/pages.active') : __('Backend/pages.inactive') }}</td>
+                            <th>{{__('backend/pages.description_en')}}</th>
+                            <td>{{ $page->description_en }}</td>
                         </tr>
-                        <tr>
-                            <th>{{__('backend/pages.author')}}</th>
-                            <td>{{ $page->user->name}}</td>
-                            <th>{{__('backend/pages.created_at')}}</th>
-                            <td>{{ $page->created_at ->format('d-m-Y h:i a')}}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="4">
-                                <div class="row">
-                                    @if($page->media->count() > 0)
-                                        @foreach($page->media as $media)
-                                            <div class="col-2">
-                                                <img src="{{ asset('assets/posts/' . $media->file_name) }}" class="img-fluid">
-                                            </div>
-                                        @endforeach
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
+                    <tr>
+                        <th>{{__('backend/pages.description')}}</th>
+                        <td>{{ $page->description }}</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>

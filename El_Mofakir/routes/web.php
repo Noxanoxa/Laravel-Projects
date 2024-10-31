@@ -49,6 +49,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function() {
         Route::resource('announcements',                Backend\AnnouncementsController::class);
 
         // volumes
+        // routes/web.php
+        Route::delete('admin/issues/{id}', [Backend\VolumesController::class, 'destroyIssue'])->name('admin.issues.destroy');
         Route::resource('volumes',                      Backend\VolumesController::class);
 
         // issues

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Issue;
 use App\Models\Post;
+use App\Models\Tag;
 use App\Models\User;
 use App\Models\Volume;
 use Faker\Factory;
@@ -25,6 +26,7 @@ class PostsTableSeeder extends Seeder
 
         $volumes = Volume::toBase()->get();
         $categories = Category::all()->modelKeys();
+        $tags = Tag::all()->modelKeys();
         $users = User::where('id', '>', 2)->get()->modelKeys();
         $posts = [];
 
@@ -67,6 +69,7 @@ class PostsTableSeeder extends Seeder
                     ]);
 
                     $post->authors()->attach(Arr::random($users, rand(1, 3)));
+                    $post->tags()->attach(Arr::random($tags, rand(1, 3)));
                 }
             }
         }

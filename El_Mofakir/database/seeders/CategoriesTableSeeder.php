@@ -14,9 +14,8 @@ class CategoriesTableSeeder extends Seeder
     {
         Category::create([ 'name' => 'غير مصنف', 'name_en' => 'un-categorized', 'status'=> 1 ]);
         Category::create([ 'name' => 'قانون', 'name_en' => 'Law', 'status'=> 1 ]);
-        Category::create([ 'name' => 'سياسة' , 'name_en' => 'Politics', 'status'=> 1 ]);
-        Category::create([ 'name' => 'اقتصاد', 'name_en' => 'Economy', 'status'=> 1 ]);
-        Category::create([ 'name' => 'شوؤن دولية', 'name_en' => 'International Affairs', 'status'=> 1 ]);
-        Category::create([ 'name' => 'ثقافة', 'name_en' => 'Culture', 'status'=> 1 ]);
-    }
+        Category::create([ 'name' => 'علم سياسة والعلاقات الدولية', 'name_en' => 'Political Science and International Relations', 'status'=> 1 ]);
+        Category::create([ 'name' => 'الإدارة العامة', 'name_en' => 'Public Administration', 'status'=> 1 ]);
+        Category::create([ 'name' => 'الشريعة الإسلامية', 'name_en' => 'Sharia Law', 'status'=> 1 ]);
+         }
 }

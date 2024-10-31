@@ -30,5 +30,9 @@ return [
     'id'            => 'ID',
     'update_volume' => 'Update Volume',
     'no_issue',
+    'keyword'      => 'Keyword',
+    'limit_by'     => 'Limit By',
+    'order_by'     => 'Order By',
+    'sort_by'      => 'Sort By',
 ];
 

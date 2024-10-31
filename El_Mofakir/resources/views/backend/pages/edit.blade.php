@@ -49,26 +49,6 @@
                     </div>
                 </div>
             </div>
-                <div class="row">
-                <div class="col-6">
-                    <label for="category_id">{{__('backend/pages.category')}}</label>
-                    <select name="category_id" id="category_id" class="form-control">
-                        <option value="">{{__('backend/pages.select_category')}}</option>
-                        @foreach($categories as $cat)
-                            <option value="{{ $cat->id }}" {{ old('category_id', $page->category_id) == $cat->id ? 'selected' : '' }}>{{ $cat->name() }}</option>
-                        @endforeach
-                    </select>
-                    @error('category_id')<span class="text-danger">{{ $message }}</span>@enderror
-                </div>
-                <div class="col-6">
-                    <label for="status">{{__('backend/pages.status')}}</label>
-                    <select name="status" id="status" class="form-control">
-                        <option value="1" {{ old('status', $page->status )== 1 ? 'selected' : '' }}>{{__('backend/pages.active')}}</option>
-                        <option value="0" {{ old('status', $page->status )== 0 ? 'selected' : '' }}>{{__('backend/pages.inactive')}}</option>
-                    </select>
-                    @error('status')<span class="text-danger">{{ $message }}</span>@enderror
-                </div>
-            </div>
             <div class="form-group pt-4">
                 <button type="submit" class="btn btn-primary">{{__('backend/pages.update_page')}}</button>
             </div>

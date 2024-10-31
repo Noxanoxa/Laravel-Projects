@@ -35,6 +35,10 @@ return [
     'select_volume'  => 'اختر العدد',
     'update_issue'   => 'تحديث الرقم',
     'volume'         => 'العدد',
+    'keyword'      => 'كلمة البحث',
+    'limit_by'      => 'الحد الاقصى',
+    'order_by'      => 'ترتيب حسب',
+    'sort_by'       => 'ترتيب حسب',
 
 
 

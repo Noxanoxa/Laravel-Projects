@@ -564,12 +564,33 @@ class GeneralController extends Controller
             'address',
             'phone_number',
             'website_univ',
-        ])->select('value', 'key', 'lang')->get();
+        ])->select('key', 'value','value_en')->get();
 
         return response()->json([
             'settings' => $settings,
             'error'    => false,
         ], 200);
     }
+
+        public function journal_info()
+        {
+            $settings = Setting::where('section_en', 'journal_info')->select('key', 'value', 'value_en')->get();
+
+            return response()->json([
+                'journalInfo' => [
+                    'eissn' => $settings->where('key', 'eissn')->first(),
+                    'frequency' => $settings->where('key', 'frequency')->first(),
+                    'acceptanceRate' => $settings->where('key', 'acceptance_rate')->first(),
+                    'averageResponseTime' => $settings->where('key', 'average_response_time')->first(),
+                    'averagePublicationTime' => $settings->where('key', 'publication_time')->first(),
+                    'year_of_creation' => $settings->where('key', 'year_of_creation')->first(),
+                    'country' => $settings->where('key', 'country')->first(),
+                    'institution' => $settings->where('key', 'institution_name')->first(),
+                    'impactFactor' => $settings->where('key', 'impact_factor')->first(),
+                    ],
+
+                'error'    => false,
+            ], 200);
+        }
 
 }

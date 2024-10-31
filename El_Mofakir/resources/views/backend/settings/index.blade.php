@@ -29,10 +29,10 @@
                                         <label for="title">{{ $setting->display_name() }}</label>
                                         @if ($setting->type == 'text')
                                             <input type="text" name="value[{{ $loop->index }}]" id="value"
-                                                   class="form-control" value="{{ $setting->value }}">
+                                                   class="form-control" value="{{ $setting->value() }}">
                                         @elseif($setting->type == 'textarea')
                                             <textarea name="value[{{ $loop->index }}]" id="value" class="form-control"
-                                                      cols="30" rows="10">{{ $setting->value }}</textarea>
+                                                      cols="30" rows="10">{{ $setting->value() }}</textarea>
                                         @elseif($setting->type == 'image')
                                             <input type="file" name="value[{{ $loop->index }}]" id="value"
                                                    class="form-control">
@@ -41,15 +41,15 @@
                                             <select name="value['{{ $loop->index }}']" id="value" class="form-control">
                                                 @foreach(explode('|', $setting->details) as $detail)
                                                     <option
-                                                        value="{{ $detail }}" {{ $setting->value == $detail ? 'selected' : '' }}>{{ $detail }}</option>
+                                                        value="{{ $detail }}" {{ $setting->value() == $detail ? 'selected' : '' }}>{{ $detail }}</option>
                                                 @endforeach
                                             </select>
                                         @elseif($setting->type == 'checkbox')
                                             <input type="checkbox" name="value[{{ $loop->index }}]" id="value"
-                                                   class="styled" value="1" {{ $setting->value == 1 ? true : false }}>
+                                                   class="styled" value="1" {{ $setting->value() == 1 ? true : false }}>
                                         @elseif($setting->type == 'radio')
                                             <input type="radio" name="value['{{ $loop->index }}']" id="value"
-                                                   class="styled" value="1" {{ $setting->value == 1 ? true : false }}>
+                                                   class="styled" value="1" {{ $setting->value() == 1 ? true : false }}>
                                         @endif
 
                                         <input type="hidden" name="key[{{ $loop->index }}]" id="key"

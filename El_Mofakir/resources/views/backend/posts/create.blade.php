@@ -111,7 +111,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="form-group">
-                            <label for="author">{{__('Backend/posts.author')}}</label>
+                            <label for="author">{{__('Backend/posts.authors')}}</label>
                             <div class="d-flex flex-wrap">
                                 @foreach($authors as $author)
                                     <div class="form-check mr-3">

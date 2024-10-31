@@ -1,3 +1,4 @@
+<!-- resources/views/backend/volumes/edit.blade.php -->
 @extends('layouts.admin')
 @section('content')
     <div class="card shadow mb-4">
@@ -15,9 +16,10 @@
             </div>
         </div>
         <div class="card-body">
-            <form method="POST" action="{{ route('admin.volumes.update', $volume->id) }}">
+            <form method="POST" action="{{ route('admin.volumes.update', $volume->id) }}" id="update-volume-form">
                 @csrf
                 @method('PATCH')
+
                 <div class="row">
                     <div class="col-4">
                         <div class="form-group">
@@ -43,40 +45,36 @@
                     </div>
                 </div>
 
-                <!-- New Issues Section -->
                 <div class="row pt-4">
                     <div class="col-12">
                         <label for="issues">{{__('Backend/issues.issues')}}</label>
                         <div class="form-group">
                             @foreach($issues as $issue)
+                                <input type="hidden" name="issue_id[]" value="{{ $issue->id }}">
                                 <div class="row">
                                     <div class="col-4">
                                         <div class="form-group">
                                             <label for="issue_number">{{__('Backend/issues.number')}}</label>
                                             <input type="text" name="issue_number[]" class="form-control" value="{{ old('issue_number', $issue->issue_number) }}">
-                                            @error('issue_number')<span class="text-danger">{{ $message }}</span>@enderror
+                                            @error('issue_number[]')<span class="text-danger">{{ $message }}</span>@enderror
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <div class="form-group">
                                             <label for="issue_date">{{__('Backend/issues.date')}}</label>
                                             <input type="date" name="issue_date[]" class="form-control" value="{{ old('issue_date', $issue->issue_date) }}">
-                                            @error('issue_date')<span class="text-danger">{{  $message }}</span>@enderror
+                                            @error('issue_date[]')<span class="text-danger">{{ $message }}</span>@enderror
                                         </div>
                                     </div>
                                     <div class="col-4 d-flex align-items-center">
                                         <a href="{{ route('admin.issues.edit', $issue->id) }}" class="btn btn-warning mr-2">{{__('Backend/issues.edit_issue')}}</a>
-                                        <a href="javascript:void(0);" onclick="if(confirm('{{__('backend/issues.are_you_sure')}}')) { document.getElementById('issue-delete-{{$issue->id}}').submit(); } else { return false }" class="btn btn-danger">{{__('Backend/issues.delete_issue')}}</a>
-                                        <form action="{{route('admin.issues.destroy', $issue->id)}}" method="post" id="issue-delete-{{$issue->id}}">
-                                            @csrf
-                                            @method('DELETE')
-                                        </form>
+                                        <button type="button" class="btn btn-danger delete-issue" data-id="{{ $issue->id }}">{{__('Backend/issues.delete_issue')}}</button>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
-                        @if(! $volume->issues->count()>2)
-                        <a href="{{ route('admin.issues.create', ['volume_id' => $volume->id]) }}" class="btn btn-success">{{__('Backend/issues.add_issue')}}</a>
+                        @if(! ($volume->issues->count() > 2))
+                            <a href="{{ route('admin.issues.create', ['volume_id' => $volume->id]) }}" class="btn btn-success">{{__('Backend/issues.add_issue')}}</a>
                         @endif
                     </div>
                 </div>
@@ -92,9 +90,32 @@
 @section('script')
     <script>
         $(document).ready(function() {
+
+                $('.delete-issue').click(function() {
+                    var issueId = $(this).data('id');
+                    if (confirm('{{__('backend/issues.are_you_sure')}}')) {
+                        $.ajax({
+                            url: '{{ url('admin/issues') }}/' + issueId,
+                            type: 'DELETE',
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                alert(response.message);
+                                location.reload();
+                            },
+                            error: function(response) {
+                                alert(response);
+                                location.reload();
+                                // alert('Error deleting issue');
+                            }
+                        });
+                    }
+                });
+
+
             function filterPostsByYear() {
                 var volumeYear = $('input[name="year"]').val();
-
 
                 if (volumeYear) {
                     $('.form-check').each(function() {
@@ -114,6 +135,7 @@
             // Initially filter posts by the current year value
             filterPostsByYear();
 
+        // Add change event listener to the year input
             // Add change event listener to the year input
             $('input[name="year"]').on('change', function() {
                 filterPostsByYear();

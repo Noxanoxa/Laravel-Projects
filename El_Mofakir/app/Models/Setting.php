@@ -17,6 +17,10 @@ class Setting extends Model
         return config('app.locale') == 'ar' ? $this->display_name : $this->display_name_en;
     }
 
+    public function value ()
+    {
+        return $this->value_en != null ? (config('app.locale') == 'ar' ? $this->value : $this->value_en): $this->value;
+    }
 
 
     public function section ()

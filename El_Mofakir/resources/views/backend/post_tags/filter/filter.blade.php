@@ -1,14 +1,14 @@
 <div class="card-body">
     <form action="{{ route('admin.post_tags.index') }}" method="get">
         <div class="row">
-            <div class="col-2">
+            <div class="col">
                 <div class="form-group">
                     <label for="keyword">{{ __('Backend/post_tags.search') }}</label>
                     <input type="text" name="keyword" value="{{ old('keyword', request('keyword')) }}"
                            class="form-control" placeholder="{{ __('Backend/post_tags.search_here') }}">
                 </div>
             </div>
-            <div class="col-2">
+            <div class="col">
                 <div class="form-group">
                     <label for="sort_by">{{ __('Backend/posts.sort_by') }}</label>
                     <select name="sort_by" class="form-control">
@@ -22,7 +22,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-2">
+            <div class="col">
                 <div class="form-group">
                     <label for="order_by">{{ __('Backend/posts.order_by') }}</label>
                     <select name="order_by" class="form-control">
@@ -34,7 +34,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-1">
+            <div class="col">
                 <div class="form-group">
                     <label for="limit_by">{{ __('Backend/posts.limit_by') }}</label>
                     <select name="limit_by" class="form-control">

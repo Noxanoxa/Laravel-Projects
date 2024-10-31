@@ -21,6 +21,7 @@ Route::controller(GeneralController::class)->group(function () {
         'posts.download_all'
     );
     Route::get('/page/{page}', 'page_show');
+    Route::get('/journal-info', 'journal_info');
 
     Route::get('/category/{category_slug}', 'category')->name('category.show');
     Route::get('/tag/{tag_slug}', 'tag')->name('tag.show');

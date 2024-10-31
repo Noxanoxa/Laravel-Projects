@@ -105,6 +105,7 @@ class VolumesController extends Controller
         return view('backend.volumes.edit', compact('volume',  'issues'));
     }
 
+
     public function update(Request $request, $id)
     {
         if (!\auth()->user()->ability('admin', 'update_volumes')) {
@@ -115,14 +116,25 @@ class VolumesController extends Controller
             'number' => 'required',
             'year' => 'required',
             'status' => 'required',
+            'issue_number.*' => 'required|string',
+            'issue_date.*' => 'required|date',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
+
         $volume = Volume::findOrFail($id);
         $data = $request->only(['number', 'year', 'status']);
         $volume->update($data);
+
+        foreach ($request->issue_number as $index => $issueNumber) {
+            $issue = Issue::findOrFail($request->issue_id[$index]);
+            $issue->update([
+                'issue_number' => $issueNumber,
+                'issue_date' => $request->issue_date[$index],
+            ]);
+        }
 
         if ($request->status == 1) {
             Cache::forget('global_volumes');
@@ -133,7 +145,6 @@ class VolumesController extends Controller
             'alert-type' => 'success',
         ]);
     }
-
     public function destroy($id)
     {
         if (!\auth()->user()->ability('admin', 'delete_volumes')) {

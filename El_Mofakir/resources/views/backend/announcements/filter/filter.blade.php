@@ -1,19 +1,14 @@
 <!-- Define the CSS class to decrease the font size -->
-<style>
-    label {
-        font-size: 14px; /* Adjust the size as needed */
-    }
-</style>
 <div class="card-body">
     <form method="get" action="{{route('admin.announcements.index')}}">
         <div class="row">
-            <div class="col-2">
+            <div class="col">
                 <div class="form-group">
                     <label for="keyword">{{ __('Backend/announcements.keyword') }}</label>
                     <input type="text" name="keyword" value="{{old('keyword', request('keyword'))}}" class="form-control" placeholder="{{ __('Backend/announcements.search_here')}}">
                 </div>
             </div>
-            <div class="col-1">
+            <div class="col">
                 <div class="form-group">
                     <label for="sort_by">{{ __('Backend/announcements.status') }}</label>
                     <select name="status" class="form-control">
@@ -23,7 +18,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-1">
+            <div class="col">
                 <div class="form-group">
                     <label for="sort_by">{{ __('Backend/announcements.sort_by') }}</label>
                     <select name="sort_by" class="form-control">
@@ -33,9 +28,9 @@
                     </select>
                 </div>
             </div>
-            <div class="col-2">
+            <div class="col">
                 <div class="form-group">
-                    <label for="keyword">{{ __('Backend/announcements.limit_by') }}</label>
+                    <label for="keyword">{{ __('Backend/announcements.order_by') }}</label>
                     <select name="order_by" class="form-control">
                         <option value="">---</option>
                         <option value="asc" {{ old('order_by', request('order_by')) == 'asc' ? 'selected' : '' }}>{{__('Backend/announcements.asc')}}</option>
@@ -43,7 +38,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-1">
+            <div class="col">
                 <div class="form-group">
                     <label for="limit_by">{{ __('Backend/announcements.limit_by') }}</label>
                     <select name="limit_by" class="form-control">

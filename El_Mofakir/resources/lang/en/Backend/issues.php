@@ -34,6 +34,10 @@ return [
     'select_volume'  => 'Select Volume',
     'update_issue'   => 'Update Issue',
     'volume'         => 'Volume',
+    'keyword'      => 'Keyword',
+    'limit_by'     => 'Limit By',
+    'order_by'     => 'Order By',
+    'sort_by'      => 'Sort By',
 
 ];
 

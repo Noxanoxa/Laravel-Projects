@@ -87,11 +87,12 @@ class IssuesController extends Controller
         }
 
         $issue = Issue::findOrFail($id);
+        $posts = Post::where('published_at', $issue->issue_date)->post()->select('id', 'title', 'title_en', 'published_at')->get();
         $volume = Volume::where('id', '!=', $issue->volume_id)->select('id', 'number', 'year')->get();
         $selectedPosts = $issue->with('posts')->get()->pluck('posts.*.id')->flatten()->toArray();
 
 
-        return view('backend.issues.edit', compact('issue', 'volume', 'selectedPosts'));
+        return view('backend.issues.edit', compact('issue', 'volume', 'selectedPosts', 'posts'));
     }
 
     public function update(Request $request, $id)
@@ -114,10 +115,9 @@ class IssuesController extends Controller
 
         $data = $request->only(['issue_number', 'issue_date']);
         $issue->update($data);
+        Post::whereIn('id', $request->posts)->update(['published_at' => $issue->issue_date, 'issue_id' => $issue->id, 'volume_id' => $issue->volume_id]);
+        Post::where('issue_id', $issue->id)->whereNotIn('id', $posts)->update(['issue_id' => null ]);
 
-
-        // Set the issue_id to null for posts not in the request
-        Post::where('issue_id', $issue->id)->whereNotIn('id', $posts)->update(['issue_id' => null]);
 
 
         return redirect()->route('admin.issues.index')->with([
@@ -133,6 +133,7 @@ class IssuesController extends Controller
 
         $issue = Issue::findOrFail($id);
         $issue->delete();
+        Post::whereIssueId($id)->update(['issue_id' => null, 'volume_id' => null]);
 
         return redirect()->route('admin.issues.index')->with([
             'message' => __('messages.issue_deleted_successfully'),

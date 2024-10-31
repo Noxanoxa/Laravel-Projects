@@ -21,7 +21,7 @@ class UserResource extends JsonResource
             'mobile' => $this->mobile,
             'status' => $this->status,
             'status_text' => $this->status(),
-            'user_image' => $this->userImage(),
+            'user_image' => $this->user_image != '' ? asset('assets/users/'. $this->user_image ) : asset('assets/users/default.png'),
         ];
     }
 }

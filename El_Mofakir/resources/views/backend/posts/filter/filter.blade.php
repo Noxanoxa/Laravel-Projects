@@ -1,13 +1,13 @@
 <div class="card-body">
     <form method="get" action="{{route('admin.posts.index')}}">
         <div class="row">
-            <div class="col-2">
+            <div class="col">
                 <div class="form-group">
                     <label id="label" for="keyword">{{ __('Backend/posts.search') }}</label>
                     <input type="text" name="keyword" value="{{old('keyword', request('keyword'))}}" class="form-control" placeholder="{{ __('Backend/posts.search_here')}}">
                 </div>
             </div>
-            <div class="col-2">
+            <div class="col">
                 <div class="form-group">
                     <label  for="volume_id">{{ __('Backend/posts.volume') }}</label>
                     <select name="volume_id" id="volume_id" class="form-control">
@@ -18,7 +18,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-2">
+            <div class="col">
                 <div class="form-group">
                     <label for="category_id">{{ __('Backend/posts.category') }}</label>
                     <select name="category_id" id="category_id" class="form-control">
@@ -29,7 +29,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-1">
+            <div class="col">
                 <div class="form-group">
                     <label  for="tag_id">{{ __('Backend/posts.tag') }}</label>
                     <select name="tag_id" id="tag_id" class="form-control">
@@ -40,7 +40,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-1">
+            <div class="col">
                 <div class="form-group">
                     <label for="status">{{ __('Backend/posts.status') }}</label>
                     <select name="status" id="status" class="form-control">
@@ -50,17 +50,17 @@
                     </select>
                 </div>
             </div>
-            <div class="col-1">
+            <div class="col">
                 <div class="form-group">
                     <label  for="sort_by">{{ __('Backend/posts.sort_by') }}</label>
                     <select name="sort_by" id="sort_by" class="form-control">
                         <option value="">---</option>
                         <option value="title" {{ old('sort_by', request('sort_by')) == 'title' ? 'selected' : '' }}>{{__('Backend/posts.title')}}</option>
-                        <option value="created_at" {{ old('sort_by', request('sort_by')) == 'created_at' ? 'selected' : '' }}>{{__('Backend/posts.created_at')}}</option>
+                        <option value="published_at" {{ old('sort_by', request('sort_by')) == 'published_at' ? 'selected' : '' }}>{{__('Backend/posts.published_at')}}</option>
                     </select>
                 </div>
             </div>
-            <div class="col-1">
+            <div class="col">
                 <div class="form-group">
                     <label for="order_by">{{ __('Backend/posts.order_by') }}</label>
                     <select name="order_by" id="order_by" class="form-control">
@@ -70,7 +70,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-1">
+            <div class="col">
                 <div class="form-group">
                     <label  for="limit_by">{{ __('Backend/posts.limit_by') }}</label>
                     <select name="limit_by" id="limit_by" class="form-control">

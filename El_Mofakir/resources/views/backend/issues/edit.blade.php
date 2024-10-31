@@ -49,7 +49,7 @@
                         <div class="form-group">
                             <button type="button" id="select-all" class="btn btn-secondary btn-sm">{{ __('Select All') }}</button>
                             <button type="button" id="deselect-all" class="btn btn-secondary btn-sm">{{ __('Deselect All') }}</button>
-                            @foreach($issue->posts as $post)
+                            @foreach($posts as $post)
                                 <div class="form-check" data-year="{{ $post->published_at }}">
                                     <input class="form-check-input" type="checkbox" name="posts[]" value="{{ $post->id }}" {{ in_array($post->id, $selectedPosts) ? 'checked' : '' }}>
                                     <label class="form-check-label">
@@ -58,7 +58,7 @@
                                 </div>
                             @endforeach
                         </div>
-                        @error('posts')<span class="text-danger">{{ $message }}</span>@enderror
+                        @error('posts[]')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
                 </div>
                 <div class="form-group pt-4">
@@ -90,9 +90,9 @@
 
             filterPostsByDate();
 
-            $('input[name="issue_date"]').on('change', function() {
-                filterPostsByDate();
-            });
+            // $('input[name="issue_date"]').on('change', function() {
+            //     filterPostsByDate();
+            // });
 
             $('#select-all').click(function() {
                 $('input[name="posts[]"]').prop('checked', true);

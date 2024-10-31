@@ -1,13 +1,6 @@
 ﻿@extends('layouts.admin')
 @section('style')
     <link rel="stylesheet" href="{{ asset('backend/vendor/select2/css/select2.min.css') }}"/>
-    <style>
-        .form-check {
-            display: flex;
-            align-items: center;
-            margin-right: 15px;
-        }
-    </style>
 @endsection
 @section('content')
     <div class="card shadow mb-4">
@@ -117,7 +110,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="form-group">
-                            <label for="author">{{__('Backend/posts.author')}}</label>
+                            <label for="author">{{__('Backend/posts.authors')}}</label>
                             <div class="d-flex flex-wrap">
                                 @foreach($authors as $author)
                                     <div class="form-check mr-3">
