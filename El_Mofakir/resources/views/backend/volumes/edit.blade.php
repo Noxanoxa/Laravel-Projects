@@ -75,7 +75,9 @@
                                 </div>
                             @endforeach
                         </div>
+                        @if(! $volume->issues->count()>2)
                         <a href="{{ route('admin.issues.create', ['volume_id' => $volume->id]) }}" class="btn btn-success">{{__('Backend/issues.add_issue')}}</a>
+                        @endif
                     </div>
                 </div>
 

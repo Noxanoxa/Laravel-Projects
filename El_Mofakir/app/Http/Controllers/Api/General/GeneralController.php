@@ -164,7 +164,7 @@ class GeneralController extends Controller
         $post = Post::with([
             'category',
             'media',
-            'user',
+            'authors',
             'tags',
             'volume',
             'issue' => function ($query) {
@@ -172,10 +172,11 @@ class GeneralController extends Controller
             },
         ]);
 
-        $post = $post->whereRelation('category', 'status', 1)
-                     ->whereRelation('user', 'status', 1);
-        $post = Post::where('slug_en', $slug);
-        $post = $post->active()->post()->first();
+        $post = $post->whereRelation('category', 'status', 1);
+        $post = $post->active();
+        $post =$post->post();
+        $post = Post::where('slug_en', $slug)->first();
+
 
         if ($post) {
             return response()->json(
@@ -239,9 +240,8 @@ class GeneralController extends Controller
         $keyword = isset($request->keyword) && $request->keyword != ''
             ? $request->keyword : null;
 
-        $posts = Post::with(['media', 'user', 'tags'])
-                     ->whereRelation('category', 'status', 1)
-                     ->whereRelation('user', 'status', 1);
+        $posts = Post::with(['media', 'authors', 'tags'])
+                     ->whereRelation('category', 'status', 1);
 
         if ($keyword != null) {
             $posts = $posts->search($keyword, null, true);

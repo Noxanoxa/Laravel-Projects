@@ -26,7 +26,7 @@ class PostsResource extends JsonResource
             'status' => $this->status(),
             'volume' => new VolumeResource($this->volume),
             'issue' => new IssueResource($this->issue),
-            'created_date' => $this->created_at->format('d-m-Y h:i a'),
+            'created_date' => $this->published_at,
             'author' =>  UsersResource::collection($this->authors),
             'category' => new CategoriesResource($this->category),
             'tags' => TagsResource::collection($this->tags),

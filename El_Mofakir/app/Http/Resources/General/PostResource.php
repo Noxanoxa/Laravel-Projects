@@ -25,7 +25,7 @@ class PostResource extends JsonResource
             'description_en' => $this->description_en,
             'status' => $this->status(),
             'created_date' => $this->created_at->format('d-m-Y h:i a'),
-            'author' => new UsersResource($this->user),
+            'author' => UsersResource::collection($this->authors),
             'volume' => new VolumeResource($this->volume),
             'issue' => new IssueResource($this->issue),
             'category' => new CategoriesResource($this->category), // in this case category as one  element
