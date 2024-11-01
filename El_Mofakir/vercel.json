@@ -11,10 +11,9 @@
         }
     ],
     "env": {
-
     "APP_ENV": "production",
     "APP_DEBUG": "true",
-    "APP_URL": "https://your.url.from.vercel.app",
+    "APP_URL": "https://elmofakir.vercel.app",
     "APP_KEY": "base64:gUr6Al875rY+fMFfkjFteJwAJZSa/Dn8p5rF7ws4J0I=",
     "APP_CONFIG_CACHE": "/tmp/config.php",
     "APP_EVENTS_CACHE": "/tmp/events.php",
@@ -57,8 +56,6 @@
     "MIX_PUSHER_APP_CLUSTER": "eu",
     "LARAVEL_WEBSOCKETS_SSL_LOCAL_CERT": "C:\\xampp\\apache\\crt\\elmofakir.test\\server.crt",
     "LARAVEL_WEBSOCKETS_SSL_LOCAL_PK": "C:\\xampp\\apache\\crt\\elmofakir.test\\server.key",
-    "FACEBOOK_CLIENT_ID": "511828781396811",
-    "FACEBOOK_CLIENT_SECRET": "bb49f4ee258616cc3fe09cb87cdea4bb",
     "PASSPORT_PERSONAL_ACCESS_CLIENT_ID": "4",
     "PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET": "ATq4Jd8Lsazy1CJWtnfw32fgrgitX01Nu3vEEJ4o"
 
