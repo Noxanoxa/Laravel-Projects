@@ -88,7 +88,8 @@
         $(document).ready(function() {
             function filterbyIssueDate() {
                 let issueDate =$('input[name="issue_date"]').val();
-                let issueYear = new Date(issueDate).getFullYear();
+                let issueYear = issueDate.split('-')[0];
+
                 if (issueDate) {
                     $('select[name="volume_id"] option').each(function() {
                         var  volumeYear = $(this).data('year');
@@ -102,7 +103,7 @@
 
                     $('.form-check').each(function() {
                         let postDate = $(this).data('date');
-                        if (postDate == issueYear) {
+                        if (postDate == issueDate) {
                             $(this).show();
                         } else {
                             $(this).hide();

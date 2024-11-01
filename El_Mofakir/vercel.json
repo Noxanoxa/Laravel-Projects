@@ -1,0 +1,66 @@
+{
+    "version": 2,
+    "framework": null,
+    "functions": {
+        "api/index.php": { "runtime": "vercel-php@0.6.0" }
+    },
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "/api/index.php"
+        }
+    ],
+    "env": {
+
+    "APP_ENV": "production",
+    "APP_DEBUG": "true",
+    "APP_URL": "https://your.url.from.vercel.app",
+    "APP_KEY": "base64:gUr6Al875rY+fMFfkjFteJwAJZSa/Dn8p5rF7ws4J0I=",
+    "APP_CONFIG_CACHE": "/tmp/config.php",
+    "APP_EVENTS_CACHE": "/tmp/events.php",
+    "APP_PACKAGES_CACHE": "/tmp/packages.php",
+    "APP_ROUTES_CACHE": "/tmp/routes.php",
+    "APP_SERVICES_CACHE": "/tmp/services.php",
+    "VIEW_COMPILED_PATH": "/tmp",
+    "CACHE_DRIVER": "redis",
+    "LOG_CHANNEL": "stderr",
+    "SESSION_DRIVER": "redis",
+    "DB_CONNECTION": "mysql",
+    "DB_HOST": "127.0.0.1",
+    "DB_PORT": "3306",
+    "DB_DATABASE": "el_mofakir",
+    "DB_USERNAME": "root",
+    "DB_PASSWORD": "",
+    "BROADCAST_DRIVER": "pusher",
+    "QUEUE_CONNECTION": "redis",
+    "SESSION_LIFETIME": "120",
+    "REDIS_HOST": "127.0.0.1",
+    "REDIS_PASSWORD": "null",
+    "REDIS_PORT": "6379",
+    "MAIL_MAILER": "smtp",
+    "MAIL_HOST": "smtp.mailtrap.io",
+    "MAIL_PORT": "2525",
+    "MAIL_USERNAME": "8037f3d541f7da",
+    "MAIL_PASSWORD": "6ed3fe1c3f532a",
+    "MAIL_ENCRYPTION": "tls",
+    "MAIL_FROM_ADDRESS": "info@ElMofakir.test",
+    "MAIL_FROM_NAME": "El Mofakir Team",
+    "AWS_ACCESS_KEY_ID": "",
+    "AWS_SECRET_ACCESS_KEY": "",
+    "AWS_DEFAULT_REGION": "us-east-1",
+    "AWS_BUCKET": "",
+    "PUSHER_APP_ID": "1831298",
+    "PUSHER_APP_KEY": "088ce7dbafbccd592b35",
+    "PUSHER_APP_SECRET": "204185da6a2922f6f42d",
+    "PUSHER_APP_CLUSTER": "eu",
+    "MIX_PUSHER_APP_KEY": "088ce7dbafbccd592b35",
+    "MIX_PUSHER_APP_CLUSTER": "eu",
+    "LARAVEL_WEBSOCKETS_SSL_LOCAL_CERT": "C:\\xampp\\apache\\crt\\elmofakir.test\\server.crt",
+    "LARAVEL_WEBSOCKETS_SSL_LOCAL_PK": "C:\\xampp\\apache\\crt\\elmofakir.test\\server.key",
+    "FACEBOOK_CLIENT_ID": "511828781396811",
+    "FACEBOOK_CLIENT_SECRET": "bb49f4ee258616cc3fe09cb87cdea4bb",
+    "PASSPORT_PERSONAL_ACCESS_CLIENT_ID": "4",
+    "PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET": "ATq4Jd8Lsazy1CJWtnfw32fgrgitX01Nu3vEEJ4o"
+
+    }
+}

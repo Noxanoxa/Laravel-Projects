@@ -44,8 +44,10 @@ class IssuesController extends Controller
             return redirect('admin/index');
         }
 
+
+
         $volumes = Volume::select('id', 'number', 'year')->get();
-        $posts = Post::whereIssueId(null)->post()->select('id', 'title', 'title_en', 'created_at')->get();
+        $posts = Post::whereIssueId(null)->active()->post()->select('id', 'title', 'title_en', 'published_at')->get();
         $volumeId = $request->query('volume_id');
         $volume = Volume::find($volumeId);
         $currentDate = now();
